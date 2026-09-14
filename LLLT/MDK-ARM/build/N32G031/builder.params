@@ -1,0 +1,116 @@
+{
+    "name": "LLLT",
+    "target": "N32G031",
+    "toolchain": "AC5",
+    "toolchainLocation": "D:\\Keil_v5\\ARM\\ARMCC",
+    "toolchainCfgFile": "c:\\Users\\75506\\.vscode\\extensions\\cl.eide-3.27.2\\res\\data\\models/arm.v5.model.json",
+    "buildMode": "fast|multhread",
+    "showRepathOnLog": true,
+    "threadNum": 16,
+    "rootDir": "c:\\Users\\75506\\OneDrive\\Desktop\\LLLT hair cap\\LLLT\\LLLT\\LedBlink\\MDK-ARM",
+    "dumpPath": "build\\N32G031",
+    "outDir": "build\\N32G031",
+    "ram": 8192,
+    "rom": 65536,
+    "incDirs": [
+        "../../bsp/inc",
+        "../../firmware/CMSIS/core",
+        "../../firmware/CMSIS/device",
+        "../../firmware/n32g031_std_periph_driver/inc",
+        ".cmsis/include",
+        "RTE/_N32G031"
+    ],
+    "libDirs": [],
+    "defines": [
+        "N32G031",
+        "USE_STDPERIPH_DRIVER",
+        "USE_FULL_ASSERT"
+    ],
+    "sourceList": [
+        "../../bsp/src/adc.c",
+        "../../bsp/src/delay.c",
+        "../../bsp/src/gpio.c",
+        "../../bsp/src/key.c",
+        "../../bsp/src/main.c",
+        "../../bsp/src/timer.c",
+        "../../bsp/src/usart.c",
+        "../../firmware/CMSIS/device/startup/startup_n32g031.s",
+        "../../firmware/CMSIS/device/system_n32g031.c",
+        "../../firmware/n32g031_std_periph_driver/src/misc.c",
+        "../../firmware/n32g031_std_periph_driver/src/n32g031_adc.c",
+        "../../firmware/n32g031_std_periph_driver/src/n32g031_gpio.c",
+        "../../firmware/n32g031_std_periph_driver/src/n32g031_it.c",
+        "../../firmware/n32g031_std_periph_driver/src/n32g031_rcc.c",
+        "../../firmware/n32g031_std_periph_driver/src/n32g031_spi.c",
+        "../../firmware/n32g031_std_periph_driver/src/n32g031_sqrt.c",
+        "../../firmware/n32g031_std_periph_driver/src/n32g031_tim.c",
+        "../../firmware/n32g031_std_periph_driver/src/n32g031_usart.c"
+    ],
+    "alwaysInBuildSources": [],
+    "sourceParams": {},
+    "options": {
+        "version": 4,
+        "afterBuildTasks": [],
+        "asm-compiler": {
+            "defines": []
+        },
+        "beforeBuildTasks": [],
+        "c/cpp-compiler": {
+            "CXX_FLAGS": "--diag_suppress=1 --diag_suppress=1295",
+            "C_FLAGS": "--diag_suppress=1 --diag_suppress=1295",
+            "c99-mode": true,
+            "gnu-extensions": true,
+            "one-elf-section-per-function": true,
+            "optimization": "level-0",
+            "warnings": "all-warnings"
+        },
+        "global": {
+            "output-debug-info": "enable",
+            "use-microLIB": true,
+            "microcontroller-cpu": "cortex-m0",
+            "microcontroller-fpu": "cortex-m0",
+            "microcontroller-float": "cortex-m0",
+            "$arch-extensions": "",
+            "$clang-arch-extensions": "",
+            "$armlink-arch-extensions": ""
+        },
+        "linker": {
+            "$outputTaskExcludes": [
+                ".bin"
+            ],
+            "output-format": "elf",
+            "ro-base": "0x08000000",
+            "rw-base": "0x20000000",
+            "xo-base": "",
+            "link-scatter": [
+                "\"c:/Users/75506/OneDrive/Desktop/LLLT hair cap/LLLT/LLLT/LedBlink/MDK-ARM/build/N32G031/LLLT.sct\""
+            ]
+        }
+    },
+    "env": {
+        "KEIL_OUTPUT_DIR": ".",
+        "workspaceFolder": "c:\\Users\\75506\\OneDrive\\Desktop\\LLLT hair cap\\LLLT\\LLLT\\LedBlink\\MDK-ARM",
+        "workspaceFolderBasename": "MDK-ARM",
+        "OutDir": "c:\\Users\\75506\\OneDrive\\Desktop\\LLLT hair cap\\LLLT\\LLLT\\LedBlink\\MDK-ARM\\build\\N32G031",
+        "OutDirRoot": "build",
+        "OutDirBase": "build\\N32G031",
+        "ProjectName": "LLLT",
+        "ConfigName": "N32G031",
+        "ProjectRoot": "c:\\Users\\75506\\OneDrive\\Desktop\\LLLT hair cap\\LLLT\\LLLT\\LedBlink\\MDK-ARM",
+        "ExecutableName": "c:\\Users\\75506\\OneDrive\\Desktop\\LLLT hair cap\\LLLT\\LLLT\\LedBlink\\MDK-ARM\\build\\N32G031\\LLLT",
+        "ChipPackDir": ".pack/Nationstech/N32G031_DFP.1.0.6 (1)",
+        "ChipName": "",
+        "SYS_Platform": "win32",
+        "SYS_DirSep": "\\",
+        "SYS_DirSeparator": "\\",
+        "SYS_PathSep": ";",
+        "SYS_PathSeparator": ";",
+        "SYS_EOL": "\r\n",
+        "EIDE_BUILDER_DIR": "c:\\Users\\75506\\.vscode\\extensions\\cl.eide-3.27.2\\res\\tools\\win32\\unify_builder",
+        "EIDE_BINARIES_VER": "12.1.1",
+        "EIDE_MSYS": "C:\\Users\\75506\\.eide\\bin\\builder\\msys\\bin",
+        "EIDE_PY3_CMD": "C:\\Users\\75506\\.eide\\bin\\python36\\python3.exe",
+        "ToolchainRoot": "D:\\Keil_v5\\ARM\\ARMCC"
+    },
+    "sysPaths": []
+}

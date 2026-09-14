@@ -1,0 +1,40 @@
+#ifndef __GPIO_H_
+#define __GPIO_H_
+
+#include "n32g031.h"
+
+#define LED1_ON GPIO_SetBits(GPIOB, GPIO_PIN_3)
+#define LED1_OFF GPIO_ResetBits(GPIOB, GPIO_PIN_3)
+#define LED1_TOGGLE GPIO_TogglePin(GPIOB, GPIO_PIN_3)
+
+#define LED2_ON GPIO_SetBits(GPIOF, GPIO_PIN_0) 
+#define LED2_OFF GPIO_ResetBits(GPIOF, GPIO_PIN_0)
+#define LED2_TOGGLE GPIO_TogglePin(GPIOF, GPIO_PIN_0)
+
+#define LED3_ON GPIO_SetBits(GPIOB, GPIO_PIN_7)
+#define LED3_OFF GPIO_ResetBits(GPIOB, GPIO_PIN_7)
+#define LED3_TOGGLE GPIO_TogglePin(GPIOB, GPIO_PIN_7)
+
+#define LED4_ON GPIO_SetBits(GPIOB, GPIO_PIN_4)
+#define LED4_OFF GPIO_ResetBits(GPIOB, GPIO_PIN_4)
+#define LED4_TOGGLE GPIO_TogglePin(GPIOB, GPIO_PIN_4)
+
+#define MOTOR_EN GPIO_SetBits(GPIOB, GPIO_PIN_1)
+#define MOTOR_DIS GPIO_ResetBits(GPIOB, GPIO_PIN_1)
+
+#define SYS_POWER_ON GPIO_SetBits(GPIOF, GPIO_PIN_1)
+#define SYS_POWER_OFF GPIO_ResetBits(GPIOF, GPIO_PIN_1)
+#define SYS_POWER_TOGGLE GPIO_TogglePin(GPIOF, GPIO_PIN_1)
+
+#define VCSEL_PWR_ON GPIO_SetBits(GPIOA, GPIO_PIN_3)
+#define VCSEL_PWR_OFF GPIO_ResetBits(GPIOA, GPIO_PIN_3)
+#define VCSEL_PWR_TOGGLE GPIO_TogglePin(GPIOA, GPIO_PIN_3)
+#define BLUE_LED_ON GPIO_SetBits(GPIOB, GPIO_PIN_0)
+#define BLUE_LED_OFF GPIO_ResetBits(GPIOB, GPIO_PIN_0)
+
+#define BAT_VLT_ON  GPIO_SetBits(GPIOA, GPIO_PIN_6)
+#define BAT_VLT_OFF GPIO_ResetBits(GPIOA, GPIO_PIN_6)
+
+void GPIO_Init(void);
+
+#endif

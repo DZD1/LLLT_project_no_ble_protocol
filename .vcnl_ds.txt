@@ -1,0 +1,1322 @@
+            www.vishay.com                                                                           VCNL36828P
+
+                                                                                            Vishay Semiconductors
+
+         A Small Package Proximity Sensor With a VCSEL,
+Low Idle Current, I2C Interface, and Smart Dual Slave Address
+
+LINKS TO ADDITIONAL RESOURCES                                    FEATURES
+                                                                 · Package type: surface-mount
+ 3D 3D     Application                                           · Dimensions (L x W x H in mm): 2.0 x 1.0 x 0.5
+              Notes                                              · Integrated modules: vertical-cavity surface-
+3D Models
+                                                                   emitting laser (VCSEL), photodiode, and
+DESCRIPTION                                                        application-specific integrated circuit (ASIC)
+                                                                 · 1.8 V rated power supply and I2C bus
+The VCNL36828P is a fully integrated proximity sensor. It        · Low power consumption with 5 A idle current
+combines a vertical-cavity surface-emitting laser (VCSEL),       · A small package allows a design with a small
+photodiode, and application-specific integrated circuit            window size
+(ASIC) within a single package. The VCNL36828P has been          · Smart dual I2C slave address in one package
+developed for proximity detection applications that require      · Immunity to red glow (940 nm VCSEL)
+a dual slave address, low power consumption, small               · Programmable IVCSEL sink current
+package size, small window size, and short range operation.      · Intelligent cancellation to reduce cross talk phenomenon
+In addition, given the typical rated supply voltage of 1.8 V     · Smart persistence scheme to reduce measurement
+to reduce power consumption, the sensor is intended for            response time
+battery-powered applications.                                    · Interrupt functionality
+                                                                 · Material categorization: for definitions of compliance
+                                                                   please see www.vishay.com/doc?99912
+
+                                                                 APPLICATIONS
+                                                                 · Smartphones and true wireless stereo (TWS) earbuds
+                                                                 · VR / AR headsets and smart glasses
+                                                                 · Smartwatches
+                                                                 · Touchless button / dispensing
+
+PRODUCT SUMMARY
+
+PART                    OPERATING      OPERATING          I2C BUS         MAX. VCSEL          OUTPUT       ADC RESOLUTION
+NUMBER                     RANGE   VOLTAGE RANGE   VOLTAGE RANGE            DRIVING             CODE           PROXIMITY /
+                             (mm)                                          CURRENT
+                                              (V)             (V)              (mA)             12 bit /    AMBIENT LIGHT
+                                                                                              16 bit, I2C
+VCNL36828P              200        1.65 to 2.00               1.2 to 3.6         20                               16 bit / -
+
+  ORDERING INFORMATION             PACKAGING                              VOLUME (1)                    REMARKS
+                                   Tape and reel              MOQ: 5000 pcs, 5000 pcs/reel    2.0 mm x 1.0 mm x 0.5 mm
+  ORDERING CODE
+  VCNL36828P
+
+Note
+(1) MOQ: minimum order quantity
+
+Rev. 1.2, 16-Nov-2023                                         1                               Document Number: 80306
+
+                             For technical questions, contact: sensorstechsupport@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+                   www.vishay.com                                                       VCNL36828P
+PIN DEFINITION
+                                                                                 Vishay Semiconductors
+                                   INT 1
+                                                                    6 SDA
+                                                   ASIC
+                                                                    5 SCL
+                                                         PD
+                                   VDD 2
+
+                                                             VCSEL
+
+                                   GND 3                            4 VCSELA
+
+PIN DESCRIPTION                    PIN NAME                          TYPE                   DESCRIPTION
+
+           PIN NUMBER
+
+                1                  INT                              O (open drain)                                     Interrupt
+
+                2                  VDD                               I                      Supply voltage
+
+                3                  GND                               I                                                 Ground
+
+                4                  VCSELA                            I                      VCSEL anode
+
+                5                  SCL (1)                          I / O (open drain)      I2C serial clock
+
+                6                  SDA (1)                          I / O (open drain)      I2C serial data
+
+Note
+(1) Pin 5 (SCL) and pin 6 (SDA) can be swapped to change the slave address from 0x60 to 0x51; please refer to Table 1
+
+ABSOLUTE MAXIMUM RATINGS (Tamb = 25 °C, unless otherwise specified)
+
+PARAMETER                          TEST CONDITION            SYMBOL           MIN.          MAX.                                  UNIT
+                                                                                               2                                    V
+Supply voltage                                               VDD                    0                                              °C
+                                                                                             +85                                   °C
+Ambient temperature range                                    Tamb                   -40     +100
+
+Storage temperature range                                    Tstg                   -40
+
+Rev. 1.2, 16-Nov-2023                                    2                                  Document Number: 80306
+
+                           For technical questions, contact: sensorstechsupport@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+           www.vishay.com                                                                        VCNL36828P
+
+                                                                                        Vishay Semiconductors
+
+BASIC CHARACTERISTICS (Tamb = 25 °C, unless otherwise specified)
+
+PARAMETER                                  TEST CONDITION                            SYMBOL MIN. TYP. MAX.                             UNIT
+
+ASIC                                                                                                                                     V
+
+Supply voltage                     Shutdown state; light condition = dark;              VDD         1.65  1.80   2.00                   A
+                                                     VDD = 1.8 V
+Supply current (1)                                                                      IDD           -     1      -                     V
+                                            Idle state (2); VDD = 1.8 V                                                                  V
+I2C supply voltage                         Active state (2); VDD = 1.8 V             VPULL UP         -     5      -                     V
+I2C signal input, logic high                                                            VIH           -   330      -
+I2C signal input, logic low                          VDD = 1.8 V                        VIL         1.2   1.8    3.6                     V
+VCSEL                                                VDD = 1.8 V                                      1            -                     V
+                                                                                                      -     -    0.5                    mA
+                                                                                                            -                             °
+                                                                                                                                        nm
+Supply voltage of the VCSEL (3)                                                      VVCSEL         2.62  -      3.60                   nm
+Forward voltage                                                                        VF
+Forward current                                   IF = 9 mA                             IF          -     1.92   -                        °
+Angle of half intensity                                                                                                                 nm
+                                                                                                    7     -      20
+
+                                                                                                    -     ± 4.5  -
+
+Peak wavelength                                   IF = 9 mA                          p              -     940    -
+Spectral bandwidth                                IF = 9 mA
+PHOTODIODE                                                                                          -     3      -
+
+Angle of half sensitivity                         X-axis (4)                                        -     ± 60   -
+                                                  Y-axis (4)
+                                                                                                    -     ± 45   -
+
+Peak sensitivity wavelength                                                          p              -     850    -
+
+Notes
+
+(1) Actual current consumption depends on the register settings. Please refer to the application note on the current consumption
+(2) Excluding VCSEL driving current
+(3) VVCSEL should at least match the minimum required supply voltage for the VCSEL VVCSEL, min. Please refer to the VVCSEL, min table
+(4) Cross section of the package
+
+                                           INT 1                      6 SDA
+
+                                                  ASIC
+
+                                           VDD 2        PD
+                                                                              5 SCL
+
+                                                                   X-axis
+
+                                           GND 3               VCSEL  4 VCSELA
+                                                              Y-axis
+
+VVCSEL, MIN.               7 mA    9 mA    11 mA              12 mA          15 mA      17 mA             19 mA        20 mA
+                           2.62 V  2.74 V  2.86 V             2.91 V         3.08 V     3.19 V            3.3 V        3.36 V
+PS_CURRENT (IF)
+VVCSEL, min.                                                          3.6 V
+VVCSEL, max.
+
+Rev. 1.2, 16-Nov-2023                                         3                                           Document Number: 80306
+
+                                   For technical questions, contact: sensorstechsupport@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+                   www.vishay.com                                                                    VCNL36828P
+LASER CLASS
+                                                                                            Vishay Semiconductors
+
+                                                     LASER
+
+                                                        1
+
+Note
+· Product specification with IEC / EN 60825-1:2014 compliance and above label
+
+BLOCK DIAGRAM
+
+                                   INT 1  VCNL36828P                              6 SDA
+
+                                             Interrupt
+                                              control
+
+                                   VDD 2               PD     Command registers   5 SCL
+                                                                   I2C interface
+                                                      16 bit
+                                                      ADC
+
+                                          Logic and timing
+                                              controller
+
+                                          VCSEL   Oscillator
+                                          driver
+
+                                   GND 3                                          4 VCSELA
+
+                                                              VCSEL
+
+Rev. 1.2, 16-Nov-2023                             4                                         Document Number: 80306
+
+                       For technical questions, contact: sensorstechsupport@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+                           www.vishay.com                                                                                                     VCNL36828P
+
+                                                                                                                                     Vishay Semiconductors
+
+I2C BUS TIMING CHARACTERISTICS (Tamb = 25 °C, unless otherwise specified)
+
+PARAMETER                                                                   SYMBOL               STANDARD MODE                          FAST MODE                  UNIT
+
+                                                                                                 MIN.                  MAX.          MIN.        MAX.               kHz
+                                                                                                                                                                     s
+Clock frequency                                                             f(I2CCLK)               10                 100           10          400
+                                                                                                                                                                     s
+Bus free time between start and stop condition                              t(BUF)                  4.7                -             1.3           -
+                                                                                                                                                                     s
+Hold time after (repeated) start condition;                                                                                                                          s
+after this period, the first clock is generated t(HDSTA) 4.0 - 0.6 -                                                                                                 ns
+                                                                                                                                                                     ns
+Repeated start condition setup time                                         t(SUSTA)                4.7                -             0.6           -                 s
+                                                                                                                                                                     s
+Stop condition setup time                                                   t(SUSTO)                4.0                -             0.6           -                 ns
+                                                                                                                                                                     ns
+Data hold time                                                              t(HDDAT)                0                  3450          0           900
+
+Data setup time                                                             t(SUDAT)                250                -             100           -
+I2C clock (SCL) low period
+I2C clock (SCL) high period                                                 t(LOW)                  4.7                -             1.3           -
+
+                                                                            t(HIGH)                 4.0                -             0.6           -
+
+Clock / data fall time                                                      t(f)                    -                  300           -           300
+
+Clock / data rise time                                                      t(r)                    -                  1000          -           300
+
+Note
+· Data based on standard I2C protocol requirement, not tested in production
+
+                                t(LOW)       t(r)                                       t(f)
+
+I2C BUS                    VIH
+CLOCK
+ (SCL)                     VIL                                                          t(HIGH)              t(SUSTA)
+                                                   t(HDSTA)                                              t(SUDAT)
+                   t(BUF)                                       t(HDDAT)                                                                         t(SUSTO)
+
+I2C BUS                                        VIH                                                                                                              P
+ DATA
+ (SDA)                                  VIL
+
+                           {
+                                 {
+                                                                                   {
+                                                                                                                    {
+
+                 P              S                                                                                      S
+Stop condition                  Start condition
+
+                                                                     Start                                                   Stop
+
+                                                                                                t(LOSEXT)                    SDAACK
+                                                                                        SCLACK
+
+                                                                            t(LOWMEXT)                     t(LOWMEXT)                t(LOWMEXT)
+
+                                I2C BUS
+                                CLOCK
+                                 (SCL)
+
+                                I2C BUS
+                                 DATA
+                                 (SDA)
+
+                                                                            Fig. 1 - I2C Bus Timing Diagram
+
+Rev. 1.2, 16-Nov-2023                                                                            5                                               Document Number: 80306
+
+                                             For technical questions, contact: sensorstechsupport@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+                   www.vishay.com                                                                                                                                      VCNL36828P
+
+PARAMETER TIMING INFORMATION                                                                                                                                  Vishay Semiconductors
+
+              I2C BUS
+               CLOCK
+                (SCL)
+
+I2C BUS                SA7  SA6       SA5       SA4       SA3       SA2       SA1       W                   SA7       SA6       SA5       SA4       SA3       SA2       SA1  SA0
+ DATA
+ (SDA)
+
+         Start by                                                                           ACK by                                                                                    ACK by
+         master                                                                         VCNL36828P                                                                                VCNL36828P
+
+                                 I2C bus slave address byte                                                                          Command code
+
+I2C BUS                     SA7       SA6       SA5       SA4       SA3       SA2       SA1       SA0                 SA7       SA6       SA5  SA4       SA3       SA2       SA1       SA0
+CLOCK
+ (SCL)
+
+I2C BUS
+ DATA
+ (SDA)
+
+                                                                                                           ACK by                                                                               ACK by Stop by
+                                                                                                       VCNL36828P                                                                           VCNL36828P master
+
+                                                          Data byte low                                                                        Data byte high
+
+                                                Fig. 2 - I2C Bus Timing for Sending Word Command Format
+
+I2C BUS
+CLOCK
+ (SCL)
+
+I2C BUS                SA7 SA6 SA5 SA4 SA3 SA2 SA1 W                                                             SA7       SA6       SA5       SA4       SA3       SA2       SA1       SA0
+ DATA
+ (SDA)
+
+         Start by                                                                          ACK by                                                                                         ACK by
+         master                                                                         VCNL36828P                                                                                     VCNL36828P
+
+                                      I2C bus slave address byte                                                                               Command code
+
+I2C BUS
+CLOCK
+ (SCL)
+
+I2C BUS                     SA7 SA6 SA5 SA4 SA3 SA2 SA1 R                                                             SA7       SA6       SA5       SA4       SA3       SA2       SA1       SA0
+ DATA
+ (SDA)
+
+         Start by                                                                               ACK by                                                                                           ACK by
+         master                                                                              VCNL36828P                                                                                          master
+
+                                      I2C bus slave address byte                                                                                    Data byte low
+
+I2C BUS
+CLOCK
+ (SCL)
+
+I2C BUS                          SA7       SA6       SA5       SA4       SA3       SA2       SA1       SA0
+ DATA
+ (SDA)
+
+                                                                                                            NACK by                  Stop by
+                                                                                                             master                  master
+
+                                                          Data byte high
+
+                                                Fig. 3 - I2C Bus Timing for Receiving Word Command Format
+
+Rev. 1.2, 16-Nov-2023                                                                                  6                                                                               Document Number: 80306
+
+                                           For technical questions, contact: sensorstechsupport@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+                                                    www.vishay.com                                                                                                                                                   VCNL36828P
+
+                                                                                                                                                                                                            Vishay Semiconductors
+
+TYPICAL PERFORMANCE CHARACTERISTICS (Tamb = 25 °C, unless otherwise specified)
+
+                                                                  Axis Title                                                                                                                                Axis Title
+                                                                                VDD = 2 V
+                                          400                                               10000                                                                                             100                                              10000
+                                                    Active State            VDD = 1.8 V     1000
+2nd line                                                                                                                1st line                                                              90 IF = 9 mA
+   IDD - Supply Current (A)               380                                                                              2nd line                                                           80
+                                                                                                                                           2nd line
+                                          360                                                                                                  Ie, rel. - Relative Radiant Intensity (%)      70 1000                                                                   1st line
+                                                                                                                                                                                              60                                                                           2nd line
+                                          340
+
+                                                                                                                                                                                              50
+
+                                          320                                                                                                                                                 40
+                                                                                            VDD = 1.65 V 100                                                                                  30 100
+
+                                          300
+
+                                                                                                                                                                                              20
+
+                                          280                                                                                                                                                 10
+
+                                          260                                                    10                                                                                           0                                                10
+                                               -40                                          100
+                                                    -20 0 20 40 60 80                                                                                                                              920 925 930 935 940 945 950 955 960
+                                                       Tamb - Ambient Temperature (°C)
+                                                                                                                                                                                                             - Wavelength (nm)
+
+                                          Fig. 4 - Supply Current vs. Ambient Temperature                                  Fig. 7 - Relative Radiant Intensity vs. Wavelength of the VCSEL
+
+                                                                  Axis Title                                                                                                                                Axis0T°itle 10° 20°
+                                                                                                                                                                                                                                     X-axis
+                                          100                                               10000                                                                                                                                              10000
+                                                                                                                                                                                                                                               30°
+
+2nd line                                                                                                          1000  1st line                                                              1.0                                              1400°00                   - Angular Displacement
+   IF - Forward Current (mA)              10                                                                               2nd line                                                                                       Y-axis                                           2nd line
+                                                                                                                                           2nd line                                                                                            50°
+                                                                                                                  100                          Srel. - Relative Sensitivity                   0.9                                              1600°0
+
+                                                                                                                                                                                              0.8
+
+                                                                                                                                                                                              0.7                                              70°
+
+                                                                                                                                                                                                                                               80°
+
+                                          1         1.4           1.8  2.2         2.6          10                                                                                                                                                                  10
+                                            1.0                                             3.0                                                                                                    0.6 0.4 0.2 0
+
+                                                         VF - Forward Voltage (V)                                                                                                                                            1st line
+
+Fig. 5 - Forward Current vs. Forward Voltage of the VCSEL                                                                                                                                                 Fig. 8 - Relative Sensitivity vs.
+                                                                                                                                                                                                   Angular Displacement of the Photodiode
+
+                                                                  Axis0T°itle 10° 20°                                                                                                                       Axis Title
+
+                                                                                            10000                                                                                             110                                              10000
+                                                                                            30°
+                                                                                                                         - Angular Displacement                                               100
+                                                                                                                           2nd line
+2nd line                                                                                                                                   2nd line                                           90
+   Ie, rel. - Relative Radiant Intensity
+                                          1.0                                               1400°00                                            s(), rel. - Relative Spectral Sensitivity (%)  80
+                                          0.9                                                                                                                                                 70 1000
+                                          0.8                                               50°
+                                                                                            1600°0                                                                                            60                                                                        1st line
+                                          0.7                                               70°                                                                                                                                                                            2nd line
+                                                                                            80°                                                                                               50
+                                                 0.6 0.4 0.2 0                              10
+                                                                            1st line                                                                                                          40 100
+                                                                                                                                                                                              30
+                                                   Fig. 6 - Relative Radiant Intensity vs.
+                                                   Angular Displacement of the VCSEL                                                                                                          20
+
+                                                                                                                                                                                              10
+
+                                                                                                                                                                                              0                                                10
+
+                                                                                                                                                                                                   400 500 600 700 800 900 1000 1100
+
+                                                                                                                                                                                                             - Wavelength (nm)
+
+                                                                                                                                                                                                   Fig. 9 - Relative Spectral Sensitivity vs.
+                                                                                                                                                                                                        Wavelength of the Photodiode
+
+Rev. 1.2, 16-Nov-2023                                                                                                   7                                                                                                         Document Number: 80306
+
+                                                                              For technical questions, contact: sensorstechsupport@vishay.com
+
+                                          THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                                                                    ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+               www.vishay.com                                                                                  VCNL36828P
+
+                                                                                                      Vishay Semiconductors
+
+                               Axis Title                                                                   Axis Title
+
+100 000                                                10000           100 000                                                 10000
+ 10 000                                                                 10 000
+    1000                                                                   1000                                         7 mA
+                                                                                                                        12 mA
+                                                                                                                        20 mA
+2nd line                                   7 mA
+   Proximity Value (Counts)                12 mA       1000                                                                    1000
+                                           20 mA
+                                                                                                1st line
+100                                                                                                2nd line100
+
+                                                                                                                    2nd line
+                                                                                                                       Proximity Value (Counts)
+
+                                                                                                                                                                                                                    1st line
+                                                                                                                                                                                                                       2nd line
+               PS_IT = 1T,                                     100                    PS_IT = 8T,                                    100
+
+               PS_ITB = 50 s,                                  10                     PS_ITB = 50 s,                                 10
+                                                    100                                                                 100
+10 PS_GAIN = 2x,                                                       10 PS_GAIN = 2x,
+         PS_HD = 16 bit,                                                        PS_HD = 16 bit,
+
+               Media = Kodak                                                          Media = Kodak
+
+       Gray Card                                                              Gray Card
+1                                                                      1
+
+          0.1               1  10                                                0.1               1           10
+
+               Distance to Reflecting Card (mm)                                       Distance to Reflecting Card (mm)
+
+               Fig. 10 - Proximity Value vs. Distance                                 Fig. 11 - Proximity Value vs. Distance
+
+APPLICATION INFORMATION
+
+Slave Address Selection
+The VCNL36828P supports a smart dual slave address where the designer can change the slave address by swapping the SCL
+and SDA pins, as shown in Table 1.
+
+TABLE 1 - SLAVE ADDRESS TABLE
+
+PIN 5          PIN 6           7 BIT SLAVE ADDRESS                  8 BIT SLAVE ADDRESS (WRITE)             8 BIT SLAVE ADDRESS (READ)
+                                                                                       0xC0                                   0xC1
+SCL            SDA                         0x60                                        0xA2                                   0xA3
+
+SDA            SCL                         0x51
+
+A smart dual slave address provides the flexibility for the designer to connect two devices from two different slave addresses
+on the same I2C bus. Besides that, the two slave address options allow designers to select a different slave address if one is
+used by the other slave devices on the same I2C bus in a single device application.
+
+Application Circuit With a Single Device - Slave Address 0x60
+Fig. 12 shows an application circuit example with a single device. As described in Table 1, when pins 5 and 6 are connected to
+the clock and data signal from the microcontroller, as shown in Fig. 12, they will then be configured as an SCL pin and SDA pin,
+respectively. The 7 bit slave address option of 0x60 will be automatically selected.
+
+                                                                                                                                  VPULL UP
+
+                                                                       R1 R2 R3
+
+                  VDD                      VDD (2)                                                           Host
+                          C1                                                                          microcontroller
+                                              VCNL36828P
+               VVCSEL                      (slave address: 0x60)
+                          C2
+                                           VCSELA (4)
+
+                                                       SCL (5)                                     SCL
+                                                                                                   SDA
+                                           GND (3)     SDA (6)                                     INT (GPIO)
+                                                        INT (1)
+
+                               Fig. 12 - Application Circuit Example for a Single VCNL36828P - Slave Address 0x60
+
+Rev. 1.2, 16-Nov-2023                                               8                                                   Document Number: 80306
+
+                                           For technical questions, contact: sensorstechsupport@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+            www.vishay.com                                                             VCNL36828P
+
+                                                                              Vishay Semiconductors
+
+Application Circuit With a Single Device - Slave Address 0x51
+
+On the other hand, when pins 5 and 6 are connected to the data and clock signal from the microcontroller, as shown in Fig. 13,
+they will then be configured as an SDA pin and SCL pin, respectively. The 7 bit slave address option of 0x51 will be automatically
+selected.
+
+                                                                 VPULL UP
+
+                                                                 R1 R2 R3
+
+                         V             VDD (2)                                       Host
+                                                                              Microcontroller
+                            DD            VCNL36828P
+
+                                C1     (slave address: 0x51)
+
+                       V               VCSELA (4)
+
+                        VCSEL
+
+                                C2
+
+                                                   SCL (5)                 SCL
+                                                                           SDA
+                                       GND (3)     SDA (6)                 INT (GPIO)
+                                                    INT (1)
+
+                                      Fig. 13 - Application Circuit Example for a Single VCNL36828P - Slave Address 0x51
+
+Table 2 shows the required values and the explanation for the individual application circuit parameters.
+
+TABLE 2 - APPLICATION CIRCUIT PARAMETERS
+
+   CIRCUIT             VALUE                                     DESCRIPTION
+PARAMETER
+
+VDD 1.65 V to 2.00 V A stable power supply such as a low dropout regulator or a switching regulator is required; the power supply isolation can be further improved with a decoupling capacitor C1
+
+VVCSEL      2.62 V to 3.60 V           A stable power supply such as a low dropout regulator or a switching regulator that can supply an
+
+                                       adequate amount of power (max. VCSEL pulse driving current of 20 mA) is required; the power
+
+                                       supply isolation can be further improved with a decoupling capacitor C2; the minimum voltage
+                                       depends on the selected driving current of the VCSEL; please refer to Table VVCSEL, min. for
+                                       reference
+
+VPULL UP               1.2 V to 3.6 V  A stable power supply such as a low dropout regulator or a switching regulator is required;
+                                       a voltage level shifter is required if the I2C bus voltage from the microcontroller is higher than 3.6 V
+
+C1 - C4     100 nF to 1 F Decoupling capacitors are recommended to reduce the noise in the supply voltage
+
+R1 - R2     2.2 k to 4.7 k             Pull-up resistors within the range of 2.2 k to 4.7 k are recommended; any increase in bus
+                                       capacitance or resistance will increase the logic high transition time
+
+R3          4.7 k to 22 k Pull-up resistor within the range of 4.7 k to 22 k is recommended
+
+Rev. 1.2, 16-Nov-2023                                         9                                         Document Number: 80306
+
+                                       For technical questions, contact: sensorstechsupport@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+                  www.vishay.com                                                                                 VCNL36828P
+
+                                                                                                        Vishay Semiconductors
+
+Application Circuit With a Smart Dual Slave Address
+
+Fig. 14 shows an application circuit example with a smart dual slave address. By swapping the SCL and SDA pins of the second
+device, as shown in Table 1, the designer can change the 7 bit slave address of the VCNL36828P. This provides the flexibility
+for the designer to connect two devices from two different slave addresses on the same I2C bus.
+
+                         VDD              VDD (2)                                       VPULL UP
+                                 C1                                               R1 R2 R3
+                                             VCNL36828P
+                     VVCSEL                        Device 1
+                                 C2
+                                          (slave address: 0x60)
+
+                                          VCSELA (4)
+
+                                                      SCL (5)
+
+                                          GND (3)     SDA (6)                                                  Host
+                                                       INT (1)                                          microcontroller
+
+                        VDD               VDD (2)                                                       SCL
+                                 C3                                                                     SDA
+                                             VCNL36828P                                                 INT (GPIO)
+                     VVCSEL                        Device 2
+                                 C4
+                                          (slave address: 0x51)
+
+                                          VCSELA (4)
+
+                                          GND (3)     SCL (5)
+                                                      SDA (6)
+                                                       INT (1)
+
+                          Fig. 14 - Application Circuit Example for Two VCNL36828Ps - Smart Dual Slave Address
+
+I2C Write and Read Protocol
+
+The communication with the VCNL36828P can be performed via I2C. The I2C write and read protocol when communicating with
+the proximity sensor is shown in Fig. 15.
+
+Send byte o write command to VCNL36828P
+
+1  7                   1  1          8             1             8       1        8               1  1
+
+S  Slave address       Wr A          Command code  A     Data byte low   A     Data byte high     AP
+
+Receive byte o read data from VCNL36828P
+
+1  7                   1  1          8             1  1               7     1  1                  8     1           8      1  1
+
+S  Slave address       Wr A          Command code  AS    Slave address      Rd A     Data byte low      A  Data byte high  NP
+
+S = start condition          Host action
+P = stop condition           VCNL36828P response
+A = acknowledge
+N = not acknowledge
+
+                                                      Fig. 15 - I2C Write and Read Protocol
+
+It is imperative that only the restart condition for the I2C read is implemented instead of the stop and restart condition.
+
+Rev. 1.2, 16-Nov-2023                                                   10                                             Document Number: 80306
+
+                                     For technical questions, contact: sensorstechsupport@vishay.com
+
+   THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                             ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+                   www.vishay.com                                                           VCNL36828P
+Function Description
+                                                                                   Vishay Semiconductors
+
+TABLE 3 - COMMAND CODE AND REGISTER DESCRIPTION
+
+COMMAND DATA BYTE         REGISTER         DEFAULT                       FUNCTION                               ACCESS
+                             NAME           VALUE
+CODE  LOW / HIGH                                                                                                   Write
+                                                                                                                and read
+                       L  PS_CONF1_L       0x00     Internal calibration setting
+                                                                                                                Read only
+                                                    Switch the sensor on / off
+
+0x00                                                High dynamic range setting
+
+                       H  PS_CONF1_H       0x00     Persistence setting
+
+                                                    Interrupt setting
+
+                                                    Measurement period setting
+
+                       L  PS_CONF2_L       0x00     Signal strength setting (Integration time and multi-pulse)
+
+0x01                                                High gain setting
+                                                    Sensitivity of the ADC setting
+
+                       H  PS_CONF2_H       0x00     Internal crosstalk cancellation setting
+
+                                                    VCSEL driving current setting
+
+                       L  PS_CONF3_L       0x00     Sensor mode setting
+
+0x02                                                Active force mode trigger setting
+
+                       H  PS_CONF3_H       0x00     Short measurement period setting
+
+                                                    Sunlight cancellation setting
+
+0x03                   L  PS_THDL_L        0x00     Low threshold interrupt value setting (low byte)
+
+                       H  PS_THDL_H        0x00     Low threshold interrupt value setting (high byte)
+
+0x04                   L  PS_THDH_L        0x00     High threshold interrupt value setting (low byte)
+
+                       H  PS_THDH_H        0x00     High threshold interrupt value setting (high byte)
+
+0x05                   L  PS_CANC_L        0x00     Offset count cancellation value setting (low byte)
+
+                       H  PS_CANC_H        0x00     Offset count cancellation value setting (high byte)
+
+0xF8                   L  PS_DATA_L        0x00     Proximity output data (low byte)
+
+                       H  PS_DATA_H        0x00     Proximity output data (high byte)
+
+0xF9                   L  Reserved         0x00 - 0xFF Reserved
+
+                       H  INT_FLAG         0x00     Interrupt flag
+
+                                                    Device ID
+
+0xFA                   L  VCNL36828P_ID_L 0x28 / 0x29 Slave address: 0x60; ID = 0x28
+
+                                                    Slave address: 0x51; ID = 0x29
+
+                       H  VCNL36828P_ID_H  0x01     Device ID
+
+Notes
+
+· All of the reserved registers are used for internal test. These values must be kept constant
+(1) The default ID depends on the connection of the SCL and SDA pins on the VCNL36828P with the SCL and SDA pins on the host MCU. If
+
+    pins 5 and 6 on the VCNL36828P are connected to the SCL and SDA pins on the host, the default value will be 0x28. On the other hand, if
+    pins 5 and 6 on the VCNL36828P are connected to the SDA and SCL pins on the host, the default value will be 0x29. Please refer to Fig. 13
+
+Rev. 1.2, 16-Nov-2023                               11                                       Document Number: 80306
+
+                          For technical questions, contact: sensorstechsupport@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+                   www.vishay.com                                                                  VCNL36828P
+Command Register Format
+                                                                                          Vishay Semiconductors
+
+TABLE 4 - REGISTER NAME: PS_CONF1_L
+
+Bit 7             Bit 6            Bit 5             Bit 4               Bit 3        Bit 2       Bit 1           Bit 0
+
+PS_CAL                                               Reserved             Bit        Value                        PS_ON
+                                                                           7       0x0 (0b0)
+COMMAND CODE                                                             6 : 1     0x1 (0b1)      0x00
+                                                                           0
+        Bit Name                           Function                                   0x00        Description
+                                                                                  (0b000000)
+        PS_CAL            Enable / disable the internal calibration                0x0 (0b0)      Disable (default)
+                                                                                   0x1 (0b1)
+                                                                                                         Enable
+
+        Reserved                           Reserved                                               Should be kept default
+
+        PS_ON                      Switch the sensor on / off                                     Turn off the sensor
+                                                                                                  (shutdown) (default)
+
+                                                                                                  Turn on the sensor
+
+TABLE 5 - REGISTER NAME: PS_CONF1_H
+
+Bit 15            Bit 14           Bit 13            Bit 12              Bit 11           Bit 10  Bit 9           Bit 8
+
+Reserved        PS_HD     PS_SP_INT        PS_SMART_PERS                         PS_PERS                 PS_INT
+
+COMMAND CODE                                                                                      0x00
+
+        Bit Name                           Function                        Bit       Value        Description
+                                                                           15     0x0 (0b0)
+        Reserved                           Reserved                        14     0x0 (0b0)       Should be kept default
+                                                                           13     0x1 (0b1)
+        PS_HD             Enable / disable high dynamic range (12 bit /    12     0x0 (0b0)       Disable (12 bit) (default)
+                                      16 bit) ADC output setting                  0x1 (0b1)
+                                                                         11 : 10  0x0 (0b0)       Enable (16 bit)
+                                                                                  0x1 (0b1)
+PS_SP_INT                 Enable / disable the sunlight protection        9 : 8   0x0 (0b00)      Disable (default)
+                                     mode interrupt setting                       0x1 (0b01)
+                                                                                  0x2 (0b10)             Enable
+                                                                                  0x3 (0b11)
+PS_SMART_PERS                Enable / disable the smart persistence               0x0 (0b00)      Disable (default)
+                          setting when the interrupt event is triggered           0x1 (0b01)
+                                                                                                         Enable
+                                                                                  0x3 (0b11)
+                                                                                                  1 time (default)
+
+        PS_PERS           Set the amount of consecutive threshold                                        2 times
+                            crossing events necessary to trigger
+                                               interrupt                                                 3 times
+
+                                                                                                         4 times
+
+                                                                                                  Interrupt disable (default)
+
+        PS_INT                     Set the interrupt mode setting                                 Logic high / low mode
+
+                                                                                                  Trigger by each high / low
+                                                                                                         threshold event
+
+Rev. 1.2, 16-Nov-2023                                          12                                 Document Number: 80306
+
+                          For technical questions, contact: sensorstechsupport@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+        www.vishay.com                                                                              VCNL36828P
+
+                                                                                           Vishay Semiconductors
+
+TABLE 6 - REGISTER NAME: PS_CONF2_L
+
+Bit 7                  Bit 6   Bit 5              Bit 4              Bit 3          Bit 2           Bit 1                 Bit 0
+
+        PS_PERIOD                       PS_IT                               PS_MPS                  PS_ITB            PS_GAIN
+
+COMMAND CODE                                                                                        0x01
+
+        Bit Name                        Function                     Bit            Value                  Description
+
+                                                                               0x0 (0b00)           50 ms, which translates into
+                                                                                                    20 measurement/s (default)
+
+        PS_PERIOD              Set the measurement period                               0x1 (0b01)  100 ms, which translates into
+                                                                     7 : 6                                10 measurements/s
+
+                                                                                        0x2 (0b10)  200 ms, which translates into
+                                                                                                           5 measurements/s
+
+                                                                                        0x3 (0b11)  400 ms, which translates into
+                                                                                                         2.5 measurements/s
+                                                                                        0x0 (0b00)
+                                                                                        0x1 (0b01)         1 T (default)
+                                                                     5 : 4
+        PS_IT                  Set the integration time for one                         0x2 (0b10)          2 T
+                               measurement; the pulse length                            0x3 (0b11)
+                                                                                        0x0 (0b00)          4 T
+                                "T" is determined by PS_ITB                             0x1 (0b01)
+                                                                     3 : 2
+                                                                                        0x2 (0b10)          8 T
+                                                                                        0x3 (0b11)
+                                                                                         0x0 (0b0)  1 pulse (default)
+                                                                       1
+        PS_MPS                 Set the number of infrared signal                         0x1 (0b1)          2 pulses
+                                     pulses per measurement                              0x0 (0b0)
+         PS_ITB                                                        0                                    4 pulses
+        PS_GAIN                Set the pulse length "T" for PS_IT                        0x1 (0b1)
+                                     Set the gain of the ADC                                                8 pulses
+
+                                                                                                    T = 25 s (default)
+
+                                                                                                            T = 50 s
+
+                                                                                                    x 1 gain (default)
+
+                                                                                                            x 2 gain
+
+TABLE 7 - REGISTER NAME: PS_CONF2_H
+
+Bit 15                 Bit 14  Bit 13             Bit 12               Bit 11          Bit 10       Bit 9                 Bit 8
+                                                                     Reserved
+        Reserved               PS_SENS  PS_OFFSET                                      Value        PS_CURRENT
+                                                                         Bit        0x0 (0b00)
+COMMAND CODE                                                          15 : 14        0x0 (0b0)      0x01
+                                                                                     0x1 (0b1)
+        Bit Name                        Function                         13          0x0 (0b0)             Description
+                                                                         12          0x1 (0b1)
+        Reserved                        Reserved                         11          0x0 (0b0)      Should be kept default
+                                                                                    0x0 (0b000)
+        PS_SENS                Set the sensitivity of the ADC          10 : 8       0x1 (0b001)     Normal sensitivity (default)
+                                                                                    0x2 (0b010)
+                                                                                    0x3 (0b011)     High sensitivity
+                                                                                    0x4 (0b100)
+PS_OFFSET                            Enable / disable the                           0x5 (0b101)     Disable (default)
+  Reserved                     internal crosstalk cancellation                      0x6 (0b110)
+                                                                                    0x7 (0b111)             Enable
+                                            Reserved
+                                                                                                    Should be kept default
+
+                                                                                                           7 mA (default)
+
+                                                                                                            9 mA
+
+                                                                                                            11 mA
+
+PS_CURRENT                     Set the VCSEL driving current                                                12 mA
+
+                                                                                                            15 mA
+
+                                                                                                            17 mA
+
+                                                                                                            19 mA
+
+                                                                                                            20 mA
+
+Rev. 1.2, 16-Nov-2023                                            13                                 Document Number: 80306
+
+                               For technical questions, contact: sensorstechsupport@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+        www.vishay.com                                                                     VCNL36828P
+
+                                                                                  Vishay Semiconductors
+
+TABLE 8 - MAXIMUM BIT RESOLUTION AND DIGITAL OUTPUT COUNTS
+
+        BIT NAME                              PS_IT = 1T              PS_IT = 2T  PS_IT = 4T              PS_IT = 8T
+
+PS_HD = 0 (12 bit)     PS_GAIN = 0 (x1 gain)                                 12 bit / 4095 counts
+                       PS_GAIN = 1 (x2 gain)
+
+PS_HD = 1 (16 bit)     PS_GAIN = 0 (x1 gain) 12 bit / 4095 counts 13 bit / 8191 counts 14 bit / 16 383 counts 15 bit / 32 767 counts
+                       PS_GAIN = 1 (x2 gain) 13 bit / 8191 counts 14 bit / 16 383 counts 15 bit / 32 767 counts 16 bit / 65 535 counts
+
+TABLE 9 - REGISTER NAME: PS_CONF3_L
+
+Bit 7                  Bit 6   Bit 5                    Bit 4         Bit 3       Bit 2            Bit 1                 Bit 0
+
+        Reserved               PS_TRIG        PS_MODE                                    Reserved
+
+COMMAND CODE                                                                                       0x02
+
+        Bit Name                              Function                Bit         Value                   Description
+
+        Reserved                              Reserved                7 : 6       0x0 (0b00)       Should be kept default
+
+                               Set the active force mode trigger;                 0x0 (0b0)               Off (default)
+
+        PS_TRIG                This bit will be reset to 0 after      5
+
+                               the measurement cycle                                0x1 (0b1)                Trigger
+
+        PS_MODE                Set the measurement mode 4                           0x0 (0b0)        Auto mode (default)
+        Reserved                        of the sensor                               0x1 (0b1)         Active force mode
+                                                                                  0x0 (0b0000)     Should be kept default
+                                              Reserved                3 : 0
+
+TABLE 10 - REGISTER NAME: PS_CONF3_H
+
+Bit 15                 Bit 14  Bit 13                   Bit 12            Bit 11     Bit 10        Bit 9                 Bit 8
+                                                                      PS_SC
+PS_SPERIOD                     Reserved                                              Value                Reserved
+                                                                            Bit   0x0 (0b00)
+COMMAND CODE                                                                                       0x02
+                                                                                  0x1 (0b01)
+        Bit Name                              Function                            0x2 (0b10)              Description
+                                                                                  0x3 (0b11)
+                                                                                   0x0 (0b0)         Disable the short period
+                                                                                  0x0 (0b000)      (follow PS_PERIOD setting)
+                                                                                  0x7 (0b111)
+                                                                                  0x0 (0b00)                    (default)
+
+PS_SPERIOD                     Set the short measurement period       15 : 14                      6.25 ms, which translates into
+                                                                                                        160 measurements/s
+        Reserved                         Reserved                       13
+         PS_SC                                                        12 : 10                      12.5 ms, which translates into
+                                    Enable / disable                                                     80 measurements/s
+        Reserved               the sunlight cancellation               9 : 8
+                                                                                                    25 ms, which translates into
+                                         Reserved                                                        40 measurements/s
+
+                                                                                                       Should be kept default
+                                                                                                            Disable (default)
+                                                                                                                  Enable
+
+                                                                                                       Should be kept default
+
+Rev. 1.2, 16-Nov-2023                                             14                               Document Number: 80306
+
+                               For technical questions, contact: sensorstechsupport@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+        www.vishay.com                                                                   VCNL36828P
+
+                                                                                Vishay Semiconductors
+
+TABLE 11 - REGISTER NAME: PS_THDL
+
+Bit 7                  Bit 6   Bit 5               Bit 4               Bit 3        Bit 2       Bit 1             Bit 0
+                                                                       Bit 11      Bit 10
+                                                   PS_THDL_L
+                                                                        Bit        Value
+Bit 15                 Bit 14  Bit 13              Bit 12               7 : 0   0 to 65 535     Bit 9             Bit 8
+                                                                       15 : 8
+                                                   PS_THDL_H
+
+COMMAND CODE                                                                                    0x03
+                                                                                                       Description
+        Bit Name                         Function                                                        Low byte
+                                                                                                         High byte
+       PS_THDL_L               Set the low threshold interrupt value
+       PS_THDL_H
+
+TABLE 12 - REGISTER NAME: PS_THDH
+
+Bit 7                  Bit 6   Bit 5               Bit 4               Bit 3        Bit 2       Bit 1             Bit 0
+                                                                       Bit 11      Bit 10
+                                                   PS_THDH_L
+                                                                        Bit        Value
+Bit 15                 Bit 14  Bit 13              Bit 12               7 : 0   0 to 65 535     Bit 9             Bit 8
+                                                                       15 : 8
+                                                   PS_THDH_H
+
+COMMAND CODE                                                                                    0x04
+                                                                                                       Description
+        Bit Name                         Function                                                        Low byte
+                                                                                                         High byte
+PS_THDH_L                      Set the high threshold interrupt value
+PS_THDH_H
+
+TABLE 13 - REGISTER NAME: PS_CANC
+
+Bit 7                  Bit 6   Bit 5               Bit 4                Bit 3   Bit 2           Bit 1             Bit 0
+
+                                                   PS_CANC_L           Bit 11
+
+Bit 15                 Bit 14  Bit 13              Bit 12                Bit    Bit 10          Bit 9             Bit 8
+                                                                        7 : 0
+                               Reserved                                11 : 8   PS_CANC_H
+                                                                       15 : 12
+COMMAND CODE                                                                                    0x05
+
+        Bit Name                         Function                               Value                 Description
+
+PS_CANC_L                                       Set the offset                  0 to 4095              Low byte
+PS_CANC_H                                count cancellation value                                      High byte
+
+        Reserved                         Reserved                               0x0 (0b0000)    Should be kept default
+
+TABLE 14 - REGISTER NAME: PS_DATA
+
+Bit 7                  Bit 6   Bit 5               Bit 4               Bit 3        Bit 2       Bit 1             Bit 0
+                                                                       Bit 11      Bit 10
+                                                   PS_DATA_L
+                                                                        Bit        Value
+Bit 15                 Bit 14  Bit 13              Bit 12               7 : 0   0 to 65 535     Bit 9             Bit 8
+                                                                       15 : 8
+                                                   PS_DATA_H
+
+COMMAND CODE                                                                                    0xF8
+                                                                                                       Description
+        Bit Name                         Function                                                        Low byte
+                                                                                                         High byte
+       PS_DATA_L               Read the proximity output data
+       PS_DATA_H
+
+Rev. 1.2, 16-Nov-2023                                              15                           Document Number: 80306
+
+                               For technical questions, contact: sensorstechsupport@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+        www.vishay.com                                                                         VCNL36828P
+
+                                                                                      Vishay Semiconductors
+
+TABLE 15 - REGISTER NAME: INT_FLAG
+
+Bit 7                  Bit 6   Bit 5             Bit 4             Bit 3              Bit 2     Bit 1               Bit 0
+
+                                                         Reserved
+
+Bit 15                 Bit 14  Bit 13            Bit 12            Bit 11             Bit 10    Bit 9               Bit 8
+
+        Reserved                       PS_SPFLAG                            Reserved            PS_IF_CLOSE PS_IF_AWAY
+
+COMMAND CODE                                                                                    0xF9
+
+        Bit Name                       Function                      Bit         Value                 Description
+                                                                    7 : 0
+        Reserved                       Reserved                    15 : 13   0x00 - 0xFF        Should be kept default
+                                                                            (0b00000000 -
+        Reserved                       Reserved                              0b11111111)        Should be kept default
+
+                                                                             0x0 (0b000)
+
+                                                                            0x0 (0b0)           No sunlight protection mode
+                                                                                                      interrupt event flag
+                               Read the sunlight protection mode
+PS_SPFLAG                                interrupt event flag      12
+
+                                                                            0x1 (0b1)           Sunlight protection mode
+                                                                                                    interrupt event flag
+
+        Reserved                       Reserved                    11 : 10  0x0 (0b00)          Should be kept default
+
+                                                                            0x0 (0b0)           No high threshold crossing
+                                                                                                     interrupt event flag
+                               Read the high threshold crossing
+PS_IF_CLOSE                             interrupt event flag       9
+
+                                                                            0x1 (0b1)           High threshold crossing interrupt
+                                                                                                               event flag
+
+PS_IF_AWAY                     Read the low threshold crossing 8            0x0 (0b0)               No low threshold crossing
+                                        interrupt event flag                0x1 (0b1)                    interrupt event flag
+
+                                                                                                Low threshold crossing interrupt
+                                                                                                               event flag
+
+TABLE 16 - REGISTER NAME: VCNL36828P_ID
+
+Bit 7                  Bit 6   Bit 5             Bit 4             Bit 3          Bit 2         Bit 1               Bit 0
+
+                                                 VCNL36828P_ID_L                 Bit 10
+
+Bit 15                 Bit 14  Bit 13            Bit 12            Bit 11        Value          Bit 9               Bit 8
+                                                                                 0x28
+                                                 VCNL36828P_ID_H            (0b00101000)
+                                                                                 0x29
+COMMAND CODE                                                                (0b00101001)        0xFA
+                                                                                 0x01                 Description
+        Bit Name                       Function                    Bit      (0b00000001)
+                                                                                                      Device with a
+VCNL36828P_ID_L                Read the device ID                  7 : 0                        slave address of 0x60
+VCNL36828P_ID_H                                                    15 : 8
+                                                                                                      Device with a
+                                                                                                slave address of 0x51
+
+                                                                                                Should be kept default
+
+Rev. 1.2, 16-Nov-2023                                    16                                     Document Number: 80306
+
+                               For technical questions, contact: sensorstechsupport@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+                   www.vishay.com                                                                                                   VCNL36828P
+
+PACKAGE INFORMATION in millimeters                                                                                         Vishay Semiconductors
+
+                                                     1.00 ± 0.1                  0.50 ± 0.1                  0.075 ± 0.05
+
+                                                                                                                              0.600 ± 0.05
+
+                       1  6                                                                                                6                1
+
+2.00 ± 0.1                                                                                                   0.400 ± 0.05                      0.725 ± 0.05 0.725 ± 0.05
+       0.852 ± 0.1
+                                                            0.643 ± 0.1
+
+                       3  4                                                                                                4                3
+
+                                                                                                             0.250 ± 0.05                      0.075 ± 0.05
+
+                                                                         1  INT      4 VCSELA
+
+                                                                         2  VDD      5 SCL
+
+                                                                         3  GND      6  SDA
+
+                          Fig. 16 - VCNL36828P Package Dimensions
+
+RECOMMENDED LAYOUT PAD INFORMATION in millimeters
+
+                                                                                               0.350
+
+                                                                                                      0.725
+
+                             0.500
+
+                                                                                                      0.725
+
+                                                         0.600
+                          Fig. 17 - VCNL36828P PCB Layout Footprint
+
+Rev. 1.2, 16-Nov-2023                                                            17                                           Document Number: 80306
+
+                          For technical questions, contact: sensorstechsupport@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+www.vishay.com                                                                                      VCNL36828P
+
+                                                                                           Vishay Semiconductors
+
+RECOMMENDED INFRARED REFLOW
+Soldering conditions which are based on J-STD-020C
+
+IR REFLOW PROFILE CONDITION                 CONDITIONS                                TEMPERATURE                                                          TIME
+                                                                         260 °C + 5 °C / - 5 °C (max.: 265 °C)                                             10 s
+PARAMETER                                                                                                                                             60 s to 180 s
+Peak temperature                                                                      150 °C to 200 °C                                                10 s to 30 s
+Preheat temperature range and timing                                                             -                                                    60 s to 150 s
+Timing within 5 °C to peak temperature                                                                                                                8 min (max.)
+Timing maintained above temperature / time                                                   217 °C
+Timing from 25 °C to peak temperature                                                            -                                                            -
+Ramp-up rate                                                                                                                                                  -
+Ramp-down rate                                                                           3 °C/s (max.)
+                                                                                        6 °C/s (max.)
+
+Recommend Normal Solder Reflow is 235 °C to 265 °C
+
+Temperature (°C)                                                                                                              Max. Temperature
+                                                                                                                         260 °C + 5 °C / - 5 °C/10 s
+
+                  260
+
+                                                                         Ramp-Up Rate                    Ramp-Down Rate
+
+                  217                                                    3 °C/s (max.)                   6 °C/s (max.)
+
+                  200                                                                   Soldering Zone
+                                                                                          60 s to 150 s
+                           Ramp-Up Rate
+                  150 3 °C/s (max.)
+
+                                             Pre-Heating Time
+                                            t2 - t1 = 60 s to 180 s
+
+                       t1                                                t2                              Time (s)
+
+                                         Fig. 18 - VCNL36828P Solder Reflow Profile Chart
+
+Rev. 1.2, 16-Nov-2023                                                18                                                                               Document Number: 80306
+
+                       For technical questions, contact: sensorstechsupport@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+                   www.vishay.com                       VCNL36828P
+TAPE PACKAGING INFORMATION in millimeters
+                                               Vishay Semiconductors
+
+Rev. 1.2, 16-Nov-2023                      19                                           Document Number: 80306
+
+                       For technical questions, contact: sensorstechsupport@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+www.vishay.com                                              Legal Disclaimer Notice
+
+                                                                                          Vishay
+
+                       Disclaimer
+
+ALL PRODUCT, PRODUCT SPECIFICATIONS AND DATA ARE SUBJECT TO CHANGE WITHOUT NOTICE TO IMPROVE
+RELIABILITY, FUNCTION OR DESIGN OR OTHERWISE.
+
+Vishay Intertechnology, Inc., its affiliates, agents, and employees, and all persons acting on its or their behalf (collectively,
+"Vishay"), disclaim any and all liability for any errors, inaccuracies or incompleteness contained in any datasheet or in any other
+disclosure relating to any product.
+
+Vishay makes no warranty, representation or guarantee regarding the suitability of the products for any particular purpose or
+the continuing production of any product. To the maximum extent permitted by applicable law, Vishay disclaims (i) any and all
+liability arising out of the application or use of any product, (ii) any and all liability, including without limitation special,
+consequential or incidental damages, and (iii) any and all implied warranties, including warranties of fitness for particular
+purpose, non-infringement and merchantability.
+
+Statements regarding the suitability of products for certain types of applications are based on Vishay's knowledge of typical
+requirements that are often placed on Vishay products in generic applications. Such statements are not binding statements
+about the suitability of products for a particular application. It is the customer's responsibility to validate that a particular product
+with the properties described in the product specification is suitable for use in a particular application. Parameters provided in
+datasheets and / or specifications may vary in different applications and performance may vary over time. All operating
+parameters, including typical parameters, must be validated for each customer application by the customer's technical experts.
+Product specifications do not expand or otherwise modify Vishay's terms and conditions of purchase, including but not limited
+to the warranty expressed therein.
+
+Hyperlinks included in this datasheet may direct users to third-party websites. These links are provided as a convenience and
+for informational purposes only. Inclusion of these hyperlinks does not constitute an endorsement or an approval by Vishay of
+any of the products, services or opinions of the corporation, organization or individual associated with the third-party website.
+Vishay disclaims any and all liability and bears no responsibility for the accuracy, legality or content of the third-party website
+or for that of subsequent links.
+
+Vishay products are not designed for use in life-saving or life-sustaining applications or any application in which the failure of
+the Vishay product could result in personal injury or death unless specifically qualified in writing by Vishay. Customers using or
+selling Vishay products not expressly indicated for use in such applications do so at their own risk. Please contact authorized
+Vishay personnel to obtain written terms and conditions regarding products designed for such applications.
+
+No license, express or implied, by estoppel or otherwise, to any intellectual property rights is granted by this document or by
+any conduct of Vishay. Product names and markings noted herein may be trademarks of their respective owners.
+
+© 2024 VISHAY INTERTECHNOLOGY, INC. ALL RIGHTS RESERVED
+
+Revision: 01-Jul-2024                                    1  Document Number: 91000
+
+                       For technical questions, contact:
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+

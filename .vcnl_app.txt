@@ -1,0 +1,2467 @@
+                       VISHAY SEMICONDUCTORS
+
+                       www.vishay.com
+
+Optical Sensors                                                                      Application Note
+
+Designing the VCNL36828P Into an Application
+
+By Hakimi Wan Yusof
+
+ABSTRACT
+This application note provides an introduction to the functionality of the VCNL36828P sensor, application circuits, and
+mechanical design considerations.
+
+CONTACT
+sensorstechsupport@vishay.com
+Please visit our website at www.vishay.com/optoelectronics/ for more information.
+
+Revision: 06-Mar-2025  1                                                             Document Number: 80359              APPLICATION NOTE
+
+                       For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+          www.vishay.com                    Application Note
+
+                                         Vishay Semiconductors
+
+                 Designing the VCNL36828P Into an Application
+
+CONTENTS
+
+1. Introduction                                                                                       3
+
+2. Pin Description and Block Diagram                                                                  4
+
+2.1. Pin Description ................................................................................................................................................................. 4
+
+2.2. Block Diagram.................................................................................................................................................................. 5
+
+3. Application Circuit                                                                                6
+
+3.1. Slave Address Selection .................................................................................................................................................. 6
+
+3.2. Application Circuit With a Single Device.......................................................................................................................... 6
+
+3.3. Application Circuit With a Smart Dual Slave Address ..................................................................................................... 9
+
+4. Register Description                                                                               10
+
+4.1. Basic Initialization .......................................................................................................................................................... 11
+
+4.2. Emitter Settings (VCSEL)................................................................................................................................................ 13
+
+4.3. Detector Settings ........................................................................................................................................................... 16
+
+4.4. Measurement Period / Rate ........................................................................................................................................... 18
+
+4.5. Offset Count Cancellation .............................................................................................................................................. 19
+
+4.6. Sunlight Cancellation ..................................................................................................................................................... 20
+
+4.7. Interrupt.......................................................................................................................................................................... 21
+
+4.8. Readout Registers.......................................................................................................................................................... 25
+
+5. I2C and Timing                                                                                     26
+
+5.1. I2C Write and Read Protocol.......................................................................................................................................... 26
+
+5.2. Timing............................................................................................................................................................................. 27
+
+5.2.1. Proximity Measurement Timing .......................................................................................................................... 27
+
+5.2.2. Timing Specification ........................................................................................................................................... 28
+
+6. Proximity Measurement                                                                              31
+
+6.1. Software Flow Chart ...................................................................................................................................................... 31
+
+6.2. Proximity Value vs. Distance Curve ............................................................................................................................... 32
+
+6.2.1. Proximity Value vs. Distance Curve Without a Window Cover ........................................................................... 32
+
+6.3. Temperature Behaviour.................................................................................................................................................. 34
+
+7. Average Current Consumption                                                                        35                                                                                     APPLICATION NOTE
+
+8. Mechanical and Optical Design                                                                      38
+
+Revision: 06-Mar-2025                 2                                                 Document Number: 80359
+
+                          For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+          www.vishay.com                                                                   Application Note
+
+                                                                                        Vishay Semiconductors
+
+          Designing the VCNL36828P Into an Application
+
+1. INTRODUCTION
+
+The VCNL36828P is a fully integrated proximity sensor. It combines a vertical-cavity surface-emitting laser (VCSEL),
+photodiode, and application-specific integrated circuit (ASIC) within a single package. The VCNL36828P has been developed
+for proximity detection applications that require a dual slave address, low power consumption, small package size, small
+window size, and short range operation up to 20 cm. In addition, given the rated supply voltage of 1.8 V to reduce power
+consumption, the sensor is intended for battery-powered applications such as:
+
+· Presence detection in smartphones and true wireless stereo (TWS) earbuds
+
+· Presence detection in VR / AR headsets and smart glasses
+
+· Presence detection in smartwatches
+
+· Touchless button / dispensing
+
+                                  Fig. 1 - VCNL36828P
+
+KEY BENEFITS OF USING VCNL36828P
+
+BENEFITS                             DESCRIPTION
+
+Small package for             Very small 2.0 x 1.0 x 0.5 (L x W x H in mm) package
+a tight space requirement     A small package allows a design with a small window size
+
+Low power consumption         1.8 V rated power supply and I2C bus reduce the power consumption
+for battery-powered devices   The low idle current of 5 A allows a lower average current consumption
+                              The use of VCSEL instead of IRED allows a lower driving current with comparable performance
+
+Superior proximity detection  The proximity sensor can detect up to 20 cm distance
+                              The proximity sensor supports sunlight cancellation up to 140 klx of sunlight
+
+Smart dual slave address      Smart dual slave address allows the connection of up to two proximity sensors with a microcontroller
+                              without needing an I2C multiplexer; the slave address can be changed by swapping the SCL and SDA pins
+
+This application note describes the functionality, application circuits, register settings, and mechanical design considerations     APPLICATION NOTE
+for the sensor.
+
+Revision: 06-Mar-2025             3                                                                          Document Number: 80359
+
+                              For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+   www.vishay.com                                                                                                   Application Note
+
+                                                                                                                 Vishay Semiconductors
+
+            Designing the VCNL36828P Into an Application
+
+2. PIN DESCRIPTION AND BLOCK DIAGRAM
+2.1 Pin Description
+
+                                 INT 1                                  6 SDA
+                                                                        5 SCL
+                                        ASIC (1)
+
+                                                  PD (2)
+
+                                 VDD 2
+
+                                                             VCSEL (3)
+
+                                 GND 3                                  4 VCSELA
+
+Notes
+(1) ASIC - Application-specific integrated circuit
+(2) PD - Photodiode
+(3) VCSEL - Vertical-cavity surface-emitting laser
+
+                                                           Fig. 2 - Pin Assignment (top view) of the VCNL36828P
+
+TABLE 1 - PIN DESCRIPTION
+
+PIN NUMBER             PIN NAME         TYPE                                                                     DESCRIPTION
+                                  O (open drain)                                                                     Interrupt
+1                      INT
+                                           I                                                                     Supply voltage
+2                      VDD                 I                                                                          Ground
+                                           I
+3                      GND       I / O (open drain)                                                              VCSEL anode
+                                 I / O (open drain)                                                              I2C serial clock
+4                      VCSELA                                                                                     I2C serial data
+
+5                      SCL (1)
+
+6                      SDA (1)
+
+Note                                                                                                                                                       APPLICATION NOTE
+(1) Pin 5 (SCL) and pin 6 (SDA) can be swapped to change the slave address from 0x60 to 0x51 (7 bit slave address)
+
+Revision: 06-Mar-2025                                     4                                                                        Document Number: 80359
+
+                            For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+                   www.vishay.com                                                                 Application Note
+
+                                                                                               Vishay Semiconductors
+
+                   Designing the VCNL36828P Into an Application
+
+2.2 Block Diagram
+
+                                   INT 1           VCNL36828P    Command registers   6 SDA
+                                   VDD 2                              I2C interface  5 SCL
+                                                      Interrupt
+                                                       control
+
+                                                       PD
+
+                                                      16 bit
+                                                      ADC
+
+                                          Logic and timing
+                                              controller
+
+                                          VCSEL   Oscillator
+                                          driver
+
+                                   GND 3                                             4 VCSELA
+
+                                                     VCSEL
+
+                                          Fig. 3 - Block Diagram of the VCNL36828P
+
+TABLE 2 - BLOCK DIAGRAM DESCRIPTION
+
+COMPONENT                                                        DESCRIPTION
+
+Command registers            Command registers are the memory storage for writing and reading I2C commands
+
+I2C interface                The I2C interface is a communication interface with active low open drain circuitry
+
+Interrupt control            Interrupt control is a circuit block with active low open drain output
+
+PD PD is a photodiode that converts the reflected infrared signal from the object into photocurrent; it is
+                                                then fed to the 16 bit ADC
+
+16 bit ADC                   The 16 bit analog to digital converter converts the analog signal to the digital signal (1); the input signal
+                             is then amplified
+
+Logic and timing controller  The logic and timing controller controls the timing for the proximity measurement
+
+VCSEL driver                 The VCSEL driver is a circuitry block that limits the driving current based on the selected setting
+
+Oscillator                   The oscillator generates the clock signal to synchronize all of the device functionalities
+
+Note                                                                                                                                        APPLICATION NOTE
+(1) The actual bit resolution can vary between 12 and 16 bit depending on the register settings PS_IT, PS_GAIN, and PS_HD
+
+Revision: 06-Mar-2025                             5                                                  Document Number: 80359
+
+                             For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+       www.vishay.com                                           Application Note
+
+                                                             Vishay Semiconductors
+
+       Designing the VCNL36828P Into an Application
+
+3. APPLICATION CIRCUIT
+
+3.1 Slave Address Selection
+The VCNL36828P supports a smart dual slave address where the designer can change the slave address by swapping the SCL
+and SDA pins, as shown in Table 3.
+
+TABLE 3 - SLAVE ADDRESS TABLE
+
+PIN 5  PIN 6             7 BIT SLAVE ADDRESS    8 BIT SLAVE ADDRESS (WRITE)            8 BIT SLAVE ADDRESS (READ)
+                                                                   0xC0                                  0xC1
+SCL    SDA               0x60                                      0xA2                                  0xA3
+
+SDA    SCL               0x51
+
+A smart dual slave address provides the flexibility for the designer to connect two devices from two different slave addresses
+on the same I2C bus. The two slave address options allow designers to select a different slave address if one is used by the
+other slave devices on the same I2C bus in a single device application.
+
+3.2 Application Circuit With a Single Device
+Fig. 4 and Fig. 5 show application circuit examples with a single device. As described in Table 3, when pins 5 and 6 are
+connected to the clock and data signal from the microcontroller, as shown in Fig. 4, they will then be configured as an SCL pin
+and SDA pin, respectively. The 7 bit slave address option of 0x60 will be automatically selected.
+
+                                                                                                                                    VPULL UP
+
+                                                   R1 R2 R3
+
+          VDD            VDD (2)                                    Host
+                     C1                                      microcontroller
+                            VCNL36828P
+       VVCSEL            (slave address: 0x60)
+                     C2
+                         VCSELA (4)
+
+                                     SCL (5)                 SCL
+                                                             SDA
+                         GND (3)     SDA (6)                 INT (GPIO)
+                                      INT (1)
+
+                                       Fig. 4 - Application Circuit Example for a Single VCNL36828P - Slave Address 0x60                      APPLICATION NOTE
+
+On the other hand, when pins 5 and 6 are connected to the data and clock signal from the microcontroller, as shown in Fig. 5,
+they will then be configured as an SDA pin and SCL pin, respectively. The 7 bit slave address option of 0x51 will be automatically
+selected.
+
+Revision: 06-Mar-2025                           6                                      Document Number: 80359
+
+                         For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+            www.vishay.com                                                                 Application Note
+
+                                                                                        Vishay Semiconductors
+
+            Designing the VCNL36828P Into an Application
+
+                                                                           VPULL UP
+
+                                                                           R1 R2 R3
+
+               VDD                     VDD (2)                                                 Host
+                          C1                                                            microcontroller
+                                          VCNL36828P
+            VVCSEL                     (slave address: 0x51)
+                          C2
+                                       VCSELA (4)
+
+                                                   SCL (5)                              SCL
+                                                                                        SDA
+                                       GND (3)     SDA (6)                              INT (GPIO)
+                                                    INT (1)
+
+                                       Fig. 5 - Application Circuit Example for a Single VCNL36828P - Slave Address 0x51
+
+Table 4 shows the required values and the explanation for the individual application circuit parameters.
+
+TABLE 4 - APPLICATION CIRCUIT PARAMETERS
+
+   CIRCUIT             VALUE                                               DESCRIPTION
+PARAMETER
+
+VDD 1.65 V to 2.00 V A stable power supply is recommended, such as a low dropout or switching regulator; the power supply isolation can be further improved with a decoupling capacitor C1
+
+VVCSEL      2.62 V to 3.60 V           A stable power supply such as a low dropout or switching regulator that can supply an adequate
+
+                                       amount of power (max. VCSEL pulse driving current of 20 mA) is recommended; the power supply
+
+                                       isolation can be further improved with a decoupling capacitor C2; the minimum voltage depends
+                                       on the selected driving current of the VCSEL; please refer to Table 5 for reference
+
+VPULL UP               1.2 V to 3.6 V  A stable power supply such as a low dropout or switching regulator is recommended; a voltage
+                                       level shifter is required if the I2C bus voltage from the microcontroller is higher than 3.6 V
+
+C1 to C4    100 nF to 1 F Decoupling capacitors are recommended to reduce the noise in the supply voltage
+
+R1 to R2    2.2 k to 4.7 k             Pull-up resistors within the range of 2.2 k to 4.7 k are recommended; any increase in bus
+                                       capacitance or resistance will increase the logic-high transition time
+
+R3          4.7 k to 22 k A pull-up resistor within the range of 4.7 k to 22 k is recommended
+
+VCSEL Driver
+Fig. 6 shows the VCSEL driver circuit in the VCNL36828P.
+
+                                                              VF + 0.22 V                                                                                                                   APPLICATION NOTE
+                                                               tolerance
+
+                                       VDriver                             VVCSEL
+
+                                                   VCSEL      VCSEL
+                                                   driver
+
+                                                              Fig. 6 - VCSEL Driver Circuit in the VCNL36828P
+
+The typical supply voltage for the VCSEL is 3.3 V. The designer could connect pin 4 VCSELA with a lower supply voltage VVCSEL.
+However, VVCSEL should at least match the minimum required supply voltage for the VCSEL VVCSEL,min..
+
+Revision: 06-Mar-2025                                         7                                      Document Number: 80359
+
+                                       For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+               www.vishay.com                                                                      Application Note
+
+                                                                                                Vishay Semiconductors
+
+               Designing the VCNL36828P Into an Application
+
+VVCSEL,min. depends on:
+  · The selected driving current IF of the VCSEL and its corresponding forward voltage VF
+  · The forward voltage tolerance of the VCSEL, VF, tolerance, which is 0.22 V
+  · The minimum voltage required by the driver circuit, VDriver,min., which is 0.6 V
+
+Therefore,
+
+                       VVCSEL, min. = VF(IF) + VF, tolerance + VDriver, min. = VF(IF) + 0.22 V + 0.6 V                                                      (1)
+
+Fig. 7 and Table 5 show the computation of VVCSEL,min.. The designer could use 3.3 V (except for 20 mA, which has a
+VVCSEL,min. of 3.36 V) to provide sufficient voltage headroom. The maximum allowable supply voltage of the VCSEL
+VVCSEL,max. is 3.6 V.
+
+                                                             Axis Title
+
+                                                                                         10000
+
+                                                  VF, VCSEL
+                               10
+                               2nd line                                                  1000
+                                  IF - Forward Current (mA)
+                                                                         VVCSEL, min.
+                                                                                                                               1st line
+                                                                                                                                  2nd line+ 0.6 V
+
+                                                  + 0.22 V
+
+                                                  = 0.82 V                               100
+
+                                       1                                                 10
+
+                                          1.0 1.4 1.8 2.2 2.6 3.0 3.4
+
+                                          VVCSEL, min. - VCSEL Supply Voltage (V)
+
+                               Fig. 7 - Forward Current vs. VCSEL Supply Voltage
+
+TABLE 5 - VVCSEL, MIN.
+
+IVCSEL (IF)            7 mA    9 mA       11 mA              12 mA               15 mA          17 mA                                       19 mA   20 mA
+                               1.92 V     2.04 V                                                2.37 V                                      2.48 V  2.54 V
+VF                     1.80 V                                2.09 V              2.26 V
+                               2.74 V     2.86 V                                                3.19 V                                      3.3 V   3.36 V
+VF, tolerance                                                            0.22 V
+
+VDriver, min.                                                            0.6 V
+
+VVCSEL, min.           2.62 V                                2.91 V              3.08 V
+
+VVCSEL, max.                                                             3.6 V                                                                                      APPLICATION NOTE
+
+Revision: 06-Mar-2025                                        8                                                                              Document Number: 80359
+
+                               For technical questions, contact: consumersensors@vishay.com
+
+    THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                              ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+www.vishay.com                                                      Application Note
+
+                                                                 Vishay Semiconductors
+
+Designing the VCNL36828P Into an Application
+
+3.3 Application Circuit With a Smart Dual Slave Address
+
+Fig. 8 shows an application circuit example with a smart dual slave address. By swapping the SCL and SDA pins of the second
+device, as shown in Table 3, the designer can change the 7 bit slave address of the VCNL36828P. This provides the flexibility
+for the designer to connect two devices from two different slave addresses on the same I2C bus.
+
+   VDD                 VDD (2)                         VPULL UP
+              C1                                 R1 R2 R3
+                          VCNL36828P
+VVCSEL                          Device 1
+              C2
+                       (slave address: 0x60)
+
+                       VCSELA (4)
+
+                                SCL (5)
+
+                       GND (3)  SDA (6)                                 Host
+                                 INT (1)                         microcontroller
+
+   VDD                 VDD (2)                                   SCL
+              C3                                                 SDA
+                          VCNL36828P                             INT (GPIO)
+VVCSEL                          Device 2
+              C4
+                       (slave address: 0x51)
+
+                       VCSELA (4)
+
+                                SCL (5)
+
+                       GND (3)  SDA (6)
+                                 INT (1)
+
+                       Fig. 8 - Application Circuit Example for Two VCNL36828Ps - Smart Dual Slave Address
+
+Revision: 06-Mar-2025                         9                                                             Document Number: 80359  APPLICATION NOTE
+
+                       For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+                www.vishay.com                               Application Note
+
+                                                          Vishay Semiconductors
+
+                Designing the VCNL36828P Into an Application
+
+4. REGISTER DESCRIPTION
+
+TABLE 6 - REGISTER DESCRIPTION OVERVIEW
+
+REGISTER                 BIT     REGISTER       COMMAND                             DESCRIPTION                       ACCESS
+  GROUP                NAME         NAME           CODE
+                                                                    Enable / disable the internal calibration         Write and
+                       PS_CAL    PS_CONF1_L     0x00                         Switch the sensor on / off                  read
+                       PS_ON
+                                                             Enable / disable the internal crosstalk cancellation     Read only
+    Basic       PS_OFFSET        PS_CONF2_H     0x01               Set the mode of the sensor to either auto          Read only
+initialization   PS_MODE         PS_CONF3_L     0x02                             or active force mode
+                  PS_TRIG
+                                                         Set the bit to 1 to trigger an individual active force mode
+ Emitter            PS_ITB       PS_CONF2_L     0x01                                 measurement
+settings
+(VCSEL)              PS_IT       PS_CONF2_H     0x00     Set the pulse length "T" for PS_IT to either 25 s or 50 s
+                                 PS_CONF1_H     0x01        Set the integration time for one measurement pulse
+Detector           PS_MPS        PS_CONF2_L                                      (1 T, 2 T, 4 T, or 8 T)
+settings        PS_CURRENT       PS_CONF2_H                   Set the number of infrared measurement pulses
+                                                               Set the VCSEL driving current (7, 9, ..., 20 mA)
+                    PS_HD
+                   PS_GAIN                                Set the maximum output data to either 12 bit or 16 bit
+                   PS_SENS                                                Set the digital gain in the ADC
+                                                                           Set the sensitivity in the ADC
+Measurement         PS_PERIOD      PS_CONF2_L   0x01                       Set the measurement period                            APPLICATION NOTE
+ period / rate                    PS_CONF3_H    0x02
+Offset count       PS_SPERIOD                   0x05                  (50 ms, 100 ms, 200 ms, or 400 ms)
+ cancellation                        PS_CANC    0x02     Set the measurement period (6.25 ms, 12.5 ms, or 25 ms)
+                            -     PS_CONF3_H
+   Sunlight                                     0x00                 Set the offset count cancellation value
+ cancellation           PS_SC     PS_CONF1_H
+                                                0x03                Enable/disable the sunlight cancellation
+   Interrupt            PS_INT       PS_THDL    0x04
+                      PS_PERS        PS_THDH    0xF9                      Set the interrupt mode setting
+   Readout      PS_SMART_PERS        INT_FLAG   0xF8         Set the interrupt persistence number (1, 2, 3, or 4)
+   registers         PS_SP_INT       PS_DATA    0FA
+                                 VCNL36828P_ID                        Enable/disable the smart persistence
+                            -                              Enable/disable the sunlight protection mode interrupt
+                            -
+                      PS_AWAY                                         Set the low threshold interrupt value
+                     PS_CLOSE                                         Set the high thershold interrupt value
+                    PS_SPFLAG                                     Low threshold crossing interrupt event flag
+                            -                                    High threshold crossing interrupt event flag
+                                                                Sunlight protection mode interrupt event flag
+                VCNL36828P_ID_L
+                                                                                Proximity output data
+                VCNL36828P_ID_H                                           Slave address 0x60: ID = 0x28,
+                                                                          Slave address 0x51: ID = 0x29
+
+                                                                                        ID = 0x01
+
+Revision: 06-Mar-2025                                 10                                       Document Number: 80359
+
+                                 For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+          www.vishay.com                                                                Application Note
+
+                                                                                     Vishay Semiconductors
+
+          Designing the VCNL36828P Into an Application
+
+4.1 Basic Initialization
+
+The sensor can be initialized with the PS_CAL, PS_ON, PS_MODE, PS_TRIG, and PS_OFFSET bits, which are found in three
+different registers: PS_CONF1_L, PS_CONF2_H, and PS_CONF3_L.
+
+TABLE 7 - BASIC INITIALIZATION
+
+REGISTER    BIT        REGISTER      COMMAND      FUNCTION                             BIT VALUE DESCRIPTION
+  GROUP   NAME            NAME          CODE
+
+          PS_CAL                              Enable/disable the internal calibration  7   0x0 (0b0) Disable (default)
+
+                                                                                           0x1 (0b1)                       Enable
+
+                       PS_CONF1_L    0x00                                                                                  Turn off the sensor
+
+          PS_ON                               Switch the sensor on / off                     0x0 (0b0)                     (shutdown)
+                                                                                       0                                     (default)
+
+                                                                                           0x1 (0b1) Turn on the sensor
+
+    Basic                            0x01           Enable / disable the               12  0x0 (0b0) Disable (default)
+initialization PS_OFFSET PS_CONF2_H           internal crosstalk cancellation
+                                                                                           0x1 (0b1)                       Enable
+
+           PS_TRIG                            Set the active force mode trigger;             0x0 (0b0)                     Off (default)
+          PS_MODE                             This bit will be reset to 0 after the    5                                      Trigger
+
+                                                       measurement cycle                     0x1 (0b1)
+
+                       PS_CONF3_L    0x02                                                                                  Auto mode
+                                                                                                                             (default)
+                                                                                                                0x0 (0b0)
+                                              Set the measurement mode of the sensor 4
+
+                                                                                           0x1 (0b1) Active force mode
+
+PS_ON - The sensor can be turned on by setting this bit to 1 and turned off by setting it to 0. The sensor will mostly be in the
+idle state and only be in the active state during the measurement phase.
+
+PS_MODE - Set this bit to 0 to activate the auto mode and 1 to activate the active force mode. Auto mode means the
+measurement will be triggered continuously with a rate defined by the measurement period. This measurement period depends
+on the PS_PERIOD and PS_SPERIOD bits setting. Active force mode means the measurement will have to be triggered
+manually by setting the PS_TRIG bit to 1.
+
+PS_TRIG - This bit must be set to 1 when using active force mode to trigger a measurement. Otherwise, the bit must be set to 0.
+
+PS_OFFSET - This bit can be set to 1 during initialization to perform internal crosstalk cancellation. The internal crosstalk is the
+crosstalk between the infrared signal from the VCSEL and the photodiode in the open air (without a window cover). The signal
+from the internal crosstalk is measured in the final test and is stored internally. If this bit is enabled, the count from the crosstalk
+will be deducted. This crosstalk is usually between 5 to 20 counts.
+
+Fig. 9 and Fig. 10 show the basic initialization of the two available modes. The basic initialization steps are usually useful when
+first testing with the proximity sensor. The proximity measurement will be based on the default values. In practice, more sensor
+parameters to change the strength of the VCSEL infrared signal, the gain of the analog-digital converter (ADC), the measurement
+period, and the interrupt should be set before starting the measurement.
+
+Revision: 06-Mar-2025                         11                                           Document Number: 80359                               APPLICATION NOTE
+
+                       For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+www.vishay.com                                                                Application Note
+
+                                                                           Vishay Semiconductors
+
+Designing the VCNL36828P Into an Application
+
+                                                                 START
+                                                                (connect
+
+                                                                   VDD)
+
+ START
+(connect
+
+   VDD)
+
+                                                                PS_MODE = 1          · Set to 1 for active force mode
+
+PS_MODE = 0            · Set to 0 for auto mode,
+                          this is by default 0
+
+                                                                PS_OFFSET = 1
+
+PS_OFFSET = 1
+
+                                                                PS_ON = 1            · Turn on the sensor, 5 µA of
+                                                                                        standby current will be drawn
+                       · Turn on the sensor, 5 µA of                                    during the idle state and 330 µA
+                          standby current will be drawn                                 during the active state
+                          during the idle state and 330 µA
+PS_ON = 1                 during the active state
+
+                                                                PS_CAL = 1
+
+PS_CAL = 1
+
+                                                                PS_TRIG = 1
+
+          Read Register 0xF8                                                    Read Register 0xF8
+Fig. 9 - Basic initialization Example Steps for Auto Mode       Fig. 10 - Basic initialization Example Steps for Active Force Mode
+
+Revision: 06-Mar-2025                                       12                       Document Number: 80359                         APPLICATION NOTE
+
+                       For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+          www.vishay.com                                                             Application Note
+
+                                                                                  Vishay Semiconductors
+
+          Designing the VCNL36828P Into an Application
+
+4.2 EMITTER SETTINGS (VCSEL)
+
+TABLE 8 - EMITTER SETTINGS (VCSEL)
+
+REGISTER    BIT          REGISTER    COMMAND                 FUNCTION             BIT VALUE                     DESCRIPTION
+  GROUP   NAME              NAME        CODE    Set the integration time for one
+                                              measurement; the pulse length "T"
+          PS_IT                                                                   5 : 4         0x0 (0b00)          1T (default)
+                                                    is determined by PS_ITB       3 : 2         0x1 (0b01)                2T
+                         PS_CONF2_L                                                             0x2 (0b10)                4T
+                                               Set the number of infrared signal    1           0x3 (0b11)                8T
+          PS_MPS                                    pulses per measurement                      0x0 (0b00)
+                                                                                  10 : 8        0x1 (0b01)       1 pulse (default)
+Emitter   PS_ITB                     0x01     Set the pulse length "T" for PS_IT                0x2 (0b10)            2 pulses
+settings                                                                                        0x3 (0b11)            4 pulses
+(VCSEL)                                          Set the VCSEL driving current                   0x0 (0b0)            8 pulses
+                                                                                                 0x1 (0b1)
+          PS_CURRENT PS_CONF2_H                                                                 0x0 (0b000)     T = 25 s (default)
+                                                                                                0x1 (0b001)          T = 50 s
+                                                                                                0x2 (0b010)
+                                                                                                0x3 (0b011)       7 mA (default)
+                                                                                                0x4 (0b100)             9 mA
+                                                                                                0x5 (0b101)            11 mA
+                                                                                                0x6 (0b110)            12 mA
+                                                                                                0x7 (0b111)            15 mA
+                                                                                                                       17 mA
+                                                                                                                       19 mA
+                                                                                                                       20 mA
+
+Fig. 11 depicts the behavior of the VCSEL infrared signal register settings on the infrared signal magnitude of the sensor. When
+the parameters PS_ITB, PS_IT, PS_CURRENT, and PS_MPS in two different registers PS_CONF2_L and PS_CONF2_H have
+been increased from lower value settings to higher value settings, the infrared signal magnitude of the VCSEL will increase. This
+increases the object's detection distance because the reflected infrared signal magnitude and proximity counts increase as well.
+
+          PS_ITB = 25 s,                      PS_ITB = 50 s,                                                 PS_ITB = 50 s,
+          PS_IT = 1 T,                        PS_IT = 4 T,                                                   PS_IT = 8 T,
+          PS_CURRENT = 7 mA,                  PS_CURRENT = 15 mA,                                            PS_CURRENT = 20 mA,
+          PS_MPS = 1                          PS_MPS = 1                                                     PS_MPS = 1
+
+                       Side view                  Side view                                                     Side view
+
+Short distance (<10 mm)                       Medium distance (<100 mm)                         Long distance (200 mm)              APPLICATION NOTE
+
+          Fig. 11 - The Behavior of the VCSEL Register Settings on the Infrared Signal Magnitude of the Sensor
+
+The infrared signal of the VCSEL is a pulse with a pulse width of multiple values of T. This can be set via the parameter PS_IT.
+The length of T can be either 25 s or 50 s, which can be set via the parameter PS_ITB. The magnitude of the pulse can be
+controlled via the VCSEL driver current parameter PS_CURRENT.
+
+Revision: 06-Mar-2025                         13                                                Document Number: 80359
+
+                                  For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+www.vishay.com                                                                                                                                                          Application Note
+
+                                                                                                                                                                     Vishay Semiconductors
+
+Designing the VCNL36828P Into an Application
+
+PS_CURRENT - The magnitude of the driving current of the VCSEL pulse.
+
+                                                                                                                                                        PS_CURRENT
+                                                                                                                                                            = 20 mA
+
+PS_CURRENT
+     = 7 mA
+
+                                                                                             t                                                                                                                                    t
+                                PS_PERIOD                                                                                                                            PS_PERIOD
+
+                                Fig. 12 - The Behavior of the Pulse Magnitude With Different PS_CURRENT
+
+PS_ITB - The length of T in parameter PS_IT. This can be either 25 s or 50 s. The setting 25 s could be used when low power
+consumption is a requirement.
+
+                       PS_IT                                                                        PS_IT
+                       = 1 T                                                                        = 1 T
+                       = 25 µs                                                                      = 50 µs
+
+                       PS_ITB                                                                       PS_ITB
+                       = T
+                       = 25 µs                                                                      = T
+
+                                                                                                    = 50 µs
+
+                                           t                                                                                                                                              t
+
+                                PS_PERIOD                                                                                                                            PS_PERIOD
+
+                                Fig. 13 - The Behavior of the Pulse Length With Different PS_ITB
+
+PS_IT - The length of the VCSEL pulse width with multiple values of T. The length of T is defined by the parameter PS_ITB.
+
+                       PS_IT                                                                        PS_IT
+                       = 1 T                                                                        = 2 T
+                       = 25 µs                                                                      = 50 µs
+
+                       PS_ITB                                                                       PS_ITB
+                       = T                                                                          = T
+                       = 25 µs                                                                      = 25 µs
+
+                                                                                    t                                                                       t
+
+                                  PS_PERIOD                                                               PS_PERIOD
+
+                                PS_IT                                                                                                                                           PS_IT                                                APPLICATION NOTE
+                                = 4 T                                                                                                                                           = 8 T
+                                = 100 µs                                                                                                                                        = 200 µs
+
+                                   PS_ITB                                                                                                                                                    PS_ITB
+                                   = T                                                                                                                                                       = T
+                                   = 25 µs                                                                                                                                                   = 25 µs
+
+                                                                                 t                                                                                                                                    t
+
+                                PS_PERIOD                                                                                                                            PS_PERIOD
+
+                                Fig. 14 - The Behavior of the Pulse Length With Different PS_IT
+
+Revision: 06-Mar-2025                                                                           14                                                                              Document Number: 80359
+
+                                For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+      www.vishay.com                                                                                  Application Note
+
+                                                                                                   Vishay Semiconductors
+
+      Designing the VCNL36828P Into an Application
+
+PS_MPS - The number of VCSEL pulses within one measurement period.
+
+                       PS_IT                                                                PS_IT
+                       = 1 T                                                                = 1 T
+                       = 25 µs                                                              = 25 µs
+
+                       PS_MPS                                                               PS_MPS
+                       = 1                                                                  = 2
+
+                                                                               t                                                           t
+                                 PS_PERIOD                                                   PS_PERIOD
+
+                                    PS_IT                                                                                      PS_IT
+                                    = 1 T                                                                                      = 1 T
+                                    = 25 µs                                                                                    = 25 µs
+
+                                    PS_MPS                                                                                     PS_MPS
+                                    = 4                                                                                        = 8
+
+                                                                          t                                                           t
+
+                       PS_PERIOD                                                            PS_PERIOD
+
+                                   Fig. 15 - The Number of Pulses' Behavior With Different PS_MPS
+
+Fig. 16, Fig. 17, Fig. 18, and Fig. 19 show the behavior of the proximity counts with increasing setting values. It can be observed
+that the proximity counts are approximately doubled when the setting values have been doubled. The designer could increase
+PS_IT, PS_ITB, PS_CURRENT, and PS_MPS if a longer detection distance is required. It is recommended to start with
+PS_ITB = 25 s and then increase the setting PS_IT, PS_CURRENT, and PS_ITB = 50 s. This sequence allows for current
+consumption optimization. PS_MPS should only be the last setting to be increased when a longer detection distance is required.
+The maximum proximity value depends on PS_IT, PS_HD, and PS_GAIN. This will be explained further in Table 10 in the section
+4.3. Fig. 11 shows example settings for different distances. For example, for applications with detection distances up to
+200 mm, it is recommended to use PS_ITB = 50 s, PS_IT = 8 T, and PS_CURRENT = 20 mA.
+
+                       Axis Title                                                                                  Axis Title
+
+4000                                         10000                                    4000  PS_CURRENT= 20 mA,                                    10000
+                                                                                      3500  PS_ITB = T = 50 s,                 PS_IT = 8T
+3500                   PS_ITB = T = 50 s                                              3000  PS_MPS = 1,
+3000                                                                                  2500  Media: Kodak Gray Card                                1000
+2nd line2500
+   Proximity Value (counts)                  1000
+
+2000                                                                                            1st line2000
+1500                                                                                               2nd line
+1000                                                                                                                2nd linePS_IT = 4T
+                                                                                                                       Proximity Value (counts)
+ 500                                                                                                                                                                                                                1st line
+                                                                                                                                                                                                                       2nd line
+      PS_ITB = T = 25 s                                                               1500                                                                                                                                       APPLICATION NOTE
+                                                                                                                   PS_IT 100
+                                                                     100
+                                PS_CURRENT= 20 mA,                                    1000         = 2T
+                                PS_IT = 8T, PS_MPS = 1,
+                                Media: Kodak Gray Card                                      PS_IT
+
+                                                                                      500 = 1T
+
+0                                            10                                       0                                                       10
+
+      0 10 20 30 40 50 60 70 80 90 100                                                      0 20 40 60 80 100 120 140 160 180 200
+
+                       Measurement                                                                     Measurement
+
+Fig. 16 - The Behavior of the Proximity Counts                                        Fig. 17 - The Behavior of the Proximity Counts
+                With Different PS_ITB                                                                  With Different PS_IT
+
+Revision: 06-Mar-2025                                                             15                                           Document Number: 80359
+
+                                   For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+           www.vishay.com                                                                                                  Application Note
+
+                                                                                                                        Vishay Semiconductors
+
+           Designing the VCNL36828P Into an Application
+
+                       Axis Title                                                                                     Axis Title
+
+4000                                       10000                                         4000  PS_CURRENT = 20 mA,                                        10000
+3500                                                                                     3500  PS_ITB = T = 50 s,                    PS_MPS = 8
+3000                   PS_CURRENT = 20 mA                                                3000  PS_IT = 1T,
+2500                                                                                     2500  Media: Kodak Gray Card                                     1000
+2nd line
+   Proximity Value (counts)                1000
+
+                                                                                                1st line
+                                                                                                   2nd line
+                                                                                                                    2nd line
+                                                                                                                       Proximity Value (counts)
+                                                                                                                                                                                                                    1st line
+                                                                                                                                                                                                                       2nd line
+           PS_CURRENT = 15 mA
+
+2000                                                                                     2000
+                                                                                         1500
+1500 PS_CURRENT                                                                                                         PS_MPS = 4
+           = 7 mA                          100                                                                                                             100
+
+1000                                 PS_IT = 8T,                                         1000  PS_MPS = 2
+                                     PS_ITB = T = 50 s,
+ 500                                 PS_MPS = 1,                                         500
+                                     Media: Kodak Gray Card
+     0                                                                                         PS_MPS = 1                                                         10
+        0                                                              10                0                              80 100 120 140 160 180 200
+
+           20 40 60 80 100 120 140                                                          0 20 40 60
+
+                       Measurement                                                                                      Measurement
+
+Fig. 18 - The Behavior of the Proximity Counts With Different                            Fig. 19 - The Behavior of the Proximity Counts
+                               PS_CURRENT                                                               With Different PS_MPS
+
+4.3 DETECTOR SETTINGS
+
+TABLE 9 - DETECTOR SETTINGS
+
+REGISTER     BIT       REGISTER     COMMAND                                               FUNCTION                      BIT VALUE DESCRIPTION
+  GROUP    NAME           NAME         CODE                                Enable/disable high dynamic range
+
+           PS_HD PS_CONF1_H             0x00                                  (12/16 bit) ADC output setting                      0x0   Disable (12 bit)
+                                                                                                                                 (0b0)      (default)
+                                                                                  Set the gain of the ADC               14
+                                                                                                                                  0x1   Enable (16 bit)
+                                                                              Set the sensitivity of the ADC                     (0b1)
+
+Detector   PS_GAIN PS_CONF2_L                                                                                                    0x0 x 1 gain (default)
+settings                                                                                                                        (0b0)
+                                                                                                                        0
+                                        0x01                                                                                     0x1 x 2 gain
+                                                                                                                                (0b1)
+
+                                                                                                                                  0x0 Normal sensitivity
+
+           PS_SENS PS_CONF2_H                                                                                                    (0b0)      (default)
+                                                                                                                        13              High sensitivity
+
+                                                                                                                                  0x1
+                                                                                                                                 (0b1)
+
+The detector of the proximity sensor consists of the photodiode and the analog-digital converter (ADC). The detector-related                                                                                                     APPLICATION NOTE
+parameters PS_HD, PS_GAIN, and PS_SENS in three different registers PS_CONF1_H, PS_CONF2_L, and PS_CONF2_H
+double or halve the magnitude of proximity counts given the same reflected infrared signal magnitude from the object arrived
+at the detector. These parameters will help increase the number of counts when a higher dynamic range is needed. Fig. 20
+depicts the behavior of the proximity counts when changing the analog-digital converter parameters.
+
+                                    Same input signal                                                 Output:
+                                        magnitude                                        1. Double / halve the digital
+
+                                                                           16 bit                  count output
+                                                                                         2. 12 to 16 bit digital count
+                                    PD                                     ADC           output (max. between 4095
+
+                                                                            Change:                and 65 535)
+                                                                             PS_HD
+                                                                            PS_GAIN
+                                                                           PS_SENSE
+
+           Fig. 20 - The Behavior of the Proximity Counts When Changing the Analog-Digital Converter Parameters
+
+Revision: 06-Mar-2025                                                                16                                              Document Number: 80359
+
+                                   For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+           www.vishay.com                                                                   Application Note
+
+                                                                                         Vishay Semiconductors
+
+                    Designing the VCNL36828P Into an Application
+
+PS_HD - This bit sets the maximum resolution of the ADC. For example, when PS_HD is set to 12 bit, the maximum possible
+counts are always 4095. However, when PS_HD is set to 16 bit, the actual maximum resolution and counts depend on PS_GAIN
+and PS_IT, as shown in Table 10. This can be between 12 bit and 16 bit or between 4095 counts and 65 535 counts.
+
+PS_GAIN - This bit sets the gain and changes the maximum resolution in the ADC when PS_HD is set to 16 bit. The counts can
+be doubled when the bit is set to 1. When combined with PS_SENS, the count can be quadrupled when both bits are set to 1.
+The actual maximum resolution depends on PS_HD and PS_IT, as shown in Table 10.
+
+PS_SENS - This bit sets the sensitivity in the ADC. The counts can be doubled when the bit is set to 1. When combined with
+PS_GAIN, the count can be quadrupled when both bits are set to 1. The actual maximum resolution depends on PS_HD,
+PS_GAIN, and PS_IT, as shown in Table 10.
+
+TABLE 10 - MAXIMUM BIT RESOLUTION AND DIGITAL OUTPUT COUNTS
+
+           BIT NAME                                PS_IT = 1T                PS_IT = 2T  PS_IT = 4T                            PS_IT = 8T
+
+                            PS_GAIN = 0 (x1 gain)                            12 bit / 4095 counts                       15 bit / 32 767 counts
+PS_HD = 0 (12 bit)                                                                                                      16 bit / 65 535 counts
+
+                            PS_GAIN = 1 (x2 gain)
+
+PS_HD = 1 (16 bit)  PS_GAIN = 0 (x1 gain)          12 bit / 4095 counts   13 bit / 8191 counts 14 bit / 16 383 counts
+                    PS_GAIN = 1 (x2 gain)          13 bit / 8191 counts  14 bit / 16 383 counts 15 bit / 32 767 counts
+
+In many applications where the detection range is less than 5 cm, such as presence detection in TWS, AR / VR headsets, and
+touchless switches, 12 bit resolution with maximum counts of 4095 is usually enough to detect two distinct events of "close"
+and "away".
+
+However, higher dynamic range output counts are required when detecting a longer range and more distinctive events or
+threshold requirements are needed. Therefore, the designer can set PS_HD to 16 bit and select the appropriate PS_GAIN and
+PS_IT based on Table 10 to reach a higher maximum count up to 65535.
+
+Fig. 21 and Fig. 22 show the behavior of the parameters PS_GAIN and PS_SENS on the proximity counts. The proximity counts
+will double with an increase in the gain or sensitivity of the ADC. The combination of double gain and high sensitivity allows the
+proximity counts to be quadrupled.
+
+                       Axis Title                                                                  Axis Title
+
+4500                                               10000                     4500                                  PS_SENS =        10000
+                                                                             4000                                 high sensitivity
+4000                   PS_GAIN = x2 gain                                     3500
+
+3500
+2nd line
+3000Proximity Value (counts)                       1000                      3000                                                   1000
+
+2500                                                                                            1st line2500
+2000                                                                                               2nd line2000
+1500                                                                                                                2nd line
+1000                                                                                                                   Proximity Value (counts)
+                                                                                                                                                                                                                    1st line
+ 500                                                                                                                                                                                                                   2nd line
+     0     PS_GAIN = x1 gain PS_CURRENT= 7 mA,                                              PS_SENS =
+        0                                                                                normal sensitivity
+
+                       PS_ITB = T = 50 s,
+
+                       PS_IT = 1T,                 100                       1500                                  PS_CURRENT= 7 mA, 100
+                                                                             1000                                    PS_ITB = T = 50 s,
+                       PS_HD = 12 bit,                                                                               PS_IT = 1T,
+                                                                              500                                    PS_HD = 12 bit,
+                       PS_SENS =                                                  0                                  PS_GAIN = x1 gain,
+                                                                                     0                               Media: Kodak Gray Card
+                       normal sensitivity,
+                                                                                                                                                       10
+                       Media:                                                            10 20 30 40 50 60 70 80 90 100                                                                                                          APPLICATION NOTE
+
+                       Kodak Gray Card                                                                     Measurement
+
+                                                   10
+
+           10 20 30 40 50 60 70 80 90 100
+
+                       Measurement
+
+Fig. 21 - The Behavior of the Parameter PS_GAIN                              Fig. 22 - The Behavior of the Parameter PS_SENS
+                 on the Proximity Counts                                                      on the Proximity Counts
+
+Revision: 06-Mar-2025                                                    17                                  Document Number: 80359
+
+                                   For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+              www.vishay.com                                                                  Application Note
+
+                                                                                           Vishay Semiconductors
+
+              Designing the VCNL36828P Into an Application
+
+4.4 Measurement Period / Rate
+
+TABLE 11 - MEASUREMENT PERIOD / RATE
+
+REGISTER        BIT    REGISTER      COMMAND                 FUNCTION               BIT    VALUE              DESCRIPTION
+  GROUP       NAME        NAME          CODE                                       7 : 6
+                                                                                             0x0   50 ms, which translates into 20
+              PS_PERIOD PS_CONF2_L   0x01                    Set the measurement  15 : 14  (0b00)      measurements/s (default)
+                                                                       period
+                                                                                             0x1   100 ms, which translates into 10
+Measurement                                                                                (0b01)            measurements/s
+ Period/Rate
+                                                                                             0x2   200 ms, which translates into 5
+              PS_SPERIOD PS_CONF3_H  0x02                         Set the short            (0b10)            measurements/s
+                                                             measurement period
+                                                                                             0x3   400 ms, which translates into 2.5
+                                                                                           (0b11)            measurements/s
+
+                                                                                             0x0   Disable the short period (follow
+                                                                                           (0b00)    PS_PERIOD setting) (default)
+
+                                                                                             0x1    6.25 ms, which translates into
+                                                                                           (0b01)         160 measurements/s
+
+                                                                                             0x2   12.5 ms, which translates into 80
+                                                                                           (0b10)            measurements/s
+
+                                                                                             0x3   25 ms, which translates into 40
+                                                                                           (0b11)            measurements/s
+
+PS_PERIOD and PS_SPERIOD define the period at which the infrared signal pulses are executed to perform proximity
+measurements. In most applications, the measurement period between 50 ms and 400 ms is enough to find a compromise
+between acceptable performance and low power consumption. A higher measurement rate increases the amount of data and
+decreases the possibility of false detection. However, the sensor will consume more current. The designer could select shorter
+measurement period options in PS_SPERIOD if a high measurement rate is required. Fig. 23 and Fig. 24 show examples of the
+measurement period that can be seen from the VCSELA pin with a 15  resistor.
+
+VCSELA                 50 ms                                     VCSELA                            400 ms
+VDD                                                              VDD
+
+INT                                                              INT
+
+Fig. 23 - Oscilloscope Screenshot of the VCSELA Pin for the      Fig. 24 - Oscilloscope Screenshot of the VCSELA Pin for the          APPLICATION NOTE
+                    Measurement Period of 50 ms                                     Measurement Period of 400 ms
+
+Revision: 06-Mar-2025                                        18                                    Document Number: 80359
+
+                               For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+              www.vishay.com                                                                                         Application Note
+
+                                                                                                                  Vishay Semiconductors
+
+              Designing the VCNL36828P Into an Application
+
+Fig. 25 and Fig. 26 show examples of the short measurement period that can be seen from the VCSELA pin with a 15  resistor.
+
+VCSELA                                                                                  VCSELA
+VDD                                                                                     VDD
+
+                         6.25 ms                                                                                               25 ms
+
+       Fig. 25 - Oscilloscope Screenshot of the VCSELA for the                          Fig. 26 - Oscilloscope Screenshot of the VCSELA for the
+                   Short Measurement Period of 6.25 ms                                               Short Measurement Period of 25 ms
+
+4.5 Offset Count Cancellation
+
+TABLE 12 - OFFSET COUNT CANCELLATION
+
+REGISTER        BIT      REGISTER  COMMAND                                               FUNCTION          BIT     VALUE                     DESCRIPTION
+  GROUP       NAME          NAME      CODE                                                                        0 to 4095
+                                                                                    Set the offset count  7 : 0                                  Low byte
+Offset count  PS_CANC_L  PS_CANC   0x05                                              cancellation value   11 : 8                                High byte
+cancellation  PS_CANC_H
+
+Crosstalk between the infrared signal from the VCSEL and the photodiode happens when introducing the window cover. This
+is because part of the light will be reflected back to the sensor due to fresnel reflection. Therefore, it is recommended to perform
+offset count cancellation by writing the PS_CANC register with the offset counts. Fig. 27 shows the offset count calibration by
+measuring the offset counts due to window cover, internal crosstalk, and noise. These offset counts can then be written to the
+register PS_CANC, as shown in Fig. 28. By using this approach, the change in counts is directly influenced by the object and
+the effect of the part-to-part tolerance can be reduced.
+
+                                                                                        5000                               Axis Title                 10000
+                                                                                        4000                                                          1000
+                                                                                        3000                      Write to PS_CANC register
+                                                                                                                     with 784 offset counts
+
+                                                                                        20002nd line                                                                                                 APPLICATION NOTE
+                                                                                        1000Proximity Value (counts)
+
+                                                                                                                                                                                        1st line
+                                                                                                                                                                                           2nd line
+                                                                                                              Before offset        After offset       100
+                                                                                                               cancellation
+                                                                                                          ~ 784 offset counts      cancellation
+
+                                                                         Side view      0                                                             10
+              Fig. 27 - Offset Count Calibration
+                                                                                                0         20      40           60     80         100
+
+                                                                                                                  Measurement
+
+                                                                                                          Fig. 28 - Offset Count Cancellation
+
+Revision: 06-Mar-2025                                                               19                                             Document Number: 80359
+
+                         For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+              www.vishay.com                                                                                                     Application Note
+
+                                                                                                                              Vishay Semiconductors
+
+              Designing the VCNL36828P Into an Application
+
+4.6 Sunlight Cancellation
+
+TABLE 13 - SUNLIGHT CANCELLATION
+
+REGISTER        BIT        REGISTER                        COMMAND                FUNCTION                              BIT   VALUE              DESCRIPTION
+  GROUP       NAME            NAME                            CODE
+                                                                             Enable / disable the                                                Disable (default)
+  Sunlight    PS_SC PS_CONF3_H                                     0x02      sunlight cancellation                                  0x0 (0b000)        Enable
+cancellation                                                                                                            12 : 10
+
+                                                                                                                                    0x7 (0b111)
+
+DC ambient light sources in the wavelength region between 800 nm and 1200 nm, such as sunlight and halogen, cause
+disturbances in the photodiode and the ADC circuitry. Therefore, the sensor needs to perform cancellation to reduce the noise
+from these disturbances. The sunlight cancellation PS_SC bit can be enabled to allow the sensor to measure the photocurrent
+contribution from the DC ambient light sources before driving the infrared signal pulse during the proximity measurement. After
+the proximity measurement, the sensor deducts the DC noise photocurrent from the total photocurrent. As a result, only the
+photocurrent due to the reflected signal from the object is converted by the ADC circuitry. This sunlight cancellation mechanism
+is depicted in Fig. 29.
+
+                              Reflected signal                                                                  16 bit
+                                from object                                                                     ADC
+
+                                   PD
+
+                                                                         Ambient light
+
+                           Fig. 29 - Sunlight Cancellation by Using the Active Sunlight Cancellation Current in the VCNL36828P
+
+The sensor can perform the cancellation of sunlight up to 140 klux. The sensor then goes into the sunlight protection mode
+beyond 140 klux of sunlight. Sunlight protection mode is a mode where the photodiode is in saturation due to high sunlight
+illuminance. Therefore, the sensor can no longer detect the object and will only output 0 in the PS_DATA register. This can be
+observed in Fig. 30. If the sunlight protection mode interrupt PS_SP_INT is enabled, the sensor will pull the interrupt line low
+each time the sensor goes into sunlight protection mode. As a result, the sunlight protection mode interrupt flag PS_SPFLAG
+changes from 0 to 1. This interrupt flag can be cleared by reading the INT_FLAG register. Therefore, the application should
+ignore the PS_DATA when it remains 0 and PS_SPFLAG consistently changes to 1 after clearing the INT_FLAG register.
+
+                                                                      PS_SC Disabled        PS_SC Enabled
+
+                                                           50 000
+
+                                                           40 000
+
+                              2nd line                     30 000             Sensor is in   Sensor is                                                              APPLICATION NOTE
+                                 Proximity Value (counts)  20 000             the Sunlight     in the
+                                                           10 000              Protection
+                                                                               Mode and       Sunlight
+                                                                             PS_SPFLAG      Protection
+                                                                             changes from   Mode and
+                                                                                            PS_SPFLA
+                                                                                  0 to 1    G changes
+                                                                                            from 0 to 1
+
+                                                           0
+
+                                                                   1     10           100                               1000
+
+                                                                         Sunlight AIllxuims Tiniatlence (klux)
+
+Fig. 30 - The Overall Behavior of the Sunlight Cancellation in the Proximity Sensor With Increasing Sunlight Illuminance
+
+If the PS_SC bit is disabled, the sensor goes into the sunlight protection mode when the illuminance of the sunlight is beyond
+
+Revision: 06-Mar-2025                                                        20                                                      Document Number: 80359
+
+                           For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+           www.vishay.com                                                                  Application Note
+
+                                                                                        Vishay Semiconductors
+
+           Designing the VCNL36828P Into an Application
+
+5 klux. This can be observed in Fig. 30.
+4.7 Interrupt
+
+TABLE 14 - INTERRUPT
+
+REGISTER     BIT       REGISTER           COMMAND                  FUNCTION              BIT      VALUE           DESCRIPTION
+  GROUP    NAME           NAME               CODE       Enable / disable the sunlight     13     0x0 (0b0)
+                                                     protection mode interrupt setting    12     0x1 (0b1)        Disable (default)
+           PS_SP_INT                           0x00      Enable / disable the smart      11 :    0x0 (0b0)              Enable
+                                                       persistence setting when the       10     0x1 (0b1)
+           PS_SMART_P                          0x03      interrupt event is triggered           0x0 (0b00)        Disable (default)
+                 ERS                           0x04   Set the amount of consecutive     9 : 8   0x1 (0b01)
+                                                                                        7 : 0   0x2 (0b10)              Enable
+           PS_PERS PS_CONF1_H                 0xF9       threshold crossing events      15 : 8  0x3 (0b11)
+                                                       necessary to trigger interrupt   7 : 0   0x0 (0b00)         1 time (default)
+           PS_INT                                                                       15 : 8  0x1 (0b01)              2 times
+                                                      Set the interrupt mode setting            0x3 (0b11)              3 times
+Interrupt  PS_THDL_L   PS_THDL                                                            12                            4 times
+           PS_THDL_H   PS_THDH                        Set the low threshold interrupt           0 to 65 535
+           PS_THDH_L                                                   value              9                       Interrupt disable
+           PS_THDH_H                                                                            0 to 65 535            (default)
+                                                      Set the high threshold interrupt    8
+           PS_SPFLAG                                                   value                     0x0 (0b0)    Logic high / low mode
+                                                                                                              Trigger by each high /
+           PS_CLOSE INT_FLAG                           Read the sunlight protection              0x1 (0b1)
+                                                          mode interrupt event flag                            low threshold event
+           PS_AWAY                                                                               0x0 (0b0)            Low byte
+                                                     Read the high threshold crossing                                 High byte
+                                                              interrupt event flag               0x1 (0b1)            Low byte
+                                                                                                                      High byte
+                                                     Read the low threshold crossing             0x0 (0b0)
+                                                              interrupt event flag                            No sunlight protection
+                                                                                                 0x1 (0b1)    mode interrupt event
+
+                                                                                                                          flag
+                                                                                                                Sunlight protection
+                                                                                                              mode interrupt event
+
+                                                                                                                          flag
+                                                                                                                 No high threshold
+                                                                                                             crossing interrupt event
+
+                                                                                                                          flag
+                                                                                                             High threshold crossing
+
+                                                                                                                interrupt event flag
+                                                                                                                 No low threshold
+                                                                                                             crossing interrupt event
+
+                                                                                                                          flag
+                                                                                                             Low threshold crossing
+
+                                                                                                                interrupt event flag
+
+The interrupt pin allows the proximity sensor to autonomously send an interrupt signal to the microcontroller when the sensor's        APPLICATION NOTE
+measured proximity crosses the defined high and low thresholds. There are two modes of interrupt in the VCNL36828P:
+
+· Logic mode
+
+· Enable mode
+
+Besides that, the proximity sensor also provides persistence and smart persistence features, which prevent the occurrence of
+false detection. The interrupt will only be triggered after a defined consecutive threshold crossing event.
+
+Revision: 06-Mar-2025                                21                                                      Document Number: 80359
+
+                       For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+                  www.vishay.com                                                                 Application Note
+
+                                                                                              Vishay Semiconductors
+
+                  Designing the VCNL36828P Into an Application
+
+Persistence and Smart Persistence Mode
+
+PS_PERS determines the event number after crossing the threshold that triggers the interrupt. When PS_PERS is set between
+2 and 4, three consecutive measurements after the first threshold crossing event will be performed with the measurement period
+defined by PS_PERIOD. This is to check whether the interrupt crossing events persist to prevent the occurrence of false
+detection. The interrupt will only be triggered after a consecutive threshold crossing event number as defined by the selected
+PS_PERS has occurred. This is valid for all of the interrupt modes. Fig. 31 shows the oscilloscope screenshot of pin 2 - VDD and
+pin 1 - INT for the measurement period of 50 ms, disabled smart persistence, and persistence of 2. The interrupt is pulled low
+after the second measurement that crosses the threshold out of the four measurements after the first interrupt crossing event.
+Fig. 32 shows the oscilloscope screenshot for the measurement period of 50 ms, disabled smart persistence, and persistence
+of 4. The interrupt is pulled low after the fourth measurement that crosses the threshold out of the four measurements after the
+first interrupt crossing event.
+
+VCSELA            2.          3.  New measurement                       VCSELA            2.         3.  New measurement
+              1.                         4.                                                                     4.
+                                                                                      1.
+ VDD                   50 ms                                             VDD                  50 ms
+
+INT                                                                     INT
+
+      Fig. 31 - Oscilloscope Screenshot of the Pin 2 - VDD and                Fig. 32 - Oscilloscope Screenshot of the Pin 2 - VDD and
+Pin 1 - INT for the Measurement Period of 50 ms, Disabled Smart         Pin 1 - INT for the Measurement Period of 50 ms, Disabled Smart
+
+                     Persistence, and Persistence of 2                                       Persistence, and Persistence of 4
+
+Otherwise, when PS_PERS is set to 1, the persistence events will not be counted and a new measurement will be performed
+after the defined PS_PERIOD. The interrupt will be triggered immediately after the first threshold event, regardless of whether
+PS_SMART_PERS is enabled or disabled, as shown in Fig. 33.
+
+                                  VCSELA           1st event New measurement
+                                  VDD
+                                                   50 ms         50 ms                                                                   APPLICATION NOTE
+                                  INT
+
+                                                         Fig. 33 - Oscilloscope Screenshot of the Pin 2 - VDD and
+                            Pin 1 - INT for the Measurement Period of 50 ms, Disabled Smart Persistence, and Persistence of 1
+
+When PS_SMART_PERS is enabled and PS_PERS is set between 2 and 4, four consecutive measurements will be performed
+with the time difference between pulses changing dynamically with PS_PERIOD/4 or PS_SPERIOD/4, as shown in Fig. 34,
+Fig. 35, and Fig. 36.
+
+Revision: 06-Mar-2025                                            22                                      Document Number: 80359
+
+                                  For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+        www.vishay.com                                                                Application Note
+
+                                                                                   Vishay Semiconductors
+
+        Designing the VCNL36828P Into an Application
+
+VCSELA                          New measurement                            VCSELA           New measurement
+VDD                    1. 2. 3. 4.                                         VDD     1. 2. 3. 4.
+
+INT                           50 ms                                        INT            50 ms
+                             12.5 ms                                                     12.5 ms
+
+     Fig. 34 - Oscilloscope Screenshot of the Pin 2 - VDD and            Fig. 35 - Oscilloscope Screenshot of the Pin 2 - VDD and
+Pin 1 - INT for the Measurement Period of 50 ms, Enabled Smart      Pin 1 - INT for the Measurement Period of 50 ms, Enabled Smart
+
+                     Persistence, and Persistence of 2                                   Persistence, and Persistence of 4
+
+                        VCSELA                            New measurement
+                        VDD                      1. 2. 3. 4.
+
+                        INT                            12.5 ms
+                                                      3.125 ms
+
+                      Fig. 36 - Oscilloscope Screenshot of the Pin 2 - VDD and Pin 1 - INT for the Measurement Period of 12.5 ms,    APPLICATION NOTE
+                                                              Enabled Smart Persistence, and Persistence of 4
+
+Logic Mode
+· The interrupt line is pulled low when the proximity counts cross the high threshold, as indicated by the blue line in Fig. 37
+· The interrupt line is pulled high when the proximity counts cross the low threshold, as indicated by the purple line in Fig. 37
+· PS_PERS determines the event number after crossing the threshold that triggers the interrupt, as shown in Fig. 37
+· Consecutive high threshold events cannot be triggered until the proximity count crosses the low threshold first and vice versa,
+
+  as shown by the green circles in Fig. 37
+· Logic mode allows the proximity sensor to autonomously send an interrupt signal to the microcontroller directly without the
+
+  need to read the INT_FLAG register
+
+Revision: 06-Mar-2025                                           23                                           Document Number: 80359
+
+                       For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+www.vishay.com                                            Application Note
+
+                                                       Vishay Semiconductors
+
+          Designing the VCNL36828P Into an Application
+
+                       Proximity count (no INT event)
+                       INT event
+                       No INT event when crossing
+                       Threshold line
+
+PS_THDH                    PS_THDH
+PS_THDL                    PS_THDL
+
+INT line                   INT line
+(Pin 1)                    (Pin 1)
+
+Fig. 37 - The Behavior of the INT Line (pin 1) Using Logic Mode With PS_PERS = 1 (left) and PS_PERS = 2 (right)
+
+Enable Mode
+
+· The interrupt line is pulled low when the proximity counts cross the high or low threshold, as indicated by the red circle in
+  Fig. 38
+
+· The first interrupt event can be either a high or low threshold crossing event
+· The interrupt flags PS_IF_CLOSE and PS_IF_AWAY change from 0 to 1 when the proximity counts cross the high and low
+
+  thresholds, respectively
+· PS_PERS determines the event number after crossing the threshold that triggers the interrupt
+· The interrupt flag PS_IF_CLOSE or PS_IF_AWAY can be cleared by reading the INT_FLAG register
+
+PS_THDH                Proximity Count (No INT Event)
+                       INT Event
+                       INT_FLAG Register
+                       Read INT_FLAG Register
+
+                                       PS_THDH
+
+PS_THDL                    PS_THDL
+
+INT line                   INT line
+(Pin 1)                    (Pin 1)
+
+PS_IF_CLOSE                PS_IF_CLOSE                                                                                               APPLICATION NOTE
+
+PS_IF_AWAY                 PS_IF_AWAY
+
+                    Fig. 38 - The Behavior of the INT Line (pin 1) and INT_FLAG Register Using the Enable Mode and PS_PERS = 1
+                       With High Threshold Crossing as the First Event (left) and Low Threshold Crossing as the First Event (right)
+
+Sunlight Protection Mode
+
+The sensor enters the sunlight protection mode when the photodiode is in saturation due to very high sunlight illuminance.
+Therefore, the sensor can no longer detect the object and will only output 0 in the PS_DATA register. The application can detect
+this situation by enabling PS_SP_INT and reading the PS_SPFLAG when the interrupt line has been pulled low and PS_DATA
+suddenly goes into 0 to confirm this situation. This is explained in section 4.6.
+
+Revision: 06-Mar-2025  24                                                            Document Number: 80359
+
+                       For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+           www.vishay.com                                                                  Application Note
+
+                                                                                        Vishay Semiconductors
+
+           Designing the VCNL36828P Into an Application
+
+4.8 Readout Registers
+
+TABLE 15 - READOUT REGISTERS
+
+REGISTER     BIT            REGISTER               COMMAND      FUNCTION         BIT    VALUE              DESCRIPTION
+  GROUP    NAME                NAME                   CODE  Read the proximity  7 : 0
+                                                                                15 : 8
+           PS_DATA_L        PS_DATA                0xF8          output data                 0 to 65 535            Low byte
+           PS_DATA_H                                                            7 : 0   0x28 (0b00101000)
+                                                            Read the device ID          0x29 (0b00101001)          High byte
+Readout    VCNL36828P_ID_L VCNL36828P                                           15 : 8  0x01 (0b00000001)
+registers                                     _ID                                                          Device with a slave of
+                                                                                                                 address 0x60
+                                                   0xFA
+                                                                                                             Device with a slave
+           VCNL36828P_ID_H                                                                                     address of 0x51
+
+                                                                                                           Should be kept default
+
+The VCNL36828P has two readout registers, which are PS_DATA and VCNL36828P_ID. PS_DATA is the 16 bit register in which
+the proximity counts data will be stored after each measurement. The register can be read via the I2C communication from a
+microcontroller. There are two methods of reading the register PS_DATA:
+
+· Data polling - continuously reading the register PS_DATA
+
+· Interrupt - read the register PS_DATA after the INT line (pin 1) has been triggered
+
+Depending on the applications' requirements, the interrupt method is recommended to reduce power consumption.
+
+On the other hand, VCNL36828P_ID is the register in which the device ID is stored. This allows the sensor to be identified with
+a specific slave address depending on the connection of pins 5 and 6 of the sensor with the microcontroller. Therefore, the
+register VCNL36828P_ID can be a good first register to read when first communicating with the sensor to test the I2C
+communication and to check the slave address.
+
+Revision: 06-Mar-2025                                       25                                 Document Number: 80359              APPLICATION NOTE
+
+                            For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+                  www.vishay.com                                                                                 Application Note
+
+                                                                                                              Vishay Semiconductors
+
+                        Designing the VCNL36828P Into an Application
+
+5. I2C AND TIMING
+
+5.1 I2C Write and Read Protocol
+The communication with the VCNL36828P can be performed via I2C. The I2C write and read protocol when communicating with
+the proximity sensor is shown in Fig. 39.
+
+Send byte o write command to VCNL36828P
+
+1     7                 1  1        8              1           8            1           8         1        1
+
+S  Slave address        Wr A     Command code      A     Data byte low      A     Data byte high  AP
+
+Receive byte o read data from VCNL36828P
+
+1     7                 1  1        8              1  1                  7     1  1                     8     1      8               1  1
+
+S  Slave address        Wr A     Command code      AS       Slave address      Rd A        Data byte low      A   Data byte high     NP
+
+S = start condition           Host action
+P = stop condition            VCNL36828P response
+A = acknowledge
+N = not acknowledge
+
+                                                      Fig. 39 - I2C Write and Read Protocol
+
+It is imperative that only the restart condition for the I2C read is implemented instead of the stop and restart condition. For
+example, Fig. 40 shows a logic analyzer screenshot of the SCL (pin 5) and SDA line (pin 6) when reading the register
+VCNL36828P_ID for the VCNL36828P with a slave address of 0x60. Here, the restart condition, indicated by the blue box, has
+been implemented and the low data byte of 0x28 matches the device ID stated in the datasheet for the VCNL36828P with the
+slave address of 0x60.
+
+   Receive byte  read data from VCNL36828P
+
+   1                 7        1  1             8         1  1                  7     1     1                   8  1               8        1  1
+
+   S     Slave address        Wr A     Command code      AS       Slave address      Rd A         Data byte low   A     Data byte high     NP
+
+                        S | 110 0000 | 0 | 0 | 1111 1010 | 0 | S | 110 0000 | 1 | 0 | 0010 1000 | 0 | 0000 0001 | 1 | P
+                                         S | 0x60 | 0 | 0 | 0xFA | 0 | S | 0x60 | 1 | 0 | 0x28 | 0 | 0x01 | 1 | P
+
+      Start                                              Restart                                                                        Stop
+
+                        Fig. 40 - The Correct I2C Read When Reading the Register VCNL36828P_ID With a Restart Condition
+
+On the other hand, Fig. 41 shows the logic analyzer screenshot, but with an incorrect read I2C protocol when reading the register                APPLICATION NOTE
+VCNL36828P_ID. Here, the stop and restart conditions have been applied, causing an error in the data field. As a result, the
+sensor writes a constant 0xFF and 0x07 in the PS_DATA register.
+
+Revision: 06-Mar-2025                                                   26                                              Document Number: 80359
+
+                                    For technical questions, contact: consumersensors@vishay.com
+
+   THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                             ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+               www.vishay.com                                                           Application Note
+
+                                                                                     Vishay Semiconductors
+
+                  Designing the VCNL36828P Into an Application
+
+     Receive byte  read data from VCNL36828P
+
+     1         7                     1  1  8             1  1               7  1  1               8      1                      8               1     1
+
+     S         Slave address         Wr A  Command code  AS    Slave address   Rd A  Data byte low       A                      Data byte high  NP
+
+               S | 110 0000 | 0 | 0 | 1111 1010 | 0 | P | S | 110 0000 | 1 | 0 | 1111 1111 | 0 | 0000 0111 | 1 | P
+                                S | 0x60 | 0 | 0 | 0xFA | 0 | P | S | 0x60 | 1 | 0 | 0xFF | 0 | 0x07 | 1 | P
+
+        Start                                 Stop             Restart                                   Invalid data                           Stop
+
+        Fig. 41 - The Incorrect I2C Read When Reading the Register VCNL36828P_ID With Both Stop and Restart Conditions
+
+Therefore, the designer should use the correct I2C library, especially the I2C read, from the microcontroller manufacturer that
+implements only the restart condition, without the stop condition before the restart condition. This is usually a typical mistake
+when communicating with the VCNL36828P, as shown in Fig. 41.
+
+5.2 Timing
+
+5.2.1 Proximity Measurement Timing
+
+In auto mode, one complete proximity measurement depends on the PS_PERIOD or PS_SPERIOD setting. However, the sensor
+is only active within a short time, as shown in Fig. 42.
+
+VCSELA                                                                         VCSELA
+
+VDD                           PS_PERIOD /                                      VDD
+                                                                                                                   PS_PERIOD /
+                              PS_SPERIOD                                                                           PS_SPERIOD
+
+               tmeasurement, active                                                          tmeasurement, active
+
+        Fig. 42 - Proximity Measurement in Auto Mode                           Fig. 43 - Proximity Measurement in Active Force Mode                           APPLICATION NOTE
+
+On the other hand, one complete measurement in the active force mode requires adding both the active measurement period
+and PS_PERIOD or PS_SPERIOD as shown in Fig. 43.
+
+One active measurement period for both depends on the register settings PS_IT, PS_ITB, PS_MPS as well as DC_KILL as
+shown below:
+
+                                     tmeasurement, active = 1.2 x (DC_KILL + (2 x PS_IT x PS_ITB x PS_MPS))                                              (2)
+
+Revision: 06-Mar-2025                                          27                                                               Document Number: 80359
+
+                                           For technical questions, contact: consumersensors@vishay.com
+
+     THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                               ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+www.vishay.com                                                                        Application Note
+
+                                                                                   Vishay Semiconductors
+
+Designing the VCNL36828P Into an Application
+
+Factor 1.2 is included in the equation above to consider the part-to-part tolerance of 20 %. On the other hand, the term
+DC_KILL is the process where the sensor measures the DC noise in the background before the actual measurement pulse from
+the VCSEL is emitted. This DC noise signal will then be deducted from the total reflected signal. The time taken to complete the
+DC_KILL process depends on the PS_ITB setting. When PS_ITB = T = 25 s, DC_KILL takes 450 s to complete. Otherwise,
+when
+PS_ITB = T = 50 s, DC_KILL takes 900 s to complete. These are shown in Fig. 44 and Fig. 45.
+
+                                   VCSELA                                                        VCSELA
+                                         VDD
+                     PS_IT                                                  PS_IT
+      2 x PS_IT x PS_ITB x PS_MPS
+                                                           2 x PS_IT x PS_ITB x PS_MPS           VDD
+DC_KILL = 450 s
+                                                           DC_KILL = 900 s
+
+Fig. 44 - The Measurement Time When PS_ITB = T = 25 s      Fig. 45 - The Measurement Time When PS_ITB = T = 50 s
+
+Example - Active Measurement Time With PS_ITB = 25 s and PS_MPS = 1
+
+For example, given PS_IT = 1T, PS_ITB = T = 25 s, PS_MPS = 1, the total active measurement time can be calculated as
+follows:
+
+                                          tmeasurement, active = 1.2 x (450 s + (2 x 1 x 25 s x 1)) = 600 s
+
+Example - Active Measurement Time With PS_ITB = 50 s and PS_MPS = 8
+
+For example, given PS_IT = 1T, PS_ITB = T = 50 s, PS_MPS = 8, the total active measurement time can be calculated as
+follows:
+
+                                         tmeasurement, active = 1.2 x (900 s + (2 x 1 x 50 s x 8)) = 2.04 ms
+
+Revision: 06-Mar-2025                                  28                                        Document Number: 80359           APPLICATION NOTE
+
+                                   For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+     www.vishay.com                                                                                           Application Note
+
+                                                                                                           Vishay Semiconductors
+
+     Designing the VCNL36828P Into an Application
+
+5.2.2 Timing Specification
+Fig. 46 and Fig. 47 show the timing specification for the auto and active force mode, respectively.
+
+                        ASIC process time                                    INT line (pin 1)
+                                                                                goes low
+                        I2C write time
+                        I2C read time
+                        Measurement repetition
+
+                       Power on   Initialization   Turn on sensor        Measurement            Read       Read data
+                        2.5 ms                    (write PS_ON = 1             time        interrupt flag  (PS_DATA)
+                                 Multiple of I2C  and PS_CAL = 1)                          (INT_FLAG)
+                                 write x B s (1)                         (PS_PERIOD)                         D s (2)
+                                                         B s (1)                               D s (2)
+                                                                              T ms
+
+                                                                                                                           t
+
+                        ton               tinitialization                    tmeasurement      tread
+
+                                                               Fig. 46 - Timing Specification for the Auto Mode
+
+Notes
+(1) B s - The parameter B refers to the time taken for a complete write I2C protocol. This depends on the selected I2C mode. Please refer to
+
+    Table 16.
+(2) D s - The parameter D refers to the time taken for a complete read I2C protocol. This depends on the selected I2C mode. Please refer to
+
+    Table 16.
+
+     ASIC process time                                     tdelay
+
+     I2C write time                                                                            INT line (pin 1)
+     I2C read time                                                                                goes low
+     Measurement repetition
+
+Power Initialization     Turn on sensor    Write trigger           Measurement                Turn off          Read          Read data
+  on Multiple of I2C    (write PS_ON = 1  (PS_TRIG = 1)                 delay              sensor (write
+                        and PS_CAL = 1)                                 T ms               PS_ON = 0)      interrupt flag     (PS_DATA)
+2.5 ms write x B s (1)                        B s (1)                                                                           D s (2)
+                              B s (1)                                                         B s (1)      (INT_FLAG)
+                                                                                                               D s (2)
+
+                                                                                                                                         t
+
+ton  tinitialization                                       tmeasurement                                               tread
+
+                                 Fig. 47 - Timing Specification for the Active Force Mode
+
+Notes                                                                                                                                              APPLICATION NOTE
+
+(1) B s - The parameter B refers to the time taken for a complete write I2C protocol. This depends on the selected I2C mode. Please refer to
+    Table 16.
+
+(2) D s - The parameter D refers to the time taken for a complete read I2C protocol. This depends on the selected I2C mode. Please refer to
+    Table 16.
+
+A measurement delay equal to the active measurement time defined by Equation 2 plus PS_PERIOD is required for the
+measurement to be completed after the trigger of the active force mode. The delay depends on the register settings of PS_IT,
+PS_ITB, PS_MPS, and PS_PERIOD. The required delay is:
+
+                            Measurement delay = 1.2 x (time to trigger x tmeasurement, active + PS_PERIOD) = (3)
+                     1.2 x ((0.5 x PS_IT x PS_ITB) + DC_KILL + (2 x PS_IT x PS_ITB x PS_MPS) + PS_PERIOD)
+
+Revision: 06-Mar-2025                                                    29                                                Document Number: 80359
+
+                                 For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+                       www.vishay.com                                                 Application Note
+
+                                                                                   Vishay Semiconductors
+
+                       Designing the VCNL36828P Into an Application
+
+Factor 1.2 in the equation is needed to consider the 20 % part-to-part tolerance of the measurement.
+The individual I2C write and read time per byte depends on the I2C mode, as shown in Table 16:
+
+TABLE 16 - I2C WRITE AND READ PROTOCOL TIME PER BYTE
+
+I2C MODE               CLOCK FREQUENY (kHz) (1)  I2C WRITE PROTOCOL TIME (s) (2)   I2C READ PROTOCOL TIME (s) (2)
+                                                                                                         500
+Standard                  100                                        400                                 125
+
+Fast                      400                                        100
+
+Notes
+(1) Maximum limit
+(2) Typical value with tolerance; it could vary depending on master
+
+Example - Auto Mode With Standard I2C Mode
+
+Table 17 shows an example of the timing specification for the Auto Mode when initializing five registers, as well as when turning
+on the sensor. The sensor needs approximately 4.9 ms for the total initialization phase. The exact timing depends on the I2C
+clock configuration from the master and the number of registers written. On the other hand, the sensor needs one measurement
+period to complete a measurement. In the case of when a PS_PERIOD of 50 ms has been selected, the measurement time is
+50 ms. In many cases, the application uses the interrupt method to read the sensor and reduce power consumption. In this
+case, once the INT line (pin 1) has been pulled low, the interrupt service routine in the microcontroller will be executed and the
+microcontroller will then read the register INT_FLAG to clear the interrupt flag. The register PS_DATA will then be read. Both
+reading processes will each need 0.5 ms for the standard I2C mode. Therefore, the total measurement time is 51 ms.
+
+TABLE 17 -TIMING SPECIFICATION EXAMPLE
+FOR AUTO MODE AND STANDARD I2C MODE (1)
+
+PARAMETER              REGISTER                                           REMARKS                             TIME (ms)
+
+ton                    -               The power on reset after the VDD pin is connected to the power supply  2.5
+
+                       PS_CONF1_L/H                                                                           0.4
+
+                       PS_CONF2_L/H Write the sensor settings                                                 0.4
+
+                       PS_CONF3_L/H                                                                           0.4
+tinitialization PS_THDL Write the low threshold setting 0.4
+
+                       PS_THDH         Write the high threshold setting                                       0.4
+
+                       PS_CONF1_L/H Turn on the sensor by writing PS_ON = 1 and PS_CAL = 1                    0.4
+
+tinitialization_total  -               -                                                                      4.9
+tmeasurement
+                       - Actual measurement time depends on the selected PS_PERIOD; 50
+                                        here is an example of when PS_PERIOD = 50 ms
+
+                       INT_FLAG        Read the interrupt flag                                                0.5
+tread PS_DATA Read the proximity data 0.5
+
+tmeasurement_total     -               -                                                                      51                           APPLICATION NOTE
+
+Notes
+
+(1) Standard I2C mode comes with a 100 kHz clock frequency. One can approximate the time taken for a complete write and read I2C protocol
+    to be 400 s and 500 s per byte respectively. Please refer to Table 16.
+
+Revision: 06-Mar-2025                                                30                                       Document Number: 80359
+
+                                 For technical questions, contact: consumersensors@vishay.com
+
+     THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                               ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+www.vishay.com                                                                     Application Note
+
+                                                                                Vishay Semiconductors
+
+Designing the VCNL36828P Into an Application
+
+6. PROXIMITY MEASUREMENT
+
+6.1 Software Flow Chart for the Proximity Measurement
+
+Fig. 48 shows a typical software flow chart for the proximity measurement using the auto mode and enabled interrupt. The
+measurement starts with the initialization code. Please note that the provided sensor initialization code is just an example. In
+practice, the designer should change the initialization code based on the application's requirements. After the initialization, the
+sensor should perform the offset count cancellation by reading the proximity count without the object. This offset count should
+then be written to the offset cancellation register PS_CANC. After writing the cancellation register, the sensor should perform
+proximity measurement in a loop. Next, the microcontroller should wait for the interrupt line to be pulled low via an interrupt
+service routine. When the interrupt has been pulled low, the interrupt flag register and the proximity data will be read.
+
+                       Start
+
+                       Step 1) - Sensor Initialization:
+
+                          Write Reg: PS_CONF1_L
+                             PS_ON = 0
+
+                          Write Reg: PS_CONF1_H
+                             PS_HD = 1
+                             PS_INT = 3
+
+                          Write Reg: PS_CONF2_L
+                             PS_PERIOD = 1
+                             PS_IT = 2
+                             PS_ITB = 1
+                             PS_GAIN = 1
+
+                          Write Reg: PS_CONF2_H
+                             PS_SENS = 1
+                             PS_CURRENT = 7
+
+                          Write Reg: PS_THDL
+                             500
+
+                          Write Reg: PS_THDH
+                             2000
+
+                          Write Reg: PS_CONF1
+                             PS_ON = 1
+                             PS_CAL = 1
+
+                       Step 2) - Read Proximity Data
+                                     (Offset):
+
+                          Read Reg: PS_DATA
+
+                        Step 3) - Write Offset Count
+                                  Cancellation:
+
+                          Write Reg: PS_CANC
+
+                                     Step 4) - Wait For INT Line                                                                     APPLICATION NOTE
+                                           To Be Pullled Low
+
+                       INT line is pulled low
+                                   Step 5) - Read Interrupt Flag:
+
+                                      Read Reg : INT_FLAG
+
+                                              Step 6) - Read Proximity Data
+                                                        (Delta Count):
+
+                                                Read Reg: PS_DATA
+
+                       Fig. 48 - Typical Software Flow Chart for the Auto Mode
+
+Revision: 06-Mar-2025  31                                                            Document Number: 80359
+
+                       For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+             www.vishay.com                                                                         Application Note
+
+                                                                                                 Vishay Semiconductors
+
+             Designing the VCNL36828P Into an Application
+
+6.2 Proximity Value vs. Distance Curve
+
+The behavior of the proximity sensor can be characterized by the proximity value against the distance. In some applications,
+the sensor will not be placed underneath a window cover. The designer could then use the proximity value against the distance
+for the case without the window cover as a reference. On the other hand, most applications will have the requirement of placing
+the sensor underneath a window cover. Here, the proximity value against the distance for the case with the window cover can
+be used as a reference. The designer can expect a decrease in the dynamic range due to the increase of crosstalk from the
+window cover.
+
+6.2.1 Proximity Value vs. Distance Curve Without the Window Cover
+
+Fig. 49 and Fig. 50 show the typical proximity counts output against distance for three different driving currents and two
+integration times. Here, the measured reference object medium is the Kodak Gray Card. This card has approximately 18 %
+reflectivity at 940 nm. The sensor can detect up to 20 cm with a minimum of 70 delta counts when measuring with the Kodak
+Gray Card and when higher sensor settings of PS_IT = 8T and PS_CURRENT = 20 mA have been selected. The dashed red line
+indicates this in Fig. 50. The minimum of 70 delta counts is usually enough to consider the sensor's tolerance of around
+± 20 % and account for the noise from the disturbing sources.
+
+                          Axis Title                                                                   Axis Title
+
+10 000                                             10000          100 000                                                 10000
+  1000                                                             10 000
+                                            7 mA                      1000                                         7 mA
+                                            12 mA                                                                  12 mA
+                                            20 mA                                                                  20 mA
+2nd line
+   Proximity Value (counts)                        1000                                                                   1000
+
+100                                                                                             1st line
+                                                                                                   2nd line
+                                                                  100
+                                                                                                                    2nd line
+                                                                                                                       Proximity Value (counts)
+
+                                                                                                                                                                                                                    1st line
+                                                                                                                                                                                                                       2nd line
+                                                   100                           PS_IT = 8T,                                    100
+
+10                                                                               PS_ITB = 50 s,                                 10
+                                                                                                                   100
+             PS_IT = 1T, PS_ITB = 50 s,                           10 PS_GAIN = 2x,
+                                                                           PS_HD = 16 bit,
+
+             PS_GAIN = 2x, PS_HD = 16 bit,                                       Media: Kodak
+
+             Media: Kodak Gray Card                                      Gray Card
+                                                                  1
+1                                                         10
+                                               100
+        0.1            1             10                                     0.1               1        10
+
+             Distance to Reflecting Card (mm)                                    Distance to Reflecting Card (mm)
+
+Fig. 49 - Proximity Value vs. Distance; PS_IT = 1T (13 bit)       Fig. 50 - Proximity Value vs. Distance; PS_IT = 8T (16 bit)
+
+While the Kodak Gray Card is used as a reference, in practice, the proximity values change with the different objects' reflectivity
+at the same distance. Therefore, the designer should consider this effect during the design phase.
+
+The VCNL36828P also has a peak sensitivity between 0.6 mm and 1 mm as shown in Fig. 51. Peak sensitivity is the distance
+away from the sensor, in which the sensor has the highest response.
+
+Revision: 06-Mar-2025                                         32                                                   Document Number: 80359                                                                                        APPLICATION NOTE
+
+                                         For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+www.vishay.com                                                                     Application Note
+
+                                                                                Vishay Semiconductors
+
+Designing the VCNL36828P Into an Application
+
+                                           Axis Title
+
+                       10 000                                         10000
+
+                       10002nd line                             7 mA
+                          Proximity Value (counts)
+                                                              Peak sensitivity1000
+
+                                                                                                                       1st line100
+                                                                                                                          2nd line
+                       10                  PS_IT = 1T,                     100
+                                           PS_ITB = 25 s,
+                        1                  PS_GAIN = 1x,                   10
+                          0.1              PS_HD = 12 bit,            100
+                                           Media: Kodak
+                                           Gray Card
+
+                                        1              10
+
+                               Distance to Reflecting Card (mm)
+
+                       Fig. 51 - Proximity Value vs. Distance; PS_IT = 1T
+
+The sensor's detection range can be extended beyond 20 cm if the number of pulse PS_MPS increases from the lowest possible
+pulse of 1 to the highest possible of 8.
+
+6.3 Temperature Behavior
+
+When designing the VCNL36828P for the end application, the temperature behavior of the proximity counts should also be
+considered. Fig. 52 shows the average relative proximity counts against ambient temperature of VCNL36828P.
+
+                                           Axis Title
+
+                       1.4                                            10000
+
+                       1.3
+                       2nd line
+                       1.2Relative Proximity Value (counts)
+
+                       1.1                                                                                             1st line1000
+                                                                                                                          2nd line
+                       1
+
+                       0.9
+
+                       0.8                                            100
+
+                       0.7 PS_CURRENT = 11 mA,
+                                 PS_IT = 4T (4 x 50 s = 200 s)
+
+                       0.6 Media: Kodak Gray Card
+
+                       0.5                                                  10                                                                              APPLICATION NOTE
+                                                                      80
+                               -40 -20  0  20 40 60
+
+                               Tamb - Ambient Temperature (°C)
+
+                       Fig. 52 - Average Relative Proximity Counts vs. Ambient Temperature of VCNL36828P
+
+The sensor has a negative temperature coefficient as the temperature increases from room temperature to 85 °C. The designer
+should consider this behavior and design the end application with enough headroom for the proximity counts fluctuation with
+temperature.
+
+Another good design approach to reduce the effect of the proximity counts fluctuation due to temperature is regular calibration
+without an object. One can observe that the change in proximity counts with temperature happens slower than the change in
+proximity counts with changing distance of an object. By observing the increase or decrease of offset counts, the system can
+recognize that as the change of temperature and proximity correction could be implemented.
+
+Revision: 06-Mar-2025                      33                                                                                       Document Number: 80359
+
+                       For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+www.vishay.com                                                                                          Application Note
+
+                                                                                                     Vishay Semiconductors
+
+Designing the VCNL36828P Into an Application
+
+7. AVERAGE CURRENT CONSUMPTION
+
+The proximity sensor VCNL36828P has been developed for battery-powered devices such as true wireless stereo (TWS)
+earbuds, smart watches, etc. The designer needs to compromise between the performance and current consumption for such
+applications. VCNL36828P offers an average current consumption down to 5.85 A.
+
+Fig. 53 shows the current consumption components through the pins.
+
+                                           IDD                                R1 R2 R3
+                       VDD (2)
+
+                                                    VCNL36828P                                              Host
+                                                    (slave address:                                  microcontroller
+
+                          IVCSEL                           0x60)
+
+VCSELA (4)                                              II2C
+
+                                                   Itotal            SCL (5)                         SCL
+                                                                     SDA (6)                         SDA
+                                                                     INT (1)                         INT (GPIO)
+
+                                Fig. 53 - Current Consumption Components Through the Pins
+
+The general total current consumption can be calculated as follows:
+
+                                                          Itotal = IDD + IVCSEL + II2C                                (4)
+
+The main current components are from IDD and IVCSEL. The current contribution from II2C for I2C communication is negligible if
+the interrupt is activated. However, if the polling mode is used, the current contribution from these pins should be considered
+in the calculation.
+
+Fig. 54 shows the current consumption profile of VCNL36828P.
+
+                       Current                     PS_IT
+
+                       A
+
+                       B                                                                                                                 APPLICATION NOTE
+
+                       C                                                                             Time
+
+                                                D  E
+
+                                                          F
+
+                                                Fig. 54 - Current Consumption Profile of VCNL36828P
+
+Revision: 06-Mar-2025                                                34                                          Document Number: 80359
+
+                                For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+           www.vishay.com                                                            Application Note
+
+                                                                                  Vishay Semiconductors
+
+           Designing the VCNL36828P Into an Application
+
+Table 18 describes the parameters of the current consumption profile in Fig. 54.
+
+TABLE 18 - AVERAGE CURRENT CONSUMPTION PARAMETER
+
+PARAMETER PARAMETER NAME                   VALUE                                  DESCRIPTION
+
+A IVCSEL 7 mA to 20 mA The magnitude of IVCSEL depends on the selected PS_CURRENT setting; This current is drawn by the pin VCSELA
+
+B IDD (Active) 330 A IDD (active) is the supply current consumed during the active state by the pin VDD
+
+C                      IDD (Idle)          5 A         IDD (idle) is the supply current consumed during the idle state by the pin VDD
+
+                                                       DC_KILL is the period where the sunlight and DC noise cancellation
+
+D                      DC_KILL     450 s / 900 s happens; the duration depends on the selected PS_ITB. When PS_ITB =
+
+                                                       25 s, DC_KILL = 450 s and when PS_ITB = 50 s, DC_KILL = 900 s
+
+E Proximity 2 x PS_IT x Proximity measurement is the duration in which the sensor sends the VCSEL
+               measurement pulse PS_ITB x PS_MPS pulse/s; The values depend on PS_IT, PS_ITB, and PS_MPS
+
+D + E (1)           Active              DC_KILL +      The active measurement period is the duration during which the sensor
+           measurement period          (2 x PS_IT x    performs the complete proximity measurement, which consists of DC_KILL
+                                   PS_ITB x PS_MPS)    and proximity measurement pulse
+
+F Measurement period 6.25 ms to 400 ms The measurement period in which the measurement is repeated, which
+                                                                            depends on the selected PS_PERIOD / PS_SPERIOD setting
+
+Note
+(1) The active measurement period could have ± 20 % part-to-part tolerance, which is not considered here
+
+A low current consumption can be achieved in VCNL36828P due to a low supply current of 5 A during the idle state. When the
+sensor is switched on, it will always consume 5 A. This is indicated by the parameter "C" in Fig. 54 over the whole time as long
+as the sensor is switched on. During the active measurement period, as indicated by the parameter "D" and "E", the sensor
+consumes an additional current of 330 A on top of 5 A. Besides that, during the active measurement period, the sensor will
+emit a short current pulse PS_CURRENT with a duration of PS_IT. The number of pulses within the duration "E" will also be
+multiplied by the parameter PS_MPS.
+
+The average current consumption over the measurement period PS_PERIOD in VCNL36828P with interrupt mode can be
+calculated as follows:
+
+                          ((DC_KILL + (2 x PS_IT x PS_ITB x PS_MPS)) x IDD(active)) + (PS_IT x PS_ITB x PS_CURRENT x PS_MPS)
+Iaverage = IDD(idle)+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                                                                                          PS_PERIOD
+                                                                                                                                                                      (5)
+
+Example - Average current Consumption Calculation
+
+Table 19 shows the average current consumption example for PS_IT = 1T with PS_ITB = T = 25 s for different PS_PERIOD and
+PS_CURRENT.
+
+TABLE 19 - AVERAGE CURRENT CONSUMPTION (PS_ITB = T = 25 s, PS_IT = 1T)                                                                                                                                                                                                                                             APPLICATION NOTE
+
+                                                       PS_PERIOD / PS_SPERIOD (ms)
+
+PS_IT (s) PS_CURRENT 6.25 12.5 25                             50                  100                     200   400
+                          (mA)
+
+25                     7           59.40        32.20  18.60  11.80               8.40                    6.70  5.85
+
+25                     9           67.40        36.20  20.60  12.80               8.90                    6.95  5.98
+
+25                     11          75.40        40.20  22.60  13.80               9.40                    7.20  6.10
+
+25                     12          79.40        42.20  23.60  14.30               9.65                    7.33  6.16
+
+25                     15          91.40        48.20  26.60  15.80               10.40                   7.70  6.35
+
+25                     17          99.40        52.20  28.60  16.80               10.90                   7.95  6.48
+
+25                     19          107.40       56.20  30.60  17.80               11.40                   8.20  6.60
+
+25                     20          111.40       58.20  31.60  18.30               11.65                   8.33  6.66
+
+Revision: 06-Mar-2025                                  35                                                 Document Number: 80359
+
+                                   For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+     www.vishay.com                                          Application Note
+
+                                                          Vishay Semiconductors
+
+     Designing the VCNL36828P Into an Application
+
+For example, given PS_IT = 1T, PS_ITB = T = 25 s, PS_MPS = 1, PS_PERIOD = 400 ms and PS_CURRENT = 7 mA, the average
+current consumption with negligible II2C can be calculated as follows:
+
+                                               ((450 s + (2 x 1 x 25 s x 1)) x 330 A) + (1 x 25 s x 7 mA x 1)
+                       Iaverage = 5 A + ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ = 5.85 A
+
+                                                                                    400 ms
+
+Table 20 shows the average current consumption example for PS_IT = 4T with PS_ITB = T = 50 s and PS_MPS = 1 for different
+PS_PERIOD and PS_CURRENT.
+
+TABLE 20 - AVERAGE CURRENT CONSUMPTION (PS_ITB = T = 50 s, PS_IT = 4T)
+
+                                           PS_PERIOD / PS_SPERIOD (ms)
+
+PS_IT (s) PS_CURRENT 6.25 12.5 25                  50     100                            200     400
+                            (mA)
+                                                                                                9.57
+200                    7   297.64  151.32  78.16   41.58  23.29                          14.15  10.57
+                                                                                                11.57
+200                    9   361.64  183.32  94.16   49.58  27.29                          16.15  12.07
+                                                                                                13.57
+200                    11  425.64  215.32  110.16  57.58  31.29                          18.15  14.57
+                                                                                                15.57
+200                    12  457.64  231.32  118.16  61.58  33.29                          19.15  16.07
+
+200                    15  553.64  279.32  142.16  73.58  39.29                          22.15
+
+200                    17  617.64  311.32  158.16  81.58  43.29                          24.15
+
+200                    19  681.64  343.32  174.16  89.58  47.29                          26.15
+
+200                    20  713.64  359.32  182.16  93.58  49.29                          27.15
+
+For example, given PS_IT = 4T, PS_ITB = T = 50 s, PS_MPS = 1, PS_PERIOD = 400 ms and PS_CURRENT = 20 mA, the
+average current consumption with negligible II2C can be calculated as follows:
+
+                                            ((900 s + (2 x 4 x 50 s x 1)) x 330 A) + (4 x 50 s x 20 mA x 1)
+                      Iaverage = 5 A + --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- = 16.07 A
+
+                                                                                   400 ms
+
+The designer could use the current calculator tool to calculate the average current consumption based on the selected settings
+here: https://www.vishay.com/en/optoelectronics/proximity-sensor-current-calculator/
+
+Revision: 06-Mar-2025                      36                                            Document Number: 80359                                                                                                               APPLICATION NOTE
+
+                           For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+        www.vishay.com                                                                                                                                Application Note
+
+                                                                                                                                                   Vishay Semiconductors
+
+        Designing the VCNL36828P Into an Application
+
+8. MECHANICAL AND OPTICAL DESIGN
+
+The light wave spreads as it travels in space. This also applies to infrared light from the VCSEL, where it spreads with increasing
+distance from the sensor. Therefore, the window cover diameter needs to be adjusted to meet the minimum diameter
+requirement so that the opaque housing will not block the infrared signal. This minimum diameter depends on the distance
+between the top of the cover and the top of the sensor, the emission angle of the VCSEL, and the field of view of the photodiode.
+In general, the window diameter increases with increasing distance away from the sensor. The VCSEL in the sensor has an
+emission angle of ± 4.5°. On the other hand, the photodiode in the sensor has an angle of half sensitivity of ± 60° in the X-axis
+direction and ± 45° in the Y-axis direction. These are shown in Fig. 55 and Fig. 56.
+
+                                                                           Axis0T°itle 10° 20°
+
+                                                                                                                     10000
+                                                                                                                     30°
+
+                       2nd line                                                                                                           1400°00   - Angular Displacement
+                          Ie, rel. - Relative Radiant Intensity  1.0                                                                                  2nd line
+
+                                                                 0.9
+                                                                                                                                          50°
+
+                                                                 0.8
+                                                                                                                                          1600°0
+
+                                                                 0.7                                                 70°
+
+                                                                                                                     80°
+
+                                                                                                                                         10
+                                                                        0.6 0.4 0.2 0
+
+                                                                                                  1st line
+
+                       Fig. 55 - Relative Radiant Intensity vs. Angular Displacement of the VCSEL in the VCNL36828P
+
+INT 1                                                            6 SDA                                                                             Axis0T°itle 10° 20°              10000
+                                                                                                                                                                            X-Axis  30°
+         ASIC
+
+ VDD 2                 PD                                                      2nd line                         1.0                                                                 1400°00  - Angular Displacement
+GND 3                                          5 SCL                              Srel. - Relative Sensitivity                              Y-Axis                                              2nd line
+                                                                                                                                                                                    50°
+                                   X-axis                                                                       0.9                                                                 1600°0
+                                                                                                                                                                                    70°
+                                                                                                                0.8                                                                 80°
+                                                                                                                                                                                    10
+                                                                                                                0.7
+
+                        VCSEL                                    4 VCSELA                                                                                                                                            APPLICATION NOTE
+                       Y-axis
+                                                                                                                     0.6 0.4 0.2 0
+                                                                                                                                               1st line
+
+                       Fig. 56 - Relative Sensitivity vs. Angular Displacement of the Photodiode in the VCNL36828P
+
+Since the VCSEL has a narrower emission angle than the field of view of the photodiode, it is possible to design the window
+asymmetrically. This is shown in Fig. 57.
+
+Revision: 06-Mar-2025                                                      37                                                                                               Document Number: 80359
+
+                               For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+www.vishay.com                                                                         Application Note
+
+                                                                                    Vishay Semiconductors
+
+Designing the VCNL36828P Into an Application
+
+                       y3                                                Side view
+                             y2                                          Top view
+                                   y1
+
+                                                                     PD
+                                        Y-axis
+                       VCSEL
+                                             ASIC
+
+                       X-axis
+
+                    Fig. 57 - Asymmetric Window Design Where the Diameter Increases With Increasing Distance From the Sensor
+
+The minimum window cover diameter D can be calculated as follows:
+
+                       D = x + (y × tan(1)) + (y × tan (2)) = 1.5 mm + (y × tan(1)) + (y × tan (2))                           (6)
+
+where x is the distance between the edge of the VCSEL and the edge of the photodiode, y is the distance between the top of              APPLICATION NOTE
+the window cover and the top of the sensor, 1 is the emission angle of the VCSEL, and 2 is the field of view of the photodiode.
+x is equal to 1.5 mm after including the mechanical placement tolerance of the VCSEL and photodiode die in the sensor
+package. Fig. 58 shows the diameter calculation of the window cover with thickness T with increasing distance between the
+top of the window cover and the top of the sensor. The placement of the window cover directly on top of the sensor is usually
+preferred because it will avoid the peak sensitivity of the sensor. This will help to reduce the crosstalk. However, this is generally
+difficult to achieve in the assembly because there will likely be an air gap due to mechanical tolerance. If this is the case, an air
+gap of less than 1 mm is acceptable.
+
+Revision: 06-Mar-2025  38                                                                            Document Number: 80359
+
+                       For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+        www.vishay.com                                                                       Application Note
+
+                                                                                          Vishay Semiconductors
+
+        Designing the VCNL36828P Into an Application
+
+                               D = x + (y × tan 1) + (y × tan 2)
+
+                               y × tan 1            y × tan 2
+
+                                               x =
+                                            1.5 mm
+                                    1
+
+                                                                           2
+                               D
+
+                                                                                       T
+                        y
+
+                                                                                                                                          Side view
+
+                                              Fig. 58 - The Calculation of the Window Cover Diameter With an Air Gap
+
+Due to mechanical design requirements, the window cover sometimes needs to be placed at a certain distance away from the
+sensor (with an air gap). In this case, the designer should meet the minimum diameter requirement and avoid placing it at the
+peak sensitivity of the sensor. The actual minimum diameter requirement depends on the assembly's mechanical tolerance
+capability so that the window cover positioning is accurate enough to prevent misalignment. Any misalignment of the housing
+and displacement of the PCB, especially the VCSEL side, could block the infrared signal, and this will cause an error in the
+measurement.
+
+From Fig. 55, the theoretical value of 1 should be 4.5°. However, the mechanical tolerance during the assembly cannot
+be guaranteed. Therefore, it is recommended to consider a higher value 1 during the mechanical design process. This reduces
+the possibility of a blocked infrared signal, which increases the production yield of the end product. 1 = 10° is usually sufficient
+to transmit the infrared signal from the sensor to the surrounding objects. On the other hand, 2 = 50° is generally adequate to
+capture the reflected infrared signal from the object back to the photodiode of the sensor, even though the total field of view of
+the photodiode is ± 60°. Table 21 shows the minimum window cover diameter calculation using Equation 6 with the distance y
+of between 0.5 mm and 4 mm.
+
+TABLE 21 - MINIMUM WINDOW COVER DIAMETER
+
+y (mm)                 x (mm)   1 (°)                                                      2 (°)  D (mm)
+                                                                                            50      2.18
+0.5                     1.5    10                                                           50      2.87                                             APPLICATION NOTE
+                                                                                            50      3.55
+1                       1.5    10                                                           50      4.24
+                                                                                            50      4.92
+1.5                     1.5    10                                                           50      5.60
+                                                                                            50      6.29
+2                       1.5    10                                                           50      6.97
+
+2.5                     1.5    10
+
+3                       1.5    10
+
+3.5                     1.5    10
+
+4                       1.5    10
+
+Revision: 06-Mar-2025          39                                                                 Document Number: 80359
+
+                       For technical questions, contact: consumersensors@vishay.com
+
+THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                          ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+

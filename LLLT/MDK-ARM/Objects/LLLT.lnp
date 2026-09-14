@@ -1,0 +1,26 @@
+--cpu Cortex-M0
+".\objects\startup_n32g031.o"
+".\objects\system_n32g031.o"
+".\objects\misc.o"
+".\objects\n32g031_adc.o"
+".\objects\n32g031_gpio.o"
+".\objects\n32g031_rcc.o"
+".\objects\n32g031_spi.o"
+".\objects\n32g031_sqrt.o"
+".\objects\n32g031_tim.o"
+".\objects\n32g031_usart.o"
+".\objects\n32g031_it.o"
+".\objects\adc.o"
+".\objects\gpio.o"
+".\objects\key.o"
+".\objects\main.o"
+".\objects\timer.o"
+".\objects\usart.o"
+".\objects\pwm.o"
+".\objects\user.o"
+".\objects\delay.o"
+".\objects\nec.o"
+--library_type=microlib --strict --scatter ".\Objects\LLLT.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Listings\LLLT.map" -o .\Objects\LLLT.axf

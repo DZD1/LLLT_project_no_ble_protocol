@@ -1,0 +1,237 @@
+[2026-07-08 09:54:13]	[info] incremental build: 19 source files changed
+These source files will be recompiled
+---
+'c:\Users\75506\OneDrive\Desktop\LLLT hair cap\LLLT\LLLT\bsp\src\adc.c': object (.o) file not exist
+'c:\Users\75506\OneDrive\Desktop\LLLT hair cap\LLLT\LLLT\bsp\src\delay.c': object (.o) file not exist
+'c:\Users\75506\OneDrive\Desktop\LLLT hair cap\LLLT\LLLT\bsp\src\gpio.c': object (.o) file not exist
+'c:\Users\75506\OneDrive\Desktop\LLLT hair cap\LLLT\LLLT\bsp\src\key.c': object (.o) file not exist
+'c:\Users\75506\OneDrive\Desktop\LLLT hair cap\LLLT\LLLT\bsp\src\main.c': object (.o) file not exist
+'c:\Users\75506\OneDrive\Desktop\LLLT hair cap\LLLT\LLLT\bsp\src\pwm.c': object (.o) file not exist
+'c:\Users\75506\OneDrive\Desktop\LLLT hair cap\LLLT\LLLT\bsp\src\timer.c': object (.o) file not exist
+'c:\Users\75506\OneDrive\Desktop\LLLT hair cap\LLLT\LLLT\bsp\src\usart.c': object (.o) file not exist
+'c:\Users\75506\OneDrive\Desktop\LLLT hair cap\LLLT\LLLT\firmware\CMSIS\device\startup\startup_n32g031.s': object (.o) file not exist
+'c:\Users\75506\OneDrive\Desktop\LLLT hair cap\LLLT\LLLT\firmware\CMSIS\device\system_n32g031.c': object (.o) file not exist
+'c:\Users\75506\OneDrive\Desktop\LLLT hair cap\LLLT\LLLT\firmware\n32g031_std_periph_driver\src\misc.c': object (.o) file not exist
+'c:\Users\75506\OneDrive\Desktop\LLLT hair cap\LLLT\LLLT\firmware\n32g031_std_periph_driver\src\n32g031_adc.c': object (.o) file not exist
+'c:\Users\75506\OneDrive\Desktop\LLLT hair cap\LLLT\LLLT\firmware\n32g031_std_periph_driver\src\n32g031_gpio.c': object (.o) file not exist
+'c:\Users\75506\OneDrive\Desktop\LLLT hair cap\LLLT\LLLT\firmware\n32g031_std_periph_driver\src\n32g031_it.c': object (.o) file not exist
+'c:\Users\75506\OneDrive\Desktop\LLLT hair cap\LLLT\LLLT\firmware\n32g031_std_periph_driver\src\n32g031_rcc.c': object (.o) file not exist
+'c:\Users\75506\OneDrive\Desktop\LLLT hair cap\LLLT\LLLT\firmware\n32g031_std_periph_driver\src\n32g031_spi.c': object (.o) file not exist
+'c:\Users\75506\OneDrive\Desktop\LLLT hair cap\LLLT\LLLT\firmware\n32g031_std_periph_driver\src\n32g031_sqrt.c': object (.o) file not exist
+'c:\Users\75506\OneDrive\Desktop\LLLT hair cap\LLLT\LLLT\firmware\n32g031_std_periph_driver\src\n32g031_tim.c': object (.o) file not exist
+'c:\Users\75506\OneDrive\Desktop\LLLT hair cap\LLLT\LLLT\firmware\n32g031_std_periph_driver\src\n32g031_usart.c': object (.o) file not exist
+
+[2026-07-08 09:54:13]	compilation failed at : "c:\Users\75506\OneDrive\Desktop\LLLT hair cap\LLLT\LLLT\bsp\src\pwm.c", exit code: 1
+command: 
+  "D:\Keil_v5\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I../../bsp/inc -I../../firmware/CMSIS/core -I../../firmware/CMSIS/device -I../../firmware/n32g031_std_periph_driver/inc -I.cmsis/include -IRTE/_N32G031 -D"N32G031" -D"USE_STDPERIPH_DRIVER" -D"USE_FULL_ASSERT" --cpu Cortex-M0 --li --c99 -D__MICROLIB -O0 --split_sections --gnu --diag_suppress=1 --diag_suppress=1295 -g -o .\build\N32G031\.obj\__\__\bsp\src\pwm.o --no_depend_system_headers --depend .\build\N32G031\.obj\__\__\bsp\src\pwm.d .\..\..\bsp\src\pwm.c
+   at unify_builder.Program.compileByMulThread(Int32 thrNum, CmdInfo[] cmds_, List`1 errLogs)
+   at unify_builder.Program.Main(String[] args_)
+---
+".\..\..\bsp\src\pwm.c", line 5: Error:  #20: identifier "uint16_t" is undefined
+      uint16_t PrescalerValue = 0;
+      ^
+".\..\..\bsp\src\pwm.c", line 6: Error:  #20: identifier "uint16_t" is undefined
+      uint16_t Period = 2400,Pulse = 1200;
+      ^
+".\..\..\bsp\src\pwm.c", line 8: Error:  #20: identifier "GPIO_InitType" is undefined
+      GPIO_InitType GPIO_InitStructure;  
+      ^
+".\..\..\bsp\src\pwm.c", line 9: Error:  #20: identifier "TIM_TimeBaseInitType" is undefined
+      TIM_TimeBaseInitType TIM_TimeBaseStructure;
+      ^
+".\..\..\bsp\src\pwm.c", line 10: Error:  #20: identifier "OCInitType" is undefined
+      OCInitType TIM_OCInitStructure;
+      ^
+".\..\..\bsp\src\pwm.c", line 12: Warning:  #223-D: function "RCC_EnableAPB1PeriphClk" declared implicitly
+      RCC_EnableAPB1PeriphClk(RCC_APB1_PERIPH_TIM3, ENABLE);   
+      ^
+".\..\..\bsp\src\pwm.c", line 12: Error:  #20: identifier "RCC_APB1_PERIPH_TIM3" is undefined
+      RCC_EnableAPB1PeriphClk(RCC_APB1_PERIPH_TIM3, ENABLE);   
+                              ^
+".\..\..\bsp\src\pwm.c", line 12: Error:  #20: identifier "ENABLE" is undefined
+      RCC_EnableAPB1PeriphClk(RCC_APB1_PERIPH_TIM3, ENABLE);   
+                                                    ^
+".\..\..\bsp\src\pwm.c", line 13: Warning:  #223-D: function "RCC_EnableAPB2PeriphClk" declared implicitly
+      RCC_EnableAPB2PeriphClk(RCC_APB2_PERIPH_GPIOA | RCC_APB2_PERIPH_AFIO,   ENABLE);
+      ^
+".\..\..\bsp\src\pwm.c", line 13: Error:  #20: identifier "RCC_APB2_PERIPH_GPIOA" is undefined
+      RCC_EnableAPB2PeriphClk(RCC_APB2_PERIPH_GPIOA | RCC_APB2_PERIPH_AFIO,   ENABLE);
+                              ^
+".\..\..\bsp\src\pwm.c", line 13: Error:  #20: identifier "RCC_APB2_PERIPH_AFIO" is undefined
+      RCC_EnableAPB2PeriphClk(RCC_APB2_PERIPH_GPIOA | RCC_APB2_PERIPH_AFIO,   ENABLE);
+                                                      ^
+".\..\..\bsp\src\pwm.c", line 15: Warning:  #223-D: function "GPIO_InitStruct" declared implicitly
+      GPIO_InitStruct(&GPIO_InitStructure);    
+      ^
+".\..\..\bsp\src\pwm.c", line 17: Error:  #20: identifier "GPIO_PIN_6" is undefined
+      GPIO_InitStructure.Pin        = GPIO_PIN_6;    
+                                      ^
+".\..\..\bsp\src\pwm.c", line 18: Error:  #20: identifier "GPIO_MODE_AF_PP" is undefined
+      GPIO_InitStructure.GPIO_Mode  = GPIO_MODE_AF_PP;   
+                                      ^
+".\..\..\bsp\src\pwm.c", line 19: Error:  #20: identifier "GPIO_DC_LOW" is undefined
+      GPIO_InitStructure.GPIO_Current = GPIO_DC_LOW;    
+                                        ^
+".\..\..\bsp\src\pwm.c", line 20: Error:  #20: identifier "GPIO_AF2_TIM3" is undefined
+      GPIO_InitStructure.GPIO_Alternate = GPIO_AF2_TIM3;    
+                                          ^
+".\..\..\bsp\src\pwm.c", line 21: Warning:  #223-D: function "GPIO_InitPeripheral" declared implicitly
+      GPIO_InitPeripheral(GPIOA, &GPIO_InitStructure);    
+      ^
+".\..\..\bsp\src\pwm.c", line 21: Error:  #20: identifier "GPIOA" is undefined
+      GPIO_InitPeripheral(GPIOA, &GPIO_InitStructure);    
+                          ^
+".\..\..\bsp\src\pwm.c", line 24: Error:  #20: identifier "uint16_t" is undefined
+      PrescalerValue = (uint16_t)(SystemCoreClock / 12000000) - 1;    
+                        ^
+".\..\..\bsp\src\pwm.c", line 24: Error:  #20: identifier "SystemCoreClock" is undefined
+      PrescalerValue = (uint16_t)(SystemCoreClock / 12000000) - 1;    
+                                  ^
+".\..\..\bsp\src\pwm.c", line 29: Error:  #20: identifier "TIM_CNT_MODE_UP" is undefined
+      TIM_TimeBaseStructure.CntMode   = TIM_CNT_MODE_UP;   
+                                        ^
+".\..\..\bsp\src\pwm.c", line 30: Warning:  #223-D: function "TIM_InitTimeBase" declared implicitly
+      TIM_InitTimeBase(TIM3, &TIM_TimeBaseStructure);    
+      ^
+".\..\..\bsp\src\pwm.c", line 30: Error:  #20: identifier "TIM3" is undefined
+      TIM_InitTimeBase(TIM3, &TIM_TimeBaseStructure);    
+                       ^
+".\..\..\bsp\src\pwm.c", line 32: Error:  #20: identifier "TIM_OCMODE_PWM1" is undefined
+      TIM_OCInitStructure.OcMode      = TIM_OCMODE_PWM1;    
+                                        ^
+".\..\..\bsp\src\pwm.c", line 33: Error:  #20: identifier "TIM_OUTPUT_STATE_ENABLE" is undefined
+      TIM_OCInitStructure.OutputState = TIM_OUTPUT_STATE_ENABLE;    
+                                        ^
+".\..\..\bsp\src\pwm.c", line 35: Error:  #20: identifier "TIM_OC_POLARITY_LOW" is undefined
+      TIM_OCInitStructure.OcPolarity  = TIM_OC_POLARITY_LOW;    
+                                        ^
+".\..\..\bsp\src\pwm.c", line 36: Warning:  #223-D: function "TIM_InitOc1" declared implicitly
+      TIM_InitOc1(TIM3, &TIM_OCInitStructure);   
+      ^
+".\..\..\bsp\src\pwm.c", line 38: Warning:  #223-D: function "TIM_ConfigOc1Preload" declared implicitly
+      TIM_ConfigOc1Preload(TIM3, TIM_OC_PRE_LOAD_ENABLE);
+      ^
+".\..\..\bsp\src\pwm.c", line 38: Error:  #20: identifier "TIM_OC_PRE_LOAD_ENABLE" is undefined
+      TIM_ConfigOc1Preload(TIM3, TIM_OC_PRE_LOAD_ENABLE);
+                                 ^
+".\..\..\bsp\src\pwm.c", line 40: Warning:  #223-D: function "TIM_ConfigArPreload" declared implicitly
+      TIM_ConfigArPreload(TIM3, ENABLE);   
+      ^
+".\..\..\bsp\src\pwm.c", line 42: Warning:  #223-D: function "TIM_Enable" declared implicitly
+      TIM_Enable(TIM3, DISABLE);
+      ^
+".\..\..\bsp\src\pwm.c", line 42: Error:  #20: identifier "DISABLE" is undefined
+      TIM_Enable(TIM3, DISABLE);
+                       ^
+.\..\..\bsp\src\pwm.c: 9 warnings, 23 errors
+
+[2026-07-08 09:54:22]	compilation failed at : "c:\Users\75506\OneDrive\Desktop\LLLT hair cap\LLLT\LLLT\bsp\src\pwm.c", exit code: 1
+command: 
+  "D:\Keil_v5\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I../../bsp/inc -I../../firmware/CMSIS/core -I../../firmware/CMSIS/device -I../../firmware/n32g031_std_periph_driver/inc -I.cmsis/include -IRTE/_N32G031 -D"N32G031" -D"USE_STDPERIPH_DRIVER" -D"USE_FULL_ASSERT" --cpu Cortex-M0 --li --c99 -D__MICROLIB -O0 --split_sections --gnu --diag_suppress=1 --diag_suppress=1295 -g -o .\build\N32G031\.obj\__\__\bsp\src\pwm.o --no_depend_system_headers --depend .\build\N32G031\.obj\__\__\bsp\src\pwm.d .\..\..\bsp\src\pwm.c
+   at unify_builder.Program.compileByMulThread(Int32 thrNum, CmdInfo[] cmds_, List`1 errLogs)
+   at unify_builder.Program.Main(String[] args_)
+---
+".\..\..\bsp\src\pwm.c", line 5: Error:  #20: identifier "uint16_t" is undefined
+      uint16_t PrescalerValue = 0;
+      ^
+".\..\..\bsp\src\pwm.c", line 6: Error:  #20: identifier "uint16_t" is undefined
+      uint16_t Period = 2400,Pulse = 1200;
+      ^
+".\..\..\bsp\src\pwm.c", line 8: Error:  #20: identifier "GPIO_InitType" is undefined
+      GPIO_InitType GPIO_InitStructure;  
+      ^
+".\..\..\bsp\src\pwm.c", line 9: Error:  #20: identifier "TIM_TimeBaseInitType" is undefined
+      TIM_TimeBaseInitType TIM_TimeBaseStructure;
+      ^
+".\..\..\bsp\src\pwm.c", line 10: Error:  #20: identifier "OCInitType" is undefined
+      OCInitType TIM_OCInitStructure;
+      ^
+".\..\..\bsp\src\pwm.c", line 12: Warning:  #223-D: function "RCC_EnableAPB1PeriphClk" declared implicitly
+      RCC_EnableAPB1PeriphClk(RCC_APB1_PERIPH_TIM3, ENABLE);   
+      ^
+".\..\..\bsp\src\pwm.c", line 12: Error:  #20: identifier "RCC_APB1_PERIPH_TIM3" is undefined
+      RCC_EnableAPB1PeriphClk(RCC_APB1_PERIPH_TIM3, ENABLE);   
+                              ^
+".\..\..\bsp\src\pwm.c", line 12: Error:  #20: identifier "ENABLE" is undefined
+      RCC_EnableAPB1PeriphClk(RCC_APB1_PERIPH_TIM3, ENABLE);   
+                                                    ^
+".\..\..\bsp\src\pwm.c", line 13: Warning:  #223-D: function "RCC_EnableAPB2PeriphClk" declared implicitly
+      RCC_EnableAPB2PeriphClk(RCC_APB2_PERIPH_GPIOA | RCC_APB2_PERIPH_AFIO,   ENABLE);
+      ^
+".\..\..\bsp\src\pwm.c", line 13: Error:  #20: identifier "RCC_APB2_PERIPH_GPIOA" is undefined
+      RCC_EnableAPB2PeriphClk(RCC_APB2_PERIPH_GPIOA | RCC_APB2_PERIPH_AFIO,   ENABLE);
+                              ^
+".\..\..\bsp\src\pwm.c", line 13: Error:  #20: identifier "RCC_APB2_PERIPH_AFIO" is undefined
+      RCC_EnableAPB2PeriphClk(RCC_APB2_PERIPH_GPIOA | RCC_APB2_PERIPH_AFIO,   ENABLE);
+                                                      ^
+".\..\..\bsp\src\pwm.c", line 15: Warning:  #223-D: function "GPIO_InitStruct" declared implicitly
+      GPIO_InitStruct(&GPIO_InitStructure);    
+      ^
+".\..\..\bsp\src\pwm.c", line 17: Error:  #20: identifier "GPIO_PIN_6" is undefined
+      GPIO_InitStructure.Pin        = GPIO_PIN_6;    
+                                      ^
+".\..\..\bsp\src\pwm.c", line 18: Error:  #20: identifier "GPIO_MODE_AF_PP" is undefined
+      GPIO_InitStructure.GPIO_Mode  = GPIO_MODE_AF_PP;   
+                                      ^
+".\..\..\bsp\src\pwm.c", line 19: Error:  #20: identifier "GPIO_DC_LOW" is undefined
+      GPIO_InitStructure.GPIO_Current = GPIO_DC_LOW;    
+                                        ^
+".\..\..\bsp\src\pwm.c", line 20: Error:  #20: identifier "GPIO_AF2_TIM3" is undefined
+      GPIO_InitStructure.GPIO_Alternate = GPIO_AF2_TIM3;    
+                                          ^
+".\..\..\bsp\src\pwm.c", line 21: Warning:  #223-D: function "GPIO_InitPeripheral" declared implicitly
+      GPIO_InitPeripheral(GPIOA, &GPIO_InitStructure);    
+      ^
+".\..\..\bsp\src\pwm.c", line 21: Error:  #20: identifier "GPIOA" is undefined
+      GPIO_InitPeripheral(GPIOA, &GPIO_InitStructure);    
+                          ^
+".\..\..\bsp\src\pwm.c", line 24: Error:  #20: identifier "uint16_t" is undefined
+      PrescalerValue = (uint16_t)(SystemCoreClock / 12000000) - 1;    
+                        ^
+".\..\..\bsp\src\pwm.c", line 24: Error:  #20: identifier "SystemCoreClock" is undefined
+      PrescalerValue = (uint16_t)(SystemCoreClock / 12000000) - 1;    
+                                  ^
+".\..\..\bsp\src\pwm.c", line 29: Error:  #20: identifier "TIM_CNT_MODE_UP" is undefined
+      TIM_TimeBaseStructure.CntMode   = TIM_CNT_MODE_UP;   
+                                        ^
+".\..\..\bsp\src\pwm.c", line 30: Warning:  #223-D: function "TIM_InitTimeBase" declared implicitly
+      TIM_InitTimeBase(TIM3, &TIM_TimeBaseStructure);    
+      ^
+".\..\..\bsp\src\pwm.c", line 30: Error:  #20: identifier "TIM3" is undefined
+      TIM_InitTimeBase(TIM3, &TIM_TimeBaseStructure);    
+                       ^
+".\..\..\bsp\src\pwm.c", line 32: Error:  #20: identifier "TIM_OCMODE_PWM1" is undefined
+      TIM_OCInitStructure.OcMode      = TIM_OCMODE_PWM1;    
+                                        ^
+".\..\..\bsp\src\pwm.c", line 33: Error:  #20: identifier "TIM_OUTPUT_STATE_ENABLE" is undefined
+      TIM_OCInitStructure.OutputState = TIM_OUTPUT_STATE_ENABLE;    
+                                        ^
+".\..\..\bsp\src\pwm.c", line 35: Error:  #20: identifier "TIM_OC_POLARITY_LOW" is undefined
+      TIM_OCInitStructure.OcPolarity  = TIM_OC_POLARITY_LOW;    
+                                        ^
+".\..\..\bsp\src\pwm.c", line 36: Warning:  #223-D: function "TIM_InitOc1" declared implicitly
+      TIM_InitOc1(TIM3, &TIM_OCInitStructure);   
+      ^
+".\..\..\bsp\src\pwm.c", line 38: Warning:  #223-D: function "TIM_ConfigOc1Preload" declared implicitly
+      TIM_ConfigOc1Preload(TIM3, TIM_OC_PRE_LOAD_ENABLE);
+      ^
+".\..\..\bsp\src\pwm.c", line 38: Error:  #20: identifier "TIM_OC_PRE_LOAD_ENABLE" is undefined
+      TIM_ConfigOc1Preload(TIM3, TIM_OC_PRE_LOAD_ENABLE);
+                                 ^
+".\..\..\bsp\src\pwm.c", line 40: Warning:  #223-D: function "TIM_ConfigArPreload" declared implicitly
+      TIM_ConfigArPreload(TIM3, ENABLE);   
+      ^
+".\..\..\bsp\src\pwm.c", line 42: Warning:  #223-D: function "TIM_Enable" declared implicitly
+      TIM_Enable(TIM3, DISABLE);
+      ^
+".\..\..\bsp\src\pwm.c", line 42: Error:  #20: identifier "DISABLE" is undefined
+      TIM_Enable(TIM3, DISABLE);
+                       ^
+.\..\..\bsp\src\pwm.c: 9 warnings, 23 errors
+
+[2026-07-08 09:54:45]	[done]
+	build successfully !
+
+[2026-07-08 09:55:05]	[done]
+	build successfully !
+
