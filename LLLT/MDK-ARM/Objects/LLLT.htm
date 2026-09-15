@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\LLLT.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\LLLT.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Fri Sep 11 14:50:13 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Mon Sep 14 14:04:34 2026
 <BR><P>
 <H3>Maximum Stack Usage =        168 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -331,7 +331,7 @@ Global Symbols
 <LI><a href="#[44]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADC_PLL_Clock_Mode_Config
 <LI><a href="#[43]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADC_AHB_Clock_Mode_Config
 </UL>
-<BR>[Called By]<UL><LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Adc_Init
+<BR>[Called By]<UL><LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Adc_Init
 </UL>
 
 <P><STRONG><a name="[45]"></a>ADC_ConfigRegularChannel</STRONG> (Thumb, 446 bytes, Stack size 40 bytes, n32g031_adc.o(i.ADC_ConfigRegularChannel))
@@ -347,7 +347,7 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[3f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
 </UL>
-<BR>[Called By]<UL><LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Adc_Init
+<BR>[Called By]<UL><LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Adc_Init
 </UL>
 
 <P><STRONG><a name="[47]"></a>ADC_EnableSoftwareStartConv</STRONG> (Thumb, 76 bytes, Stack size 16 bytes, n32g031_adc.o(i.ADC_EnableSoftwareStartConv))
@@ -391,7 +391,7 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[3f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
 </UL>
-<BR>[Called By]<UL><LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Adc_Init
+<BR>[Called By]<UL><LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Adc_Init
 </UL>
 
 <P><STRONG><a name="[4b]"></a>ADC_Init</STRONG> (Thumb, 262 bytes, Stack size 24 bytes, n32g031_adc.o(i.ADC_Init))
@@ -399,17 +399,18 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[3f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
 </UL>
-<BR>[Called By]<UL><LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Adc_Init
+<BR>[Called By]<UL><LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Adc_Init
 </UL>
 
 <P><STRONG><a name="[44]"></a>ADC_PLL_Clock_Mode_Config</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, n32g031_adc.o(i.ADC_PLL_Clock_Mode_Config))
 <BR><BR>[Called By]<UL><LI><a href="#[40]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADC_ConfigClk
 </UL>
 
-<P><STRONG><a name="[4c]"></a>ADC_Scan</STRONG> (Thumb, 236 bytes, Stack size 40 bytes, adc.o(i.ADC_Scan))
+<P><STRONG><a name="[4c]"></a>ADC_Scan</STRONG> (Thumb, 272 bytes, Stack size 40 bytes, adc.o(i.ADC_Scan))
 <BR><BR>[Stack]<UL><LI>Max Depth = 168<LI>Call Chain = ADC_Scan &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; __aeabi_llsr
 </UL>
-<BR>[Calls]<UL><LI><a href="#[34]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ui2f
+<BR>[Calls]<UL><LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
+<LI><a href="#[34]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ui2f
 <LI><a href="#[4e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fmul
 <LI><a href="#[30]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fdiv
 <LI><a href="#[4f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2uiz
@@ -422,39 +423,39 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[26]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[51]"></a>Adc_Init</STRONG> (Thumb, 152 bytes, Stack size 48 bytes, adc.o(i.Adc_Init))
+<P><STRONG><a name="[52]"></a>Adc_Init</STRONG> (Thumb, 152 bytes, Stack size 48 bytes, adc.o(i.Adc_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = Adc_Init &rArr; RCC_WaitHsiStable &rArr; RCC_GetFlagStatus
 </UL>
-<BR>[Calls]<UL><LI><a href="#[57]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitStruct
-<LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitPeripheral
+<BR>[Calls]<UL><LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitStruct
+<LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitPeripheral
 <LI><a href="#[4b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADC_Init
 <LI><a href="#[4a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADC_GetFlagStatusNew
 <LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADC_Enable
 <LI><a href="#[40]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADC_ConfigClk
-<LI><a href="#[55]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_WaitHsiStable
-<LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableHsi
-<LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableAPB2PeriphClk
-<LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableAHBPeriphClk
-<LI><a href="#[56]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_ConfigAdc1mClk
+<LI><a href="#[56]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_WaitHsiStable
+<LI><a href="#[55]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableHsi
+<LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableAPB2PeriphClk
+<LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableAHBPeriphClk
+<LI><a href="#[57]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_ConfigAdc1mClk
 </UL>
 <BR>[Called By]<UL><LI><a href="#[26]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[59]"></a>App_Handle</STRONG> (Thumb, 642 bytes, Stack size 8 bytes, user.o(i.App_Handle))
+<P><STRONG><a name="[5a]"></a>App_Handle</STRONG> (Thumb, 638 bytes, Stack size 8 bytes, user.o(i.App_Handle))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = App_Handle &rArr; Treat_Tick &rArr; __2printf
 </UL>
-<BR>[Calls]<UL><LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_TogglePin
-<LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_SetBits
-<LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ResetBits
-<LI><a href="#[62]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
-<LI><a href="#[5c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_ms
+<BR>[Calls]<UL><LI><a href="#[5c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_TogglePin
+<LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_SetBits
+<LI><a href="#[5e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ResetBits
+<LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
+<LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_ms
 <LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Treat_Tick
-<LI><a href="#[60]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Treat_Stop
-<LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Treat_Start
+<LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Treat_Stop
+<LI><a href="#[62]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Treat_Start
 <LI><a href="#[63]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mode_ShowLed
-<LI><a href="#[5f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mode_Next
+<LI><a href="#[60]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mode_Next
 <LI><a href="#[64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Led1_Update
-<LI><a href="#[5e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_SetCmp2
+<LI><a href="#[5f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_SetCmp2
 </UL>
 <BR>[Called By]<UL><LI><a href="#[26]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -462,9 +463,9 @@ Global Symbols
 <P><STRONG><a name="[66]"></a>Beep_init</STRONG> (Thumb, 134 bytes, Stack size 72 bytes, pwm.o(i.Beep_init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = Beep_init &rArr; GPIO_InitPeripheral
 </UL>
-<BR>[Calls]<UL><LI><a href="#[57]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitStruct
-<LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitPeripheral
-<LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableAPB2PeriphClk
+<BR>[Calls]<UL><LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitStruct
+<LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitPeripheral
+<LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableAPB2PeriphClk
 <LI><a href="#[67]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableAPB1PeriphClk
 <LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_InitTimeBase
 <LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_InitTimBaseStruct
@@ -479,16 +480,16 @@ Global Symbols
 <P><STRONG><a name="[6e]"></a>GPIO_Init</STRONG> (Thumb, 122 bytes, Stack size 32 bytes, gpio.o(i.GPIO_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = GPIO_Init &rArr; GPIO_InitPeripheral
 </UL>
-<BR>[Calls]<UL><LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_SetBits
-<LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ResetBits
-<LI><a href="#[57]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitStruct
-<LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitPeripheral
-<LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableAPB2PeriphClk
+<BR>[Calls]<UL><LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_SetBits
+<LI><a href="#[5e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ResetBits
+<LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitStruct
+<LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitPeripheral
+<LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableAPB2PeriphClk
 </UL>
 <BR>[Called By]<UL><LI><a href="#[26]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[58]"></a>GPIO_InitPeripheral</STRONG> (Thumb, 810 bytes, Stack size 24 bytes, n32g031_gpio.o(i.GPIO_InitPeripheral))
+<P><STRONG><a name="[59]"></a>GPIO_InitPeripheral</STRONG> (Thumb, 810 bytes, Stack size 24 bytes, n32g031_gpio.o(i.GPIO_InitPeripheral))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = GPIO_InitPeripheral
 </UL>
 <BR>[Calls]<UL><LI><a href="#[3f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
@@ -500,10 +501,10 @@ Global Symbols
 <LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Beep_init
 <LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Key_Init
 <LI><a href="#[6e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_Init
-<LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Adc_Init
+<LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Adc_Init
 </UL>
 
-<P><STRONG><a name="[57]"></a>GPIO_InitStruct</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, n32g031_gpio.o(i.GPIO_InitStruct))
+<P><STRONG><a name="[58]"></a>GPIO_InitStruct</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, n32g031_gpio.o(i.GPIO_InitStruct))
 <BR><BR>[Called By]<UL><LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IRM_Init
 <LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;VCSEL_init
 <LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Usart_Init
@@ -511,7 +512,7 @@ Global Symbols
 <LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Beep_init
 <LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Key_Init
 <LI><a href="#[6e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_Init
-<LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Adc_Init
+<LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Adc_Init
 </UL>
 
 <P><STRONG><a name="[6f]"></a>GPIO_ReadInputDataBit</STRONG> (Thumb, 174 bytes, Stack size 16 bytes, n32g031_gpio.o(i.GPIO_ReadInputDataBit))
@@ -523,36 +524,36 @@ Global Symbols
 <LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Key_Scan
 </UL>
 
-<P><STRONG><a name="[5d]"></a>GPIO_ResetBits</STRONG> (Thumb, 158 bytes, Stack size 16 bytes, n32g031_gpio.o(i.GPIO_ResetBits))
+<P><STRONG><a name="[5e]"></a>GPIO_ResetBits</STRONG> (Thumb, 158 bytes, Stack size 16 bytes, n32g031_gpio.o(i.GPIO_ResetBits))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = GPIO_ResetBits
 </UL>
 <BR>[Calls]<UL><LI><a href="#[3f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
 </UL>
 <BR>[Called By]<UL><LI><a href="#[63]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mode_ShowLed
 <LI><a href="#[64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Led1_Update
-<LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Handle
+<LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Handle
 <LI><a href="#[6e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_Init
 </UL>
 
-<P><STRONG><a name="[5a]"></a>GPIO_SetBits</STRONG> (Thumb, 158 bytes, Stack size 16 bytes, n32g031_gpio.o(i.GPIO_SetBits))
+<P><STRONG><a name="[5b]"></a>GPIO_SetBits</STRONG> (Thumb, 158 bytes, Stack size 16 bytes, n32g031_gpio.o(i.GPIO_SetBits))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = GPIO_SetBits
 </UL>
 <BR>[Calls]<UL><LI><a href="#[3f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
 </UL>
 <BR>[Called By]<UL><LI><a href="#[63]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mode_ShowLed
 <LI><a href="#[64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Led1_Update
-<LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Handle
+<LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Handle
 <LI><a href="#[26]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 <LI><a href="#[6e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_Init
 </UL>
 
-<P><STRONG><a name="[5b]"></a>GPIO_TogglePin</STRONG> (Thumb, 122 bytes, Stack size 16 bytes, n32g031_gpio.o(i.GPIO_TogglePin))
+<P><STRONG><a name="[5c]"></a>GPIO_TogglePin</STRONG> (Thumb, 122 bytes, Stack size 16 bytes, n32g031_gpio.o(i.GPIO_TogglePin))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = GPIO_TogglePin
 </UL>
 <BR>[Calls]<UL><LI><a href="#[3f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
 </UL>
 <BR>[Called By]<UL><LI><a href="#[64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Led1_Update
-<LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Handle
+<LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Handle
 </UL>
 
 <P><STRONG><a name="[2]"></a>HardFault_Handler</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, n32g031_it.o(i.HardFault_Handler))
@@ -561,9 +562,9 @@ Global Symbols
 <P><STRONG><a name="[70]"></a>IRM_Init</STRONG> (Thumb, 162 bytes, Stack size 72 bytes, pwm.o(i.IRM_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = IRM_Init &rArr; GPIO_InitPeripheral
 </UL>
-<BR>[Calls]<UL><LI><a href="#[57]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitStruct
-<LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitPeripheral
-<LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableAPB2PeriphClk
+<BR>[Calls]<UL><LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitStruct
+<LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitPeripheral
+<LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableAPB2PeriphClk
 <LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_InitTimeBase
 <LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_InitTimBaseStruct
 <LI><a href="#[71]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_InitOcStruct
@@ -579,9 +580,9 @@ Global Symbols
 <P><STRONG><a name="[73]"></a>Key_Init</STRONG> (Thumb, 44 bytes, Stack size 32 bytes, key.o(i.Key_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = Key_Init &rArr; GPIO_InitPeripheral
 </UL>
-<BR>[Calls]<UL><LI><a href="#[57]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitStruct
-<LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitPeripheral
-<LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableAPB2PeriphClk
+<BR>[Calls]<UL><LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitStruct
+<LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitPeripheral
+<LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableAPB2PeriphClk
 </UL>
 <BR>[Called By]<UL><LI><a href="#[26]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -617,9 +618,9 @@ Global Symbols
 <P><STRONG><a name="[7d]"></a>NEC_RxInit</STRONG> (Thumb, 44 bytes, Stack size 32 bytes, nec.o(i.NEC_RxInit))
 <BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = NEC_RxInit &rArr; GPIO_InitPeripheral
 </UL>
-<BR>[Calls]<UL><LI><a href="#[57]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitStruct
-<LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitPeripheral
-<LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableAPB2PeriphClk
+<BR>[Calls]<UL><LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitStruct
+<LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitPeripheral
+<LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableAPB2PeriphClk
 </UL>
 <BR>[Called By]<UL><LI><a href="#[26]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -640,12 +641,12 @@ Global Symbols
 <P><STRONG><a name="[4]"></a>PendSV_Handler</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, n32g031_it.o(i.PendSV_Handler))
 <BR>[Address Reference Count : 1]<UL><LI> startup_n32g031.o(RESET)
 </UL>
-<P><STRONG><a name="[56]"></a>RCC_ConfigAdc1mClk</STRONG> (Thumb, 336 bytes, Stack size 16 bytes, n32g031_rcc.o(i.RCC_ConfigAdc1mClk))
+<P><STRONG><a name="[57]"></a>RCC_ConfigAdc1mClk</STRONG> (Thumb, 336 bytes, Stack size 16 bytes, n32g031_rcc.o(i.RCC_ConfigAdc1mClk))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = RCC_ConfigAdc1mClk
 </UL>
 <BR>[Calls]<UL><LI><a href="#[3f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
 </UL>
-<BR>[Called By]<UL><LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Adc_Init
+<BR>[Called By]<UL><LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Adc_Init
 </UL>
 
 <P><STRONG><a name="[42]"></a>RCC_ConfigAdcHclk</STRONG> (Thumb, 86 bytes, Stack size 16 bytes, n32g031_rcc.o(i.RCC_ConfigAdcHclk))
@@ -672,12 +673,12 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[86]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIMER_Init
 </UL>
 
-<P><STRONG><a name="[53]"></a>RCC_EnableAHBPeriphClk</STRONG> (Thumb, 80 bytes, Stack size 16 bytes, n32g031_rcc.o(i.RCC_EnableAHBPeriphClk))
+<P><STRONG><a name="[54]"></a>RCC_EnableAHBPeriphClk</STRONG> (Thumb, 80 bytes, Stack size 16 bytes, n32g031_rcc.o(i.RCC_EnableAHBPeriphClk))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = RCC_EnableAHBPeriphClk
 </UL>
 <BR>[Calls]<UL><LI><a href="#[3f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
 </UL>
-<BR>[Called By]<UL><LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Adc_Init
+<BR>[Called By]<UL><LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Adc_Init
 </UL>
 
 <P><STRONG><a name="[67]"></a>RCC_EnableAPB1PeriphClk</STRONG> (Thumb, 80 bytes, Stack size 16 bytes, n32g031_rcc.o(i.RCC_EnableAPB1PeriphClk))
@@ -689,7 +690,7 @@ Global Symbols
 <LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Beep_init
 </UL>
 
-<P><STRONG><a name="[52]"></a>RCC_EnableAPB2PeriphClk</STRONG> (Thumb, 80 bytes, Stack size 16 bytes, n32g031_rcc.o(i.RCC_EnableAPB2PeriphClk))
+<P><STRONG><a name="[53]"></a>RCC_EnableAPB2PeriphClk</STRONG> (Thumb, 80 bytes, Stack size 16 bytes, n32g031_rcc.o(i.RCC_EnableAPB2PeriphClk))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = RCC_EnableAPB2PeriphClk
 </UL>
 <BR>[Calls]<UL><LI><a href="#[3f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
@@ -701,15 +702,15 @@ Global Symbols
 <LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Beep_init
 <LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Key_Init
 <LI><a href="#[6e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_Init
-<LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Adc_Init
+<LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Adc_Init
 </UL>
 
-<P><STRONG><a name="[54]"></a>RCC_EnableHsi</STRONG> (Thumb, 58 bytes, Stack size 8 bytes, n32g031_rcc.o(i.RCC_EnableHsi))
+<P><STRONG><a name="[55]"></a>RCC_EnableHsi</STRONG> (Thumb, 58 bytes, Stack size 8 bytes, n32g031_rcc.o(i.RCC_EnableHsi))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = RCC_EnableHsi
 </UL>
 <BR>[Calls]<UL><LI><a href="#[3f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
 </UL>
-<BR>[Called By]<UL><LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Adc_Init
+<BR>[Called By]<UL><LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Adc_Init
 </UL>
 
 <P><STRONG><a name="[81]"></a>RCC_GetClocksFreqValue</STRONG> (Thumb, 354 bytes, Stack size 40 bytes, n32g031_rcc.o(i.RCC_GetClocksFreqValue))
@@ -725,15 +726,15 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[3f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
 </UL>
-<BR>[Called By]<UL><LI><a href="#[55]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_WaitHsiStable
+<BR>[Called By]<UL><LI><a href="#[56]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_WaitHsiStable
 </UL>
 
-<P><STRONG><a name="[55]"></a>RCC_WaitHsiStable</STRONG> (Thumb, 60 bytes, Stack size 16 bytes, n32g031_rcc.o(i.RCC_WaitHsiStable))
+<P><STRONG><a name="[56]"></a>RCC_WaitHsiStable</STRONG> (Thumb, 60 bytes, Stack size 16 bytes, n32g031_rcc.o(i.RCC_WaitHsiStable))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = RCC_WaitHsiStable &rArr; RCC_GetFlagStatus
 </UL>
 <BR>[Calls]<UL><LI><a href="#[82]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_GetFlagStatus
 </UL>
-<BR>[Called By]<UL><LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Adc_Init
+<BR>[Called By]<UL><LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Adc_Init
 </UL>
 
 <P><STRONG><a name="[3]"></a>SVC_Handler</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, n32g031_it.o(i.SVC_Handler))
@@ -907,12 +908,12 @@ Global Symbols
 <LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Treat_Tick
 </UL>
 
-<P><STRONG><a name="[5e]"></a>TIM_SetCmp2</STRONG> (Thumb, 40 bytes, Stack size 16 bytes, n32g031_tim.o(i.TIM_SetCmp2))
+<P><STRONG><a name="[5f]"></a>TIM_SetCmp2</STRONG> (Thumb, 40 bytes, Stack size 16 bytes, n32g031_tim.o(i.TIM_SetCmp2))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = TIM_SetCmp2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[3f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
 </UL>
-<BR>[Called By]<UL><LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Handle
+<BR>[Called By]<UL><LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Handle
 </UL>
 
 <P><STRONG><a name="[89]"></a>USART_Enable</STRONG> (Thumb, 80 bytes, Stack size 16 bytes, n32g031_usart.o(i.USART_Enable))
@@ -952,9 +953,9 @@ Global Symbols
 <P><STRONG><a name="[8d]"></a>Usart_Init</STRONG> (Thumb, 106 bytes, Stack size 48 bytes, usart.o(i.Usart_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 156<LI>Call Chain = Usart_Init &rArr; USART_Init &rArr; RCC_GetClocksFreqValue &rArr; __aeabi_uidivmod
 </UL>
-<BR>[Calls]<UL><LI><a href="#[57]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitStruct
-<LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitPeripheral
-<LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableAPB2PeriphClk
+<BR>[Calls]<UL><LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitStruct
+<LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitPeripheral
+<LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableAPB2PeriphClk
 <LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART_Init
 <LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART_Enable
 </UL>
@@ -964,9 +965,9 @@ Global Symbols
 <P><STRONG><a name="[8e]"></a>VCSEL_init</STRONG> (Thumb, 154 bytes, Stack size 72 bytes, pwm.o(i.VCSEL_init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = VCSEL_init &rArr; GPIO_InitPeripheral
 </UL>
-<BR>[Calls]<UL><LI><a href="#[57]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitStruct
-<LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitPeripheral
-<LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableAPB2PeriphClk
+<BR>[Calls]<UL><LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitStruct
+<LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitPeripheral
+<LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableAPB2PeriphClk
 <LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_InitTimeBase
 <LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_InitTimBaseStruct
 <LI><a href="#[71]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_InitOcStruct
@@ -985,12 +986,13 @@ Global Symbols
 
 <P><STRONG><a name="[9e]"></a>__1printf$3</STRONG> (Thumb, 0 bytes, Stack size 24 bytes, printf3.o(i.__0printf$3), UNUSED)
 
-<P><STRONG><a name="[62]"></a>__2printf</STRONG> (Thumb, 0 bytes, Stack size 24 bytes, printf3.o(i.__0printf$3))
+<P><STRONG><a name="[51]"></a>__2printf</STRONG> (Thumb, 0 bytes, Stack size 24 bytes, printf3.o(i.__0printf$3))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = __2printf
 </UL>
 <BR>[Called By]<UL><LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Treat_Tick
-<LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Treat_Start
-<LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Handle
+<LI><a href="#[62]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Treat_Start
+<LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Handle
+<LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADC_Scan
 </UL>
 
 <P><STRONG><a name="[37]"></a>__ARM_clz</STRONG> (Thumb, 46 bytes, Stack size 0 bytes, depilogue.o(i.__ARM_clz))
@@ -1010,11 +1012,11 @@ Global Symbols
 <P><STRONG><a name="[a1]"></a>__scatterload_zeroinit</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_zeroinit), UNUSED)
 
 <P><STRONG><a name="[3f]"></a>assert_failed</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, main.o(i.assert_failed))
-<BR><BR>[Called By]<UL><LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_TogglePin
-<LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_SetBits
-<LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ResetBits
+<BR><BR>[Called By]<UL><LI><a href="#[5c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_TogglePin
+<LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_SetBits
+<LI><a href="#[5e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ResetBits
 <LI><a href="#[6f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ReadInputDataBit
-<LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitPeripheral
+<LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_InitPeripheral
 <LI><a href="#[41]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_ConfigAdcPllClk
 <LI><a href="#[42]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_ConfigAdcHclk
 <LI><a href="#[4b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADC_Init
@@ -1029,17 +1031,17 @@ Global Symbols
 <LI><a href="#[7b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NVIC_Init
 <LI><a href="#[76]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_ClearFlag
 <LI><a href="#[82]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_GetFlagStatus
-<LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableHsi
-<LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableAPB2PeriphClk
+<LI><a href="#[55]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableHsi
+<LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableAPB2PeriphClk
 <LI><a href="#[67]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableAPB1PeriphClk
-<LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableAHBPeriphClk
+<LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_EnableAHBPeriphClk
 <LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_ConfigPclk1
-<LI><a href="#[56]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_ConfigAdc1mClk
+<LI><a href="#[57]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_ConfigAdc1mClk
 <LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART_SendData
 <LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART_Init
 <LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART_GetFlagStatus
 <LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART_Enable
-<LI><a href="#[5e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_SetCmp2
+<LI><a href="#[5f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_SetCmp2
 <LI><a href="#[78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_SetCmp1
 <LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_InitTimeBase
 <LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_InitOc2
@@ -1062,9 +1064,9 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[26]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[5c]"></a>delay_ms</STRONG> (Thumb, 70 bytes, Stack size 0 bytes, delay.o(i.delay_ms))
+<P><STRONG><a name="[5d]"></a>delay_ms</STRONG> (Thumb, 70 bytes, Stack size 0 bytes, delay.o(i.delay_ms))
 <BR><BR>[Called By]<UL><LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Treat_Tick
-<LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Handle
+<LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Handle
 </UL>
 
 <P><STRONG><a name="[29]"></a>fputc</STRONG> (Thumb, 32 bytes, Stack size 16 bytes, usart.o(i.fputc))
@@ -1078,7 +1080,7 @@ Global Symbols
 <P><STRONG><a name="[26]"></a>main</STRONG> (Thumb, 74 bytes, Stack size 0 bytes, main.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 168<LI>Call Chain = main &rArr; ADC_Scan &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; __aeabi_llsr
 </UL>
-<BR>[Calls]<UL><LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_SetBits
+<BR>[Calls]<UL><LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_SetBits
 <LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_init
 <LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;VCSEL_init
 <LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Usart_Init
@@ -1086,11 +1088,11 @@ Global Symbols
 <LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NEC_RxInit
 <LI><a href="#[7a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NEC_Init
 <LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Beep_init
-<LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Handle
+<LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Handle
 <LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Key_Scan
 <LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Key_Init
 <LI><a href="#[6e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_Init
-<LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Adc_Init
+<LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Adc_Init
 <LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADC_Scan
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> entry9a.o(.ARM.Collect$$$$0000000B)
@@ -1118,56 +1120,56 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADC_Scan
 </UL>
 
-<P><STRONG><a name="[50]"></a>Bat_Update</STRONG> (Thumb, 172 bytes, Stack size 0 bytes, adc.o(i.Bat_Update))
+<P><STRONG><a name="[50]"></a>Bat_Update</STRONG> (Thumb, 254 bytes, Stack size 0 bytes, adc.o(i.Bat_Update))
 <BR><BR>[Called By]<UL><LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADC_Scan
 </UL>
 
-<P><STRONG><a name="[64]"></a>Led1_Update</STRONG> (Thumb, 82 bytes, Stack size 8 bytes, user.o(i.Led1_Update))
+<P><STRONG><a name="[64]"></a>Led1_Update</STRONG> (Thumb, 102 bytes, Stack size 8 bytes, user.o(i.Led1_Update))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = Led1_Update &rArr; GPIO_TogglePin
 </UL>
-<BR>[Calls]<UL><LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_TogglePin
-<LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_SetBits
-<LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ResetBits
+<BR>[Calls]<UL><LI><a href="#[5c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_TogglePin
+<LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_SetBits
+<LI><a href="#[5e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ResetBits
 </UL>
-<BR>[Called By]<UL><LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Handle
+<BR>[Called By]<UL><LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Handle
 </UL>
 
-<P><STRONG><a name="[5f]"></a>Mode_Next</STRONG> (Thumb, 54 bytes, Stack size 0 bytes, user.o(i.Mode_Next))
-<BR><BR>[Called By]<UL><LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Handle
+<P><STRONG><a name="[60]"></a>Mode_Next</STRONG> (Thumb, 54 bytes, Stack size 0 bytes, user.o(i.Mode_Next))
+<BR><BR>[Called By]<UL><LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Handle
 </UL>
 
 <P><STRONG><a name="[63]"></a>Mode_ShowLed</STRONG> (Thumb, 128 bytes, Stack size 8 bytes, user.o(i.Mode_ShowLed))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = Mode_ShowLed &rArr; GPIO_SetBits
 </UL>
-<BR>[Calls]<UL><LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_SetBits
-<LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ResetBits
+<BR>[Calls]<UL><LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_SetBits
+<LI><a href="#[5e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ResetBits
 </UL>
-<BR>[Called By]<UL><LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Handle
+<BR>[Called By]<UL><LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Handle
 </UL>
 
-<P><STRONG><a name="[61]"></a>Treat_Start</STRONG> (Thumb, 102 bytes, Stack size 8 bytes, user.o(i.Treat_Start))
+<P><STRONG><a name="[62]"></a>Treat_Start</STRONG> (Thumb, 102 bytes, Stack size 8 bytes, user.o(i.Treat_Start))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = Treat_Start &rArr; __2printf
 </UL>
-<BR>[Calls]<UL><LI><a href="#[62]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
+<BR>[Calls]<UL><LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
 </UL>
-<BR>[Called By]<UL><LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Handle
+<BR>[Called By]<UL><LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Handle
 </UL>
 
-<P><STRONG><a name="[60]"></a>Treat_Stop</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, user.o(i.Treat_Stop))
+<P><STRONG><a name="[61]"></a>Treat_Stop</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, user.o(i.Treat_Stop))
 <BR><BR>[Called By]<UL><LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Treat_Tick
-<LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Handle
+<LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Handle
 </UL>
 
 <P><STRONG><a name="[65]"></a>Treat_Tick</STRONG> (Thumb, 240 bytes, Stack size 8 bytes, user.o(i.Treat_Tick))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = Treat_Tick &rArr; __2printf
 </UL>
-<BR>[Calls]<UL><LI><a href="#[62]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
+<BR>[Calls]<UL><LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
 <LI><a href="#[2f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_uidivmod
-<LI><a href="#[5c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_ms
-<LI><a href="#[60]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Treat_Stop
+<LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_ms
+<LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Treat_Stop
 <LI><a href="#[78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_SetCmp1
 </UL>
-<BR>[Called By]<UL><LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Handle
+<BR>[Called By]<UL><LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Handle
 </UL>
 
 <P><STRONG><a name="[77]"></a>NEC_CarrierOff</STRONG> (Thumb, 12 bytes, Stack size 8 bytes, nec.o(i.NEC_CarrierOff))

@@ -34,3 +34,4 @@
 .\objects\adc.o: ..\..\firmware\n32g031_std_periph_driver\inc\n32g031_wwdg.h
 .\objects\adc.o: ..\..\firmware\n32g031_std_periph_driver\inc\misc.h
 .\objects\adc.o: ..\..\bsp\inc\main.h
+.\objects\adc.o: ..\..\bsp\inc\timer.h

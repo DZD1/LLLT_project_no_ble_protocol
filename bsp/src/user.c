@@ -180,7 +180,7 @@ static void Mode_ShowLed(void)
  *        和 AdcScanTimeCount 一样是"减到 0 后保持"的约定, 主循环被阻塞
  *        (如 NEC 发帧、蜂鸣 delay)只会让这次翻转延后, 不会漏掉。
  */
-static void Led1_Update(uint8_t emitting)
+static void Led1_Update(void)
 {
     if (F_BAT_LOW && F_POWER_ON)
     {
@@ -192,7 +192,7 @@ static void Led1_Update(uint8_t emitting)
         return;
     }
 
-    if (emitting)
+    if (F_POWER_ON && F_BAT_OK)
         LED1_ON; /* 正在出光 */
     else
         LED1_OFF;
@@ -359,8 +359,8 @@ void App_Handle(void)
         }
         Mode_ShowLed();
     }
-    if (F_IN_TREATMENT && F_OUT_TREAT_PAUSE &&
-        (s_mode != BLE_MODE_OFF) && F_THERMAL_OK && F_BAT_OK) // TODO：头戴式检测条件需要加上
+    Led1_Update(); /* 出光中: 常亮, 低电时改为闪烁 */
+    if (F_IN_TREATMENT && F_OUT_TREAT_PAUSE &&(s_mode != BLE_MODE_OFF) && F_THERMAL_OK && F_BAT_NOT_EMPTY) // TODO：头戴式检测条件需要加上
     {
         LOG(0xFF, "Treat start\r\n");
         /* 出光: 两路互斥, 只看 TreatPhase。挡位到颜色的映射在 Treat_Start()
@@ -380,7 +380,7 @@ void App_Handle(void)
             BLUE_LED_ON;
         }
 
-        Led1_Update(1); /* 出光中: 常亮, 低电时改为闪烁 */
+        
         IdleTimeCount = 0;
         if (!OneSecondTimeCount) // 治疗中，计时器每秒中断一次，治疗时间计数递减
         {
@@ -396,7 +396,7 @@ void App_Handle(void)
         VCSEL_OFF;
         VCSEL_PWR_OFF;
         BLUE_LED_OFF;
-        Led1_Update(0); /* 没出光: 常灭, 低电时仍要闪 */
+        Led1_Update(); /* 没出光: 常灭, 低电时仍要闪 */
         OneSecondTimeCount = 1000;
     }
     Key |= KEY_DONE_FLAG;

@@ -52,7 +52,8 @@ extern "C" {
 #define MASK_CHK                    0X0400
 #define MASK_ALARM                  0X0800
 #define MASK_BAT_LOW                0X1000
-    
+#define MASK_BAT_EMPTY              0X2000
+
 #define KEY_DONE_FLAG               0X80
 #define KEY_DATA_CODE               0X7F
     
@@ -91,6 +92,9 @@ extern "C" {
 #define F_BAT_OK                    (((ssw & MASK_BAT_LOW) != MASK_BAT_LOW))//0
 #define F_BAT_LOW                   (((ssw & MASK_BAT_LOW) == MASK_BAT_LOW))//1
 
+#define F_BAT_NOT_EMPTY             (((ssw & MASK_BAT_EMPTY) != MASK_BAT_EMPTY))//0
+#define F_BAT_EMPTY                 (((ssw & MASK_BAT_EMPTY) == MASK_BAT_EMPTY))//1
+
 #define S_POWER_OFF                 (ssw &= ~MASK_POWER)//0
 #define S_POWER_ON                  (ssw |= MASK_POWER)//1
 
@@ -109,6 +113,12 @@ extern "C" {
 #define S_FANWARE_OK                (ssw &= ~MASK_FANWARE)//0
 #define S_FANWARE_ERR               (ssw |= MASK_FANWARE)//1
 
+#define S_BAT_OK                    (ssw &= ~MASK_BAT_LOW)//0
+#define S_BAT_LOW                   (ssw |= MASK_BAT_LOW)//1
+
+#define S_BAT_NOT_EMPTY             (ssw &= ~MASK_BAT_EMPTY)//0
+#define S_BAT_EMPTY                 (ssw |= MASK_BAT_EMPTY)//1
+
 #define S_OUT_LTT                   (ssw &= ~MASK_LTT)//0
 #define S_IN_LTT                    (ssw |= MASK_LTT)//1
 
@@ -117,9 +127,6 @@ extern "C" {
 
 #define S_OUT_ALARM                 (ssw &= ~MASK_ALARM)//0
 #define S_IN_ALARM                  (ssw |= MASK_ALARM)//1
-
-#define S_BAT_OK                    (ssw &= ~MASK_BAT_LOW)//0
-#define S_BAT_LOW                   (ssw |= MASK_BAT_LOW)//1
 
 typedef enum
 {    

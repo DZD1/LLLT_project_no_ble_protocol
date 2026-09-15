@@ -1,8 +1,10 @@
 #include "ADC.h"
 #include "main.h"
+#include"timer.h"
 extern __IO uint16_t OneSecondTimeCount;
+extern uint16_t ssw;
 uint16_t NTC1_Value, NTC2_Value, BAT_Value;
-extern uint16_t ssw ;
+
 /* ---------------- 电量分档 ----------------
  * 2S 锂电经 1/3 分压接 PA5, 所以 BAT_Value(引脚毫伏) x 3 = 电池端毫伏。
  * 比较一律在**电池端毫伏**上做, 不把门限除到引脚侧: 门限除以 3 会截断
@@ -19,17 +21,24 @@ extern uint16_t ssw ;
 #define BAT_MV_75 7900		/* 3.95V/节 */
 #define BAT_MV_50 7600		/* 3.80V/节 */
 #define BAT_MV_25 7300		/* 3.65V/节 */
-#define BAT_MV_LOW 7000		/* 3.50V/节 -> 低于 20%, 触发闪烁 */
-#define BAT_MV_LOW_CLR 7200 /* 回差: 高于此值才解除低电 */
-#define BAT_MV_EMPTY 6000	/* 3.00V/节, 放电截止。低于此值报 0% */
+#define BAT_MV_LOW 7000		  /* 3.50V/节 -> 低于 20%, 触发闪烁 */
+#define BAT_MV_LOW_CLR 7200	  /* 回差: 高于此值才解除低电 */
+#define BAT_MV_EMPTY 6300	  /* 3.00V/节, 放电截止。低于此值报 0% 并禁止出光 */
+#define BAT_MV_EMPTY_CLR 6700 /* 回差: 高于此值才解除空电 */
 
 /* 低电判定要连续 8 次(约 2s)成立才置位。
  * VCSEL 出光是脉冲负载, 会把电池电压瞬时拉低几百毫伏; 单次采样直接置位会在
  * 治疗中误报低电并让 LED1 无故闪烁。回差 + 连续计数一起用, 两个方向都不抖。 */
 #define BAT_LOW_CONFIRM 8
 
+/* 空电判定同样要连续确认, 而且比低电更不能误判: 低电误判只是灯闪, 空电误判会
+ * 直接断光停机。脉冲负载在接近放电截止时内阻已经变大, 瞬时跌落比满电时更深,
+ * 所以确认次数取得比低电多一倍(约 4s), 并配 300mV 回差防止停机后电压回弹又启动。 */
+#define BAT_EMPTY_CONFIRM 16
+
 static uint8_t BatPercent = BAT_PERCENT_FULL; /* 开机先当满电, 由首次采样纠正 */
 static uint8_t BatLowCnt = 0;
+static uint8_t BatEmptyCnt = 0;
 
 /**
  * @brief 按最新 BAT_Value 更新电量档位和低电标志。每次 ADC 采样后调一次。
@@ -82,6 +91,26 @@ static void Bat_Update(void)
 		   治疗中约 2s 就凑满并误报低电, 正好打掉这个计数器的设计目的。 */
 		BatLowCnt = 0;
 	}
+
+	/* ---- 第三段: 空电标志(放电截止, 断光并拒绝启动) ----
+	   和低电分成两段独立判定, 结构与第二段一致: 空电必然也是低电, 但反过来不成立,
+	   写成 if/else 链会让空电吃掉低电的判定机会, LED1 就不闪了。 */
+	if (mv <= BAT_MV_EMPTY)
+	{
+		if (BatEmptyCnt < BAT_EMPTY_CONFIRM)
+			BatEmptyCnt++;
+		if (BatEmptyCnt >= BAT_EMPTY_CONFIRM)
+			S_BAT_EMPTY;
+	}
+	else if (mv >= BAT_MV_EMPTY_CLR)
+	{
+		BatEmptyCnt = 0;
+		S_BAT_NOT_EMPTY;
+	}
+	else
+	{
+		BatEmptyCnt = 0; /* 回差带内(6.0~6.3V): 维持现状, 计数清零, 同第二段 */
+	}
 }
 
 /**
@@ -105,21 +134,21 @@ void Adc_Init(void)
 	GPIO_InitType GPIO_InitStructure;
 	ADC_InitType ADC_InitStructure;
 
-    RCC_EnableAPB2PeriphClk(RCC_APB2_PERIPH_GPIOA, ENABLE);
+	RCC_EnableAPB2PeriphClk(RCC_APB2_PERIPH_GPIOA, ENABLE);
 	/* Enable ADC clocks */
 	RCC_EnableAHBPeriphClk(RCC_AHB_PERIPH_ADC, ENABLE);
 	/* enable ADC 1M clock */
 	RCC_EnableHsi(ENABLE);
 	/* Wait til1 HSI is ready*/
-	HSIStartUpStatus = RCC_WaitHsiStable(); 
-	if(HSIStartUpStatus == SUCCESS)
+	HSIStartUpStatus = RCC_WaitHsiStable();
+	if (HSIStartUpStatus == SUCCESS)
 	{
 	}
 	else
 	{
 		/* If HSI fails to start-up, the application will have wrong clock configuration. User can add here some code to deal with this error*/
 		/* Go to infinitel1oop*/
-		while(1)
+		while (1)
 		{
 		}
 	}
@@ -129,84 +158,79 @@ void Adc_Init(void)
 
 	GPIO_InitStruct(&GPIO_InitStructure);
 	/* Configure PA.01 as analog input -------------------------*/
-	GPIO_InitStructure.Pin       = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_5;
+	GPIO_InitStructure.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_5;
 	GPIO_InitStructure.GPIO_Mode = GPIO_MODE_ANALOG;
 	GPIO_InitPeripheral(GPIOA, &GPIO_InitStructure);
 
 	/* ADC configuration ------------------------------------------------------*/
-	ADC_InitStructure.MultiChEn      = DISABLE;
+	ADC_InitStructure.MultiChEn = DISABLE;
 	ADC_InitStructure.ContinueConvEn = DISABLE;
-	ADC_InitStructure.ExtTrigSelect  = ADC_EXT_TRIGCONV_NONE;
-	ADC_InitStructure.DatAlign       = ADC_DAT_ALIGN_R;
-	ADC_InitStructure.ChsNumber      = 1;
+	ADC_InitStructure.ExtTrigSelect = ADC_EXT_TRIGCONV_NONE;
+	ADC_InitStructure.DatAlign = ADC_DAT_ALIGN_R;
+	ADC_InitStructure.ChsNumber = 1;
 	ADC_Init(ADC, &ADC_InitStructure);
 
 	/* Enable ADC */
 	ADC_Enable(ADC, ENABLE);
 	/* Check ADC Ready */
-	while(ADC_GetFlagStatusNew(ADC,ADC_FLAG_RDY) == RESET)
-	;
-	while(ADC_GetFlagStatusNew(ADC,ADC_FLAG_PD_RDY))
-	;
-
+	while (ADC_GetFlagStatusNew(ADC, ADC_FLAG_RDY) == RESET)
+		;
+	while (ADC_GetFlagStatusNew(ADC, ADC_FLAG_PD_RDY))
+		;
 }
 
 uint16_t ADC_GetData(uint8_t ADC_Channel)
 {
-    uint16_t dat;
-    ADC_ConfigRegularChannel(ADC, ADC_Channel, 1, ADC_SAMP_TIME_56CYCLES5);
-    /* Start ADC Software Conversion */
-    ADC_EnableSoftwareStartConv(ADC,ENABLE);
-    while(ADC_GetFlagStatus(ADC,ADC_FLAG_ENDC_ANY)==0){
-    }
-    ADC_ClearFlag(ADC,ADC_FLAG_ENDC_ANY);
-    ADC_ClearFlag(ADC,ADC_FLAG_STR);
-    dat=ADC_GetDat(ADC);
-    return dat;
+	uint16_t dat;
+	ADC_ConfigRegularChannel(ADC, ADC_Channel, 1, ADC_SAMP_TIME_56CYCLES5);
+	/* Start ADC Software Conversion */
+	ADC_EnableSoftwareStartConv(ADC, ENABLE);
+	while (ADC_GetFlagStatus(ADC, ADC_FLAG_ENDC_ANY) == 0)
+	{
+	}
+	ADC_ClearFlag(ADC, ADC_FLAG_ENDC_ANY);
+	ADC_ClearFlag(ADC, ADC_FLAG_STR);
+	dat = ADC_GetDat(ADC);
+	return dat;
 }
 static uint16_t ADC_Average(u8 ADC_Channel)
 {
-    uint8_t i = 0;
-    uint16_t adc_average = 0;
-    uint32_t all = 0;
+	uint8_t i = 0;
+	uint16_t adc_average = 0;
+	uint32_t all = 0;
 
-    for (i = 0; i < 8; i++)
-        all += ADC_GetData(ADC_Channel);
+	for (i = 0; i < 8; i++)
+		all += ADC_GetData(ADC_Channel);
 
-    adc_average = (all >> 3);
+	adc_average = (all >> 3);
 
-    return adc_average;
+	return adc_average;
 }
 
 void ADC_Scan(void)
 {
-	float temp1,temp2;
-	uint16_t  ADCConvertedValue[3];
-	if(AdcScanTimeCount == 0)
+	float temp1, temp2;
+	uint16_t ADCConvertedValue[3];
+	if (AdcScanTimeCount == 0)
 	{
-		AdcScanTimeCount = ADC_SCAN_INTERVAL;		//重装下一次采样间隔
+		AdcScanTimeCount = ADC_SCAN_INTERVAL; // 重装下一次采样间隔
 
 		ADCConvertedValue[0] = ADC_Average(ADC_CH_1_PA1);
-		temp1 = (float)ADCConvertedValue[0] * 3.3 ;
+		temp1 = (float)ADCConvertedValue[0] * 3.3;
 		temp2 = temp1 / 4096;
 		NTC1_Value = temp2 * 1000;
-	 
 
 		ADCConvertedValue[1] = ADC_Average(ADC_CH_0_PA0);
-		temp1 = (float)ADCConvertedValue[1] * 3.3 ;
+		temp1 = (float)ADCConvertedValue[1] * 3.3;
 		temp2 = temp1 / 4096;
-		NTC2_Value = temp2 * 1000;	
-	
+		NTC2_Value = temp2 * 1000;
 
 		ADCConvertedValue[2] = ADC_Average(ADC_CH_5_PA5);
-		temp1 = (float)ADCConvertedValue[2] * 3.3 ;
+		temp1 = (float)ADCConvertedValue[2] * 3.3;
 		temp2 = temp1 / 4096;
 		BAT_Value = temp2 * 1000;
-		
+
 		Bat_Update(); // 电量分档与低电判定, 依赖本次的 BAT_Value
-		//LOG(0xFF, "NTC1:%d NTC2:%d BAT:%d\r\n", NTC1_Value, NTC2_Value, BAT_Value);
+		LOG(0xFF, "NTC1:%d NTC2:%d BAT:%d", NTC1_Value, NTC2_Value, BAT_Value);
 	}
-	
-
 }
-

@@ -332,8 +332,8 @@ I (..\..\firmware\n32g031_std_periph_driver\inc\n32g031_lpuart.h)(0x671D9AC2)
 I (..\..\firmware\n32g031_std_periph_driver\inc\n32g031_lptim.h)(0x671D9AC2)
 I (..\..\firmware\n32g031_std_periph_driver\inc\n32g031_wwdg.h)(0x671D9AC2)
 I (..\..\firmware\n32g031_std_periph_driver\inc\misc.h)(0x671D9AC2)
-I (..\..\bsp\inc\main.h)(0x6AA398A7)
-F (..\..\bsp\src\adc.c)(0x6AA3A093)(--gnu -c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\bsp\inc -I ..\..\firmware\CMSIS\core -I ..\..\firmware\CMSIS\device -I ..\..\firmware\n32g031_std_periph_driver\inc-ID:\Users\75506\AppData\Local\Arm\Packs\Nationstech\N32G031_DFP\1.0.5\firmware\CMSIS\device-D__UVISION_VERSION="538" -DN32G031 -DUSE_STDPERIPH_DRIVER -DN32G031 -DUSE_STDPERIPH_DRIVER -DUSE_FULL_ASSERT-o .\objects\adc.o --omf_browse .\objects\adc.crf --depend .\objects\adc.d)
+I (..\..\bsp\inc\main.h)(0x6AA788FD)
+F (..\..\bsp\src\adc.c)(0x6AA7892B)(--gnu -c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\bsp\inc -I ..\..\firmware\CMSIS\core -I ..\..\firmware\CMSIS\device -I ..\..\firmware\n32g031_std_periph_driver\inc-ID:\Users\75506\AppData\Local\Arm\Packs\Nationstech\N32G031_DFP\1.0.5\firmware\CMSIS\device-D__UVISION_VERSION="538" -DN32G031 -DUSE_STDPERIPH_DRIVER -DN32G031 -DUSE_STDPERIPH_DRIVER -DUSE_FULL_ASSERT-o .\objects\adc.o --omf_browse .\objects\adc.crf --depend .\objects\adc.d)
 I (..\..\bsp\inc\ADC.h)(0x6AA3A175)
 I (..\..\firmware\CMSIS\device\n32g031.h)(0x671D9AC2)
 I (..\..\firmware\CMSIS\core\core_cm0.h)(0x671D9AC2)
@@ -367,7 +367,8 @@ I (..\..\firmware\n32g031_std_periph_driver\inc\n32g031_lpuart.h)(0x671D9AC2)
 I (..\..\firmware\n32g031_std_periph_driver\inc\n32g031_lptim.h)(0x671D9AC2)
 I (..\..\firmware\n32g031_std_periph_driver\inc\n32g031_wwdg.h)(0x671D9AC2)
 I (..\..\firmware\n32g031_std_periph_driver\inc\misc.h)(0x671D9AC2)
-I (..\..\bsp\inc\main.h)(0x6AA398A7)
+I (..\..\bsp\inc\main.h)(0x6AA788FD)
+I (..\..\bsp\inc\timer.h)(0x6AA3978E)
 F (..\..\bsp\src\gpio.c)(0x6A992985)(--gnu -c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\bsp\inc -I ..\..\firmware\CMSIS\core -I ..\..\firmware\CMSIS\device -I ..\..\firmware\n32g031_std_periph_driver\inc-ID:\Users\75506\AppData\Local\Arm\Packs\Nationstech\N32G031_DFP\1.0.5\firmware\CMSIS\device-D__UVISION_VERSION="538" -DN32G031 -DUSE_STDPERIPH_DRIVER -DN32G031 -DUSE_STDPERIPH_DRIVER -DUSE_FULL_ASSERT-o .\objects\gpio.o --omf_browse .\objects\gpio.crf --depend .\objects\gpio.d)
 I (..\..\bsp\inc\gpio.h)(0x6A9929BA)
 I (..\..\firmware\CMSIS\device\n32g031.h)(0x671D9AC2)
@@ -436,9 +437,9 @@ I (..\..\firmware\n32g031_std_periph_driver\inc\n32g031_lpuart.h)(0x671D9AC2)
 I (..\..\firmware\n32g031_std_periph_driver\inc\n32g031_lptim.h)(0x671D9AC2)
 I (..\..\firmware\n32g031_std_periph_driver\inc\n32g031_wwdg.h)(0x671D9AC2)
 I (..\..\firmware\n32g031_std_periph_driver\inc\misc.h)(0x671D9AC2)
-I (..\..\bsp\inc\main.h)(0x6AA398A7)
+I (..\..\bsp\inc\main.h)(0x6AA788FD)
 F (..\..\bsp\src\main.c)(0x6AA3886D)(--gnu -c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\bsp\inc -I ..\..\firmware\CMSIS\core -I ..\..\firmware\CMSIS\device -I ..\..\firmware\n32g031_std_periph_driver\inc-ID:\Users\75506\AppData\Local\Arm\Packs\Nationstech\N32G031_DFP\1.0.5\firmware\CMSIS\device-D__UVISION_VERSION="538" -DN32G031 -DUSE_STDPERIPH_DRIVER -DN32G031 -DUSE_STDPERIPH_DRIVER -DUSE_FULL_ASSERT-o .\objects\main.o --omf_browse .\objects\main.crf --depend .\objects\main.d)
-I (..\..\bsp\inc\main.h)(0x6AA398A7)
+I (..\..\bsp\inc\main.h)(0x6AA788FD)
 I (..\..\firmware\CMSIS\device\n32g031.h)(0x671D9AC2)
 I (..\..\firmware\CMSIS\core\core_cm0.h)(0x671D9AC2)
 I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x6025237E)
@@ -519,7 +520,7 @@ I (..\..\firmware\n32g031_std_periph_driver\inc\n32g031_lptim.h)(0x671D9AC2)
 I (..\..\firmware\n32g031_std_periph_driver\inc\n32g031_wwdg.h)(0x671D9AC2)
 I (..\..\firmware\n32g031_std_periph_driver\inc\misc.h)(0x671D9AC2)
 I (..\..\bsp\inc\gpio.h)(0x6A9929BA)
-I (..\..\bsp\inc\main.h)(0x6AA398A7)
+I (..\..\bsp\inc\main.h)(0x6AA788FD)
 I (..\..\bsp\inc\ADC.h)(0x6AA3A175)
 I (..\..\bsp\inc\nec.h)(0x6A9A2086)
 F (..\..\bsp\src\usart.c)(0x6A683428)(--gnu -c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\bsp\inc -I ..\..\firmware\CMSIS\core -I ..\..\firmware\CMSIS\device -I ..\..\firmware\n32g031_std_periph_driver\inc-ID:\Users\75506\AppData\Local\Arm\Packs\Nationstech\N32G031_DFP\1.0.5\firmware\CMSIS\device-D__UVISION_VERSION="538" -DN32G031 -DUSE_STDPERIPH_DRIVER -DN32G031 -DUSE_STDPERIPH_DRIVER -DUSE_FULL_ASSERT-o .\objects\usart.o --omf_browse .\objects\usart.crf --depend .\objects\usart.d)
@@ -591,7 +592,7 @@ I (..\..\firmware\n32g031_std_periph_driver\inc\n32g031_lpuart.h)(0x671D9AC2)
 I (..\..\firmware\n32g031_std_periph_driver\inc\n32g031_lptim.h)(0x671D9AC2)
 I (..\..\firmware\n32g031_std_periph_driver\inc\n32g031_wwdg.h)(0x671D9AC2)
 I (..\..\firmware\n32g031_std_periph_driver\inc\misc.h)(0x671D9AC2)
-F (..\..\bsp\src\user.c)(0x6AA3A4A0)(--gnu -c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\bsp\inc -I ..\..\firmware\CMSIS\core -I ..\..\firmware\CMSIS\device -I ..\..\firmware\n32g031_std_periph_driver\inc-ID:\Users\75506\AppData\Local\Arm\Packs\Nationstech\N32G031_DFP\1.0.5\firmware\CMSIS\device-D__UVISION_VERSION="538" -DN32G031 -DUSE_STDPERIPH_DRIVER -DN32G031 -DUSE_STDPERIPH_DRIVER -DUSE_FULL_ASSERT-o .\objects\user.o --omf_browse .\objects\user.crf --depend .\objects\user.d)
+F (..\..\bsp\src\user.c)(0x6AA78E69)(--gnu -c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\bsp\inc -I ..\..\firmware\CMSIS\core -I ..\..\firmware\CMSIS\device -I ..\..\firmware\n32g031_std_periph_driver\inc-ID:\Users\75506\AppData\Local\Arm\Packs\Nationstech\N32G031_DFP\1.0.5\firmware\CMSIS\device-D__UVISION_VERSION="538" -DN32G031 -DUSE_STDPERIPH_DRIVER -DN32G031 -DUSE_STDPERIPH_DRIVER -DUSE_FULL_ASSERT-o .\objects\user.o --omf_browse .\objects\user.crf --depend .\objects\user.d)
 I (..\..\bsp\inc\user.h)(0x6AA39665)
 I (..\..\firmware\CMSIS\device\n32g031.h)(0x671D9AC2)
 I (..\..\firmware\CMSIS\core\core_cm0.h)(0x671D9AC2)
@@ -629,7 +630,7 @@ I (..\..\bsp\inc\gpio.h)(0x6A9929BA)
 I (..\..\bsp\inc\usart.h)(0x6A683724)
 I (D:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x60252374)
 I (..\..\bsp\inc\key.h)(0x6A4DE336)
-I (..\..\bsp\inc\main.h)(0x6AA398A7)
+I (..\..\bsp\inc\main.h)(0x6AA788FD)
 I (..\..\bsp\inc\ADC.h)(0x6AA3A175)
 I (..\..\bsp\inc\pwm.h)(0x6A993BA8)
 I (..\..\bsp\inc\delay.h)(0x6A99328E)
