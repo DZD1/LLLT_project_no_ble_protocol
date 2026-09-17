@@ -102,9 +102,9 @@ extern "C" {
 #define S_IN_TREATMENT              (ssw |= MASK_TREATMENT)//1
 
 #define S_OUT_TREAT_PAUSE           (ssw &= ~MASK_TREAT_PAUSE)//0
-#define S_IN_TREAT_PAUSE            (ssw |= MASK_TREAT_PAUSE)//1
+#define S_IN_TREAT_PAUSE           (ssw |= MASK_TREAT_PAUSE)//1
 
-#define S_OUT_TOUCH                 (ssw &= ~MASK_TOUCH)//0
+#define S_OUT_TOUCH                (ssw &= ~MASK_TOUCH)//0
 #define S_IN_TOUCH                  (ssw |= MASK_TOUCH)//1
 
 #define S_THERMAL_OK                (ssw &= ~MASK_THERMAL)//0

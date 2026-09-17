@@ -329,15 +329,15 @@ void App_Handle(void)
             S_THERMAL_OK;
         }
 
-        if(F_IN_TREATMENT && F_OUT_TREAT_PAUSE && !Wear_IsOn())
+        if(F_IN_TREATMENT && F_OUT_TREAT_PAUSE )
         {
             S_IN_TREAT_PAUSE;
         }
-        else if(F_IN_TREATMENT && F_IN_TREAT_PAUSE && Wear_IsOn())
+        else if(F_IN_TREATMENT && F_IN_TREAT_PAUSE )
         {
             S_OUT_TREAT_PAUSE;
         }
-        if (Key == (KEY_POWER | KEY_LONG_FLAG) || IdleTimeCount >= 600) // 电源按键长按从开机状态进入关机状态，或者空闲10分钟自动关机F
+        if (Key == (KEY_POWER | KEY_LONG_FLAG) || IdleTimeCount >= 300) // 电源按键长按从开机状态进入关机状态，或者空闲10分钟自动关机F
         {
             OneSecondTimeCount = 1000;
             IdleTimeCount = 0;
@@ -356,7 +356,9 @@ void App_Handle(void)
         }
         if (Key == KEY_POWER)
         {
+
             Mode_Next();
+
             if (s_mode == BLE_MODE_OFF)
                 Treat_Stop(); /* 循环回待机挡 = 主动结束 */
             else
@@ -387,6 +389,8 @@ void App_Handle(void)
             VCSEL_PWR_ON; /* 蓝光段不给 VCSEL 供电, 不只是占空比归零 */
             BLUE_LED_ON;
         }
+
+        
         IdleTimeCount = 0;
         if (!OneSecondTimeCount) // 治疗中，计时器每秒中断一次，治疗时间计数递减
         {
@@ -394,7 +398,7 @@ void App_Handle(void)
             Treat_Tick();
         }
     }
-    else 
+    else
     {
         /* 待机挡、用户暂停、摘下、关机 —— 四种情形都在这里断光。
            重装 OneSecondTimeCount 使治疗计时冻结在原处: 摘下期间不递减,
@@ -405,8 +409,8 @@ void App_Handle(void)
         Led1_Update(); /* 没出光: 常灭, 低电时仍要闪 */
         if(!OneSecondTimeCount)
         {
-           OneSecondTimeCount = 1000; 
-           IdleTimeCount++;
+						OneSecondTimeCount = 1000;
+						IdleTimeCount++;
         }
     }
     Key |= KEY_DONE_FLAG;
