@@ -231,6 +231,5 @@ void ADC_Scan(void)
 		BAT_Value = temp2 * 1000;
 
 		Bat_Update(); // 电量分档与低电判定, 依赖本次的 BAT_Value
-		LOG(0xFF, "NTC1:%d NTC2:%d BAT:%d", NTC1_Value, NTC2_Value, BAT_Value);
 	}
 }

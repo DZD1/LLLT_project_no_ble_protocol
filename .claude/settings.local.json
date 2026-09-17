@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rtk ls *)",
+      "Bash(rtk proxy *)",
+      "Bash(\"D:/Keil_v5/UV4/UV4.exe\" -r LLLT.uvprojx -j0 -log build_verify.log)"
+    ]
+  }
+}

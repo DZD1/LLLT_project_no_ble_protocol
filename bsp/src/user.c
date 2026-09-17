@@ -3,7 +3,7 @@
 #include "usart.h"
 #include "stdio.h"
 #include "key.h"
-#include "main.h"
+#include "main.h" 
 #include "ADC.h"
 #include "pwm.h"
 #include "delay.h"
@@ -13,9 +13,10 @@
 /* ---------------- NEC 持续发码 ---------------- */
 #define NEC_ADDR 0x00      /* 循环发送的地址, 按需改 */
 #define NEC_CMD 0x45       /* 循环发送的命令, 按需改 */
-#define NTC_OVER_HEAD 2350 /* ADC 值低于值表示温度>45*/
-#define WEAR_ON_FRAMES 3
+#define NTC_OVER_HEAD 1500 /* ADC 值低于值表示温度>45*/
+#define WEAR_ON_FRAMES 10
 #define WEAR_OFF_FRAMES 2
+
 
 /* 最近一帧的引导码期间接收头是否收到载波: 1=收到, 0=没收到, 0xFF=还没发过帧。
    每 108ms 刷新一次, 其他文件加 extern 后可随时读 */
@@ -52,9 +53,12 @@ static uint8_t NecFramePending = 0;
  */
 __IO uint8_t s_mode;
 
-static uint8_t WearOnCnt = 0;  /* 连续判为"已佩戴"的帧数 */
-static uint8_t WearOffCnt = 0; /* 连续判为"未佩戴"的帧数 */
-static uint8_t WearLinkOk = 0; /* 1 = 本次开机见过载波, 收发链路确认可用 */
+static uint8_t WearOnCnt = 0;   /* 连续判为"已佩戴"的帧数 */
+static uint8_t WearOffCnt = 0;  /* 连续判为"未佩戴"的帧数 */
+static uint8_t WearLinkOk = 0;  /* 1 = 链路确认可用, 达到 WEAR_LINK_FRAMES 才置位 */
+static uint8_t WearLinkCnt = 0; /* 连续收到载波的帧数, 单次瞬时误收不足以置信链路 */
+
+#define WEAR_LINK_FRAMES 3 /* 连续收到几帧载波才认可链路可用, 防止一次瞬时干扰永久解锁佩戴判定 */
 
 #define TREAT_SEC_BLUE 600U  /* 蓝光段 10 分钟 */
 #define TREAT_SEC_RED 1200U  /* 红光段 20 分钟 */
@@ -66,17 +70,21 @@ static uint8_t WearLinkOk = 0; /* 1 = 本次开机见过载波, 收发链路确�
 __IO uint8_t TreatPhase = TREAT_PHASE_BLUE;
 
 /* 本段剩余秒数。摘下期间冻结不减, 戴回去从断点接着走 */
-__IO uint16_t TreatSecLeft = 0;
+__IO uint16_t TreatSecLeft = 0; 
 static void Wear_Update(uint8_t rx)
 {
     if (rx)
     {
-        /* 光路通畅: 收发两端和线束都是活的, 同时本帧判为未佩戴 */
-        WearLinkOk = 1;
+        /* 光路通畅: 收发两端和线束都是活的, 同时本帧判为未佩戴。
+           连续收到 WEAR_LINK_FRAMES 帧才认可链路, 避免一次瞬时误收(干扰/
+           接触瞬间导通)就永久解锁佩戴判定 */
+        if (WearLinkCnt < WEAR_LINK_FRAMES)
+            WearLinkCnt++;
+        if (WearLinkCnt >= WEAR_LINK_FRAMES)
+            WearLinkOk = 1;
         WearOnCnt = 0;
         if (WearOffCnt < WEAR_OFF_FRAMES)
             WearOffCnt++;
-
         if (WearOffCnt >= WEAR_OFF_FRAMES && F_IN_TOUCH)
         {
             S_OUT_TOUCH;
@@ -86,12 +94,11 @@ static void Wear_Update(uint8_t rx)
     else
     {
         WearOffCnt = 0;
+        WearLinkCnt = 0; /* 收不到载波说明链路本帧不通, 连续计数清零重来 */
         if (WearOnCnt < WEAR_ON_FRAMES)
             WearOnCnt++;
 
 #if WEAR_REQUIRE_LINK_CHECK
-        /* 一次载波都没收到过时不认可"已佩戴": 此时"戴上了"和"发射管坏/排线
-           脱落"在信号上完全一样, 认了就等于让坏机器放行出光 */
         if (!WearLinkOk)
             return;
 #endif
@@ -212,13 +219,11 @@ static void Treat_Start(void)
     {
         TreatPhase = TREAT_PHASE_RED;
         TreatSecLeft = TREAT_SEC_RED;
-        LOG(0xFF, "Treat red start\r\n");
     }
     else /* 蓝光挡, 以及红蓝光挡的第一段 */
     {
         TreatPhase = TREAT_PHASE_BLUE;
         TreatSecLeft = TREAT_SEC_BLUE;
-        LOG(0xFF, "Treat blue start\r\n");
     }
 }
 static void Treat_Stop(void)
@@ -246,8 +251,8 @@ static void Treat_Tick(void)
             delay_ms(200);
             BEEP_OFF;
         }
-        LOG(0xFF, "Treat %s:%d\r\n",
-            (TreatPhase == TREAT_PHASE_BLUE) ? "blue" : "red", TreatSecLeft);
+        /*LOG(0xFF, "Treat %s:%d\r\n",
+            (TreatPhase == TREAT_PHASE_BLUE) ? "blue" : "red", TreatSecLeft);*/
         return;
     }
 
@@ -260,14 +265,12 @@ static void Treat_Tick(void)
         BEEP_ON;
         delay_ms(500);
         BEEP_OFF;
-        LOG(0xFF, "Treat blue done, switch to red\r\n");
         return;
     }
     BEEP_ON;
     delay_ms(1000);
     BEEP_OFF;
     Treat_Stop();
-    LOG(0xFF, "Treat complete\r\n");
 }
 
 void App_Handle(void)
@@ -295,28 +298,28 @@ void App_Handle(void)
     {
         /* 每 108ms 发一帧 NEC 并在引导码期间采样 RX。整帧由 TIM1 中断发出,
        这里只做调度, 不阻塞, 下面的按键/治疗逻辑照常执行 */
-        //        if (!NEC_IsBusy())
-        //        {
-        //            if (NecFramePending) /* 上一帧刚发完, 锁存它的采样结果 */
-        //            {
-        //                NecFramePending = 0;
-        //                NecRx = NEC_RxSeen();
-        //                if (NecRx != NecRxOk) /* 只在变化时打印, 避免每 108ms 刷屏 */
-        //                {
-        //                    NecRxOk = NecRx;
-        //                    LOG(0xFF, "NEC rx=%d\r\n", NecRxOk);
-        //                }
-        //                /* 原始采样喂给去抖层。NecRxOk 只是给调试看的原始值,
-        //                   业务判断一律走 Wear_IsOn() */
-        //                Wear_Update(NecRx);
-        //            }
-        //            if (NecGapTimeCount == 0) /* 起下一帧 */
-        //            {
-        //                NecGapTimeCount = NEC_FRAME_PERIOD_MS;
-        //                NEC_SendFrameVerify(NEC_ADDR, NEC_CMD);
-        //                NecFramePending = 1;
-        //            }
-        //        }
+        if (!NEC_IsBusy())
+        {
+            if (NecFramePending) /* 上一帧刚发完, 锁存它的采样结果 */
+            {
+                NecFramePending = 0;
+                NecRx = NEC_RxSeen();
+                if (NecRx != NecRxOk) /* 只在变化时打印, 避免每 108ms 刷屏 */
+                {
+                    NecRxOk = NecRx;
+                    LOG(0xFF, "NEC rx=%d\r\n", NecRxOk);
+                }
+                /* 原始采样喂给去抖层。NecRxOk 只是给调试看的原始值,
+                    业务判断一律走 Wear_IsOn() */
+                Wear_Update(NecRx);
+            }
+            if (NecGapTimeCount == 0) /* 起下一帧 */
+            {
+                NecGapTimeCount = NEC_FRAME_PERIOD_MS;
+                NEC_SendFrameVerify(NEC_ADDR, NEC_CMD);
+                NecFramePending = 1;
+            }
+        }
         if (F_THERMAL_OK && (NTC1_Value < NTC_OVER_HEAD || NTC2_Value < NTC_OVER_HEAD))
         {
             S_THERMAL_ERR;
@@ -325,9 +328,19 @@ void App_Handle(void)
         {
             S_THERMAL_OK;
         }
-        if (Key == (KEY_POWER | KEY_LONG_FLAG) || IdleTimeCount > 600) // 电源按键长按从开机状态进入关机状态，或者空闲10分钟自动关机F
+
+        if(F_IN_TREATMENT && F_OUT_TREAT_PAUSE && !Wear_IsOn())
+        {
+            S_IN_TREAT_PAUSE;
+        }
+        else if(F_IN_TREATMENT && F_IN_TREAT_PAUSE && Wear_IsOn())
+        {
+            S_OUT_TREAT_PAUSE;
+        }
+        if (Key == (KEY_POWER | KEY_LONG_FLAG) || IdleTimeCount >= 600) // 电源按键长按从开机状态进入关机状态，或者空闲10分钟自动关机F
         {
             OneSecondTimeCount = 1000;
+            IdleTimeCount = 0;
             DelayTimeCount = 0;
             TreatSecLeft = 0; /* ssw=0 已退出治疗态, 剩余秒数一并清掉 */
             ssw = 0;
@@ -343,9 +356,7 @@ void App_Handle(void)
         }
         if (Key == KEY_POWER)
         {
-
             Mode_Next();
-
             if (s_mode == BLE_MODE_OFF)
                 Treat_Stop(); /* 循环回待机挡 = 主动结束 */
             else
@@ -354,15 +365,12 @@ void App_Handle(void)
         else if (F_THERMAL_ERR) /* 过温: 无条件断光回待机, 时长走完由 Treat_Tick 处理 */
         {
             Treat_Stop();
-            LOG(0xFF, "NTC1_Value=%d,NTC2_Value=%d", NTC1_Value, NTC2_Value);
-            LOG(0xFF, "THERMAL_ERR\r\n");
         }
         Mode_ShowLed();
     }
     Led1_Update(); /* 出光中: 常亮, 低电时改为闪烁 */
-    if (F_IN_TREATMENT && F_OUT_TREAT_PAUSE &&(s_mode != BLE_MODE_OFF) && F_THERMAL_OK && F_BAT_NOT_EMPTY) // TODO：头戴式检测条件需要加上
+    if (F_IN_TREATMENT && F_OUT_TREAT_PAUSE && (s_mode != BLE_MODE_OFF) && F_THERMAL_OK && F_BAT_NOT_EMPTY) // TODO：头戴式检测条件需要加上
     {
-        LOG(0xFF, "Treat start\r\n");
         /* 出光: 两路互斥, 只看 TreatPhase。挡位到颜色的映射在 Treat_Start()
            里已经定过, 这里不再各挡判一遍。
            两路都显式写一次电平, 别只开该开的那路 —— 红蓝光挡切段时蓝光是开着的,
@@ -379,8 +387,6 @@ void App_Handle(void)
             VCSEL_PWR_ON; /* 蓝光段不给 VCSEL 供电, 不只是占空比归零 */
             BLUE_LED_ON;
         }
-
-        
         IdleTimeCount = 0;
         if (!OneSecondTimeCount) // 治疗中，计时器每秒中断一次，治疗时间计数递减
         {
@@ -388,7 +394,7 @@ void App_Handle(void)
             Treat_Tick();
         }
     }
-    else
+    else 
     {
         /* 待机挡、用户暂停、摘下、关机 —— 四种情形都在这里断光。
            重装 OneSecondTimeCount 使治疗计时冻结在原处: 摘下期间不递减,
@@ -397,7 +403,11 @@ void App_Handle(void)
         VCSEL_PWR_OFF;
         BLUE_LED_OFF;
         Led1_Update(); /* 没出光: 常灭, 低电时仍要闪 */
-        OneSecondTimeCount = 1000;
+        if(!OneSecondTimeCount)
+        {
+           OneSecondTimeCount = 1000; 
+           IdleTimeCount++;
+        }
     }
     Key |= KEY_DONE_FLAG;
     Fac |= KEY_DONE_FLAG;
