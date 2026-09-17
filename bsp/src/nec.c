@@ -135,20 +135,57 @@ void NEC_Init(void)
 }
 
 /**
- * @brief 把 PA9 配置为红外接收头 VOUT 的输入。
+ * @brief 把 PA9 配置为红外接收头 VOUT 的输入, 并把 EXTI9 接到这个引脚上。
  *        一体化接收头内部有上拉, 输出为开漏。
+ * @note  EXTI9 只做下降沿捕获, 平时保持屏蔽(IMASK 清零), 只在引导码稳定期
+ *        结束后由 TIM1 中断打开, 离开引导码时关闭 —— 见
+ *        TIM1_BRK_UP_TRG_COM_IRQHandler()。开着的这段时间里, 一旦接收头拉低
+ *        VOUT 就直接置位 NecRxSeen, 不需要 TIM1 中断每 26us 轮询一次 IO。
  */
 void NEC_RxInit(void)
 {
     GPIO_InitType GPIO_InitStructure;
+    EXTI_InitType EXTI_InitStructure;
+    NVIC_InitType NVIC_InitStructure;
 
-    RCC_EnableAPB2PeriphClk(RCC_APB2_PERIPH_GPIOA, ENABLE);
+    RCC_EnableAPB2PeriphClk(RCC_APB2_PERIPH_GPIOA | RCC_APB2_PERIPH_AFIO, ENABLE);
 
     GPIO_InitStruct(&GPIO_InitStructure);
     GPIO_InitStructure.Pin       = NEC_RX_PIN;
     GPIO_InitStructure.GPIO_Mode = GPIO_MODE_INPUT;
     GPIO_InitStructure.GPIO_Pull = GPIO_PULL_UP;
     GPIO_InitPeripheral(NEC_RX_PORT, &GPIO_InitStructure);
+
+    GPIO_ConfigEXTILine(GPIOA_PORT_SOURCE, GPIO_PIN_SOURCE9);
+
+    EXTI_InitStruct(&EXTI_InitStructure);
+    EXTI_InitStructure.EXTI_Line    = EXTI_LINE9;
+    EXTI_InitStructure.EXTI_Mode    = EXTI_Mode_Interrupt;
+    EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
+    EXTI_InitStructure.EXTI_LineCmd = ENABLE;
+    EXTI_InitPeripheral(&EXTI_InitStructure);
+    /* 配置完触发边沿后立即屏蔽, 平时不产生中断 */
+    EXTI->IMASK &= ~EXTI_LINE9;
+    EXTI_ClrITPendBit(EXTI_LINE9);
+
+    NVIC_InitStructure.NVIC_IRQChannel         = EXTI4_15_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPriority = 1;   /* 与 TIM6 同级, 让位给 TIM1 的位时序 */
+    NVIC_InitStructure.NVIC_IRQChannelCmd      = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
+}
+
+/**
+ * @brief EXTI9 (PA9) 下降沿中断: 引导码期间接收头拉低了 VOUT。
+ * @note  只在引导码的"稳定期结束→引导码结束"这段窗口内会被打开, 见
+ *        TIM1_BRK_UP_TRG_COM_IRQHandler()。窗口外触发不到这里, 因为线已被屏蔽。
+ */
+void EXTI4_15_IRQHandler(void)
+{
+    if (EXTI_GetITStatus(EXTI_LINE9) != RESET)
+    {
+        EXTI_ClrITPendBit(EXTI_LINE9);
+        NecRxSeen = 1;
+    }
 }
 
 /**
@@ -163,13 +200,13 @@ void TIM1_BRK_UP_TRG_COM_IRQHandler(void)
         return;
     TIM1->STS = (uint32_t)~TIM_FLAG_UPDATE;
 
-    /* 引导码期间采样 RX, 跳过开头让接收头稳定的那段 */
-    if (NecVerify && NecState == NEC_ST_LEAD_ON)
+    /* 引导码期间跳过开头让接收头稳定的那段, 稳定期一结束就打开 EXTI9 边沿捕获,
+     * 后续不必再每 26us 轮询一次 PA9 —— 接收头一拉低 VOUT, EXTI9_IRQHandler
+     * 会直接置位 NecRxSeen */
+    if (NecVerify && NecState == NEC_ST_LEAD_ON && NecRxSettle && --NecRxSettle == 0)
     {
-        if (NecRxSettle)
-            NecRxSettle--;
-        else if (NEC_RX_ACTIVE())
-            NecRxSeen = 1;
+        EXTI_ClrITPendBit(EXTI_LINE9);   /* 清掉稳定期内可能因抖动挂起的标志 */
+        EXTI->IMASK |= EXTI_LINE9;
     }
 
     if (NecTicks > 1)
@@ -183,6 +220,7 @@ void TIM1_BRK_UP_TRG_COM_IRQHandler(void)
     {
     case NEC_ST_LEAD_ON:
         NEC_CarrierOff();
+        EXTI->IMASK &= ~EXTI_LINE9;    /* 离开引导码, 关闭 RX 边沿捕获 */
         /* bits 为 0 表示这是重复码, 引导码后的空闲为 2250us */
         NecTicks = NEC_Ticks(NecBitTotal ? NEC_LEAD_OFF : NEC_REPEAT_OFF);
         NecState = NEC_ST_LEAD_OFF;

@@ -370,7 +370,7 @@ void App_Handle(void)
     }
     Led1_Update(); /* 出光中: 常亮, 低电时改为闪烁 */
     if (F_IN_TREATMENT && F_OUT_TREAT_PAUSE && (s_mode != BLE_MODE_OFF) && F_THERMAL_OK && F_BAT_NOT_EMPTY) // TODO：头戴式检测条件需要加上
-    {
+            {
         /* 出光: 两路互斥, 只看 TreatPhase。挡位到颜色的映射在 Treat_Start()
            里已经定过, 这里不再各挡判一遍。
            两路都显式写一次电平, 别只开该开的那路 —— 红蓝光挡切段时蓝光是开着的,
