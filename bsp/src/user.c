@@ -14,7 +14,7 @@
 #define NEC_ADDR 0x00      /* 循环发送的地址, 按需改 */
 #define NEC_CMD 0x45       /* 循环发送的命令, 按需改 */
 #define NTC_OVER_HEAD 1500 /* ADC 值低于值表示温度>45*/
-#define WEAR_ON_FRAMES 10
+#define WEAR_ON_FRAMES 3
 #define WEAR_OFF_FRAMES 2
 
 
@@ -75,30 +75,27 @@ static void Wear_Update(uint8_t rx)
 {
     if (rx)
     {
-        /* 光路通畅: 收发两端和线束都是活的, 同时本帧判为未佩戴。
-           连续收到 WEAR_LINK_FRAMES 帧才认可链路, 避免一次瞬时误收(干扰/
-           接触瞬间导通)就永久解锁佩戴判定 */
-        if (WearLinkCnt < WEAR_LINK_FRAMES)
-            WearLinkCnt++;
-        if (WearLinkCnt >= WEAR_LINK_FRAMES)
-            WearLinkOk = 1;
+        /* 光路通畅: 收发两端和线束都是活的, 同时本帧判为未佩戴 */
+        WearLinkOk = 1;
         WearOnCnt = 0;
         if (WearOffCnt < WEAR_OFF_FRAMES)
             WearOffCnt++;
+
         if (WearOffCnt >= WEAR_OFF_FRAMES && F_IN_TOUCH)
         {
             S_OUT_TOUCH;
-            LOG(0xFF, "WearOff\r\n");
+            WearLinkOk = 0;
         }
     }
     else
     {
         WearOffCnt = 0;
-        WearLinkCnt = 0; /* 收不到载波说明链路本帧不通, 连续计数清零重来 */
         if (WearOnCnt < WEAR_ON_FRAMES)
             WearOnCnt++;
 
 #if WEAR_REQUIRE_LINK_CHECK
+        /* 一次载波都没收到过时不认可"已佩戴": 此时"戴上了"和"发射管坏/排线
+           脱落"在信号上完全一样, 认了就等于让坏机器放行出光 */
         if (!WearLinkOk)
             return;
 #endif
@@ -371,8 +368,8 @@ void App_Handle(void)
         Mode_ShowLed();
     }
     Led1_Update(); /* 出光中: 常亮, 低电时改为闪烁 */
-    if (F_IN_TREATMENT && F_OUT_TREAT_PAUSE && (s_mode != BLE_MODE_OFF) && F_THERMAL_OK && F_BAT_NOT_EMPTY) // TODO：头戴式检测条件需要加上
-            {
+    if (F_IN_TREATMENT && F_OUT_TREAT_PAUSE && (s_mode != BLE_MODE_OFF) && F_THERMAL_OK && F_BAT_NOT_EMPTY && Wear_IsOn())
+    {
         /* 出光: 两路互斥, 只看 TreatPhase。挡位到颜色的映射在 Treat_Start()
            里已经定过, 这里不再各挡判一遍。
            两路都显式写一次电平, 别只开该开的那路 —— 红蓝光挡切段时蓝光是开着的,
@@ -389,8 +386,6 @@ void App_Handle(void)
             VCSEL_PWR_ON; /* 蓝光段不给 VCSEL 供电, 不只是占空比归零 */
             BLUE_LED_ON;
         }
-
-        
         IdleTimeCount = 0;
         if (!OneSecondTimeCount) // 治疗中，计时器每秒中断一次，治疗时间计数递减
         {
